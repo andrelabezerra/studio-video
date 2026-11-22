@@ -1,0 +1,36 @@
+[project]
+name = "studio-video"
+version = "0.1.0"
+description = "AI Video Studio Pipeline (Vox Bíblico 9:16)"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.9",
+    "python-dotenv>=1.0",
+    "playwright>=1.49",
+    "Pillow>=11.0",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "python-multipart>=0.0.12",
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"

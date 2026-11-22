@@ -1,0 +1,237 @@
+{
+  "preset": {
+    "preset_id": "pastor-andre-biblico",
+    "name": "Vox Bíblico — Canal Pastor André Bezerra",
+    "channel_handle": "@pastorandrebezerra",
+    "default_bible_translation": "NVI",
+    "video": {
+      "aspect_ratio": "9:16",
+      "width": 1080,
+      "height": 1920,
+      "fps": 30
+    },
+    "safe_zones_px": {
+      "top": 220,
+      "bottom": 420,
+      "right": 160,
+      "left": 64
+    },
+    "palette": {
+      "parchment_bg": "#F4EDE1",
+      "charcoal_dark": "#181A1F",
+      "vox_gold": "#E5A93C",
+      "historical_navy": "#1E3A5F",
+      "terracotta_accent": "#9E3B2E",
+      "muted_ink": "#4A4E57",
+      "paper_shadow": "rgba(24, 26, 31, 0.24)"
+    },
+    "typography": {
+      "display_font": "Playfair Display",
+      "body_font": "Inter",
+      "mono_font": "JetBrains Mono",
+      "max_words_per_kinetic_block": 5,
+      "caption_style": "editorial_pill_subtle"
+    }
+  },
+  "scenes": [
+    {
+      "format_type": "perdido_traducao",
+      "duration_ms": 3400,
+      "scene_start_ms": 0,
+      "asset_urls": {},
+      "show_safe_zones": false,
+      "scripture_ref": null,
+      "scene": {
+        "scene_id": "scene_01",
+        "order": 1,
+        "status": "draft",
+        "tier": 1,
+        "template": "kinetic_captions",
+        "template_version": "1.0.0",
+        "timing": {
+          "start_word_id": "w_0001",
+          "end_word_id": "w_0008",
+          "resolved_start_ms": 0,
+          "resolved_end_ms": 3400
+        },
+        "visual": {
+          "background_theme": "carvao",
+          "headline": "NÃO É SÓ FELICIDADE",
+          "subtext": "GREGO · μακάριος",
+          "highlight_word_ids": ["w_0004", "w_0008"],
+          "transition_in": "stamp_drop",
+          "camera_motion": "subtle_zoom_in",
+          "reference_layout_asset": null
+        },
+        "assets": [],
+        "sfx_cues": []
+      },
+      "words": [
+        { "word_id": "w_0001", "text": "Jesus", "start_ms": 120, "end_ms": 480 },
+        { "word_id": "w_0002", "text": "não", "start_ms": 500, "end_ms": 720 },
+        { "word_id": "w_0003", "text": "prometeu", "start_ms": 740, "end_ms": 1200 },
+        { "word_id": "w_0004", "text": "felicidade", "start_ms": 1240, "end_ms": 1820 },
+        { "word_id": "w_0005", "text": "fácil", "start_ms": 1860, "end_ms": 2220 },
+        { "word_id": "w_0006", "text": "em", "start_ms": 2260, "end_ms": 2440 },
+        { "word_id": "w_0007", "text": "Mateus", "start_ms": 2480, "end_ms": 2880 },
+        { "word_id": "w_0008", "text": "cinco.", "start_ms": 2920, "end_ms": 3320 }
+      ]
+    },
+    {
+      "format_type": "perdido_traducao",
+      "duration_ms": 3600,
+      "scene_start_ms": 3400,
+      "asset_urls": {},
+      "show_safe_zones": false,
+      "scripture_ref": null,
+      "scene": {
+        "scene_id": "scene_02",
+        "order": 2,
+        "status": "draft",
+        "tier": 1,
+        "template": "paper_collage",
+        "template_version": "1.0.0",
+        "timing": {
+          "start_word_id": "w_0009",
+          "end_word_id": "w_0016",
+          "resolved_start_ms": 3400,
+          "resolved_end_ms": 7000
+        },
+        "visual": {
+          "background_theme": "pergaminho",
+          "headline": "MAKÁRIOS",
+          "subtext": "Grego · Mateus 5",
+          "highlight_word_ids": ["w_0016"],
+          "transition_in": "paper_tear",
+          "camera_motion": "subtle_zoom_in",
+          "reference_layout_asset": null
+        },
+        "assets": [
+          {
+            "asset_id": "img_pergaminho_grego",
+            "provider": "gemini_hybrid",
+            "prompt": "Ancient Greek papyrus scroll with makarios",
+            "apply_rembg": true
+          }
+        ],
+        "sfx_cues": []
+      },
+      "words": [
+        { "word_id": "w_0009", "text": "A", "start_ms": 3480, "end_ms": 3620 },
+        { "word_id": "w_0010", "text": "palavra", "start_ms": 3650, "end_ms": 4080 },
+        { "word_id": "w_0011", "text": "grega", "start_ms": 4120, "end_ms": 4520 },
+        { "word_id": "w_0012", "text": "usada", "start_ms": 4560, "end_ms": 4960 },
+        { "word_id": "w_0013", "text": "ali", "start_ms": 5000, "end_ms": 5280 },
+        { "word_id": "w_0014", "text": "no", "start_ms": 5320, "end_ms": 5520 },
+        { "word_id": "w_0015", "text": "texto", "start_ms": 5560, "end_ms": 5980 },
+        { "word_id": "w_0016", "text": "é makários.", "start_ms": 6020, "end_ms": 6880 }
+      ]
+    },
+    {
+      "format_type": "perdido_traducao",
+      "duration_ms": 4000,
+      "scene_start_ms": 7000,
+      "asset_urls": {},
+      "show_safe_zones": false,
+      "scripture_ref": {
+        "ref_id": "ref_01",
+        "citation": "Mateus 5:3",
+        "translation": "NVI",
+        "exact_text": "Bem-aventurados os pobres em espírito, pois deles é o Reino dos céus.",
+        "verified_by_human": true
+      },
+      "scene": {
+        "scene_id": "scene_03",
+        "order": 3,
+        "status": "draft",
+        "tier": 1,
+        "template": "bible_quote_card",
+        "template_version": "1.0.0",
+        "timing": {
+          "start_word_id": "w_0017",
+          "end_word_id": "w_0028",
+          "resolved_start_ms": 7000,
+          "resolved_end_ms": 11000
+        },
+        "visual": {
+          "background_theme": "pergaminho",
+          "headline": "Deles é o Reino dos Céus",
+          "subtext": "Mateus 5:3 · NVI",
+          "highlight_word_ids": ["w_0017", "w_0026", "w_0028"],
+          "transition_in": "whip_pan",
+          "camera_motion": "subtle_zoom_out",
+          "reference_layout_asset": null
+        },
+        "assets": [],
+        "sfx_cues": []
+      },
+      "words": [
+        { "word_id": "w_0017", "text": "Bem-aventurados", "start_ms": 7120, "end_ms": 7820 },
+        { "word_id": "w_0018", "text": "os", "start_ms": 7850, "end_ms": 7980 },
+        { "word_id": "w_0019", "text": "pobres", "start_ms": 8020, "end_ms": 8440 },
+        { "word_id": "w_0020", "text": "em", "start_ms": 8480, "end_ms": 8640 },
+        { "word_id": "w_0021", "text": "espírito,", "start_ms": 8680, "end_ms": 9200 },
+        { "word_id": "w_0022", "text": "pois", "start_ms": 9260, "end_ms": 9500 },
+        { "word_id": "w_0023", "text": "deles", "start_ms": 9540, "end_ms": 9840 },
+        { "word_id": "w_0024", "text": "é", "start_ms": 9880, "end_ms": 10000 },
+        { "word_id": "w_0025", "text": "o", "start_ms": 10020, "end_ms": 10120 },
+        { "word_id": "w_0026", "text": "Reino", "start_ms": 10150, "end_ms": 10460 },
+        { "word_id": "w_0027", "text": "dos", "start_ms": 10490, "end_ms": 10640 },
+        { "word_id": "w_0028", "text": "céus.", "start_ms": 10660, "end_ms": 10940 }
+      ]
+    },
+    {
+      "format_type": "mapa_contexto",
+      "duration_ms": 3800,
+      "scene_start_ms": 11000,
+      "asset_urls": {},
+      "show_safe_zones": false,
+      "scripture_ref": {
+        "ref_id": "ref_02",
+        "citation": "Mateus 4:23",
+        "translation": "NVI",
+        "exact_text": "Da Galileia até Jerusalém, a rota histórica atravessava cento e vinte quilômetros pelo Vale do Jordão.",
+        "verified_by_human": true
+      },
+      "scene": {
+        "scene_id": "scene_04",
+        "order": 4,
+        "status": "draft",
+        "tier": 1,
+        "template": "timeline_map",
+        "template_version": "1.0.0",
+        "timing": {
+          "start_word_id": "w_0029",
+          "end_word_id": "w_0038",
+          "resolved_start_ms": 11000,
+          "resolved_end_ms": 14800
+        },
+        "visual": {
+          "background_theme": "pergaminho",
+          "headline": "ROTA: GALILEIA → JERUSALÉM",
+          "subtext": "120 km · Contexto Histórico",
+          "original_term": "Cafarnaum → Vale do Jordão → Jerusalém",
+          "stamp_text": "ROTA HISTÓRICA",
+          "highlight_word_ids": ["w_0030", "w_0032", "w_0038"],
+          "transition_in": "paper_tear",
+          "camera_motion": "subtle_zoom_in",
+          "reference_layout_asset": null
+        },
+        "assets": [],
+        "sfx_cues": []
+      },
+      "words": [
+        { "word_id": "w_0029", "text": "Da", "start_ms": 11080, "end_ms": 11240 },
+        { "word_id": "w_0030", "text": "Galileia", "start_ms": 11260, "end_ms": 11720 },
+        { "word_id": "w_0031", "text": "até", "start_ms": 11760, "end_ms": 11960 },
+        { "word_id": "w_0032", "text": "Jerusalém,", "start_ms": 12000, "end_ms": 12560 },
+        { "word_id": "w_0033", "text": "a", "start_ms": 12600, "end_ms": 12720 },
+        { "word_id": "w_0034", "text": "rota", "start_ms": 12760, "end_ms": 13080 },
+        { "word_id": "w_0035", "text": "atravessava", "start_ms": 13120, "end_ms": 13680 },
+        { "word_id": "w_0036", "text": "o", "start_ms": 13720, "end_ms": 13840 },
+        { "word_id": "w_0037", "text": "Vale do", "start_ms": 13880, "end_ms": 14240 },
+        { "word_id": "w_0038", "text": "Jordão.", "start_ms": 14280, "end_ms": 14720 }
+      ]
+    }
+  ]
+}

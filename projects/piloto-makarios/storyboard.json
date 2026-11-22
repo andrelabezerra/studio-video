@@ -1,0 +1,20 @@
+{
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "music_track": "music/tracks/editorial_contemplative_01.wav",
+  "music_enabled": true,
+  "captions_enabled": true,
+  "scene_ids": [
+    "scene_01",
+    "scene_02",
+    "scene_03",
+    "scene_04",
+    "scene_05",
+    "scene_06",
+    "scene_07",
+    "scene_08",
+    "scene_09",
+    "scene_10"
+  ]
+}

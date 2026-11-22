@@ -1,0 +1,850 @@
+{
+  "audio_source": "voicestudio",
+  "audio_cache_relpath": "audio/narration_master.wav",
+  "audio_sha256": "beee14764fbd1fb0bf125994403ac72b7825262e546edbadb062a2acc9119020",
+  "sample_rate_hz": 48000,
+  "duration_ms": 40000,
+  "alignment_engine": "deterministic_energy_syllabic",
+  "words": [
+    {
+      "word_id": "w_0001",
+      "segment_id": "seg_01",
+      "text": "Jesus",
+      "start_ms": 180,
+      "end_ms": 522,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0002",
+      "segment_id": "seg_01",
+      "text": "não",
+      "start_ms": 522,
+      "end_ms": 702,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0003",
+      "segment_id": "seg_01",
+      "text": "prometeu",
+      "start_ms": 702,
+      "end_ms": 1223,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0004",
+      "segment_id": "seg_01",
+      "text": "felicidade",
+      "start_ms": 1223,
+      "end_ms": 2040,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0005",
+      "segment_id": "seg_01",
+      "text": "fácil",
+      "start_ms": 2040,
+      "end_ms": 2382,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0006",
+      "segment_id": "seg_01",
+      "text": "em",
+      "start_ms": 2382,
+      "end_ms": 2545,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0007",
+      "segment_id": "seg_01",
+      "text": "Mateus",
+      "start_ms": 2545,
+      "end_ms": 2904,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0008",
+      "segment_id": "seg_01",
+      "text": "5",
+      "start_ms": 2904,
+      "end_ms": 3182,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0009",
+      "segment_id": "seg_02",
+      "text": "Quando",
+      "start_ms": 3371,
+      "end_ms": 3729,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0010",
+      "segment_id": "seg_02",
+      "text": "você",
+      "start_ms": 3729,
+      "end_ms": 4056,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0011",
+      "segment_id": "seg_02",
+      "text": "lê",
+      "start_ms": 4056,
+      "end_ms": 4219,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0012",
+      "segment_id": "seg_02",
+      "text": "bem-aventurados",
+      "start_ms": 4219,
+      "end_ms": 5246,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0013",
+      "segment_id": "seg_02",
+      "text": "hoje",
+      "start_ms": 5246,
+      "end_ms": 5573,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0014",
+      "segment_id": "seg_02",
+      "text": "quase",
+      "start_ms": 5658,
+      "end_ms": 6001,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0015",
+      "segment_id": "seg_02",
+      "text": "sempre",
+      "start_ms": 6001,
+      "end_ms": 6359,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0016",
+      "segment_id": "seg_02",
+      "text": "pensa",
+      "start_ms": 6359,
+      "end_ms": 6702,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0017",
+      "segment_id": "seg_02",
+      "text": "em",
+      "start_ms": 6702,
+      "end_ms": 6865,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0018",
+      "segment_id": "seg_02",
+      "text": "alegria",
+      "start_ms": 6865,
+      "end_ms": 7371,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0019",
+      "segment_id": "seg_02",
+      "text": "passageira",
+      "start_ms": 7371,
+      "end_ms": 8055,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0020",
+      "segment_id": "seg_03",
+      "text": "Mas",
+      "start_ms": 8244,
+      "end_ms": 8423,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0021",
+      "segment_id": "seg_03",
+      "text": "olha",
+      "start_ms": 8423,
+      "end_ms": 8749,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0022",
+      "segment_id": "seg_03",
+      "text": "o",
+      "start_ms": 8749,
+      "end_ms": 8897,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0023",
+      "segment_id": "seg_03",
+      "text": "texto",
+      "start_ms": 8897,
+      "end_ms": 9239,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0024",
+      "segment_id": "seg_03",
+      "text": "exato",
+      "start_ms": 9239,
+      "end_ms": 9713,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0025",
+      "segment_id": "seg_03",
+      "text": "de",
+      "start_ms": 9713,
+      "end_ms": 9876,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0026",
+      "segment_id": "seg_03",
+      "text": "Mateus",
+      "start_ms": 9876,
+      "end_ms": 10235,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0027",
+      "segment_id": "seg_03",
+      "text": "5:3",
+      "start_ms": 10235,
+      "end_ms": 10808,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0028",
+      "segment_id": "seg_03",
+      "text": "na",
+      "start_ms": 10808,
+      "end_ms": 10971,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0029",
+      "segment_id": "seg_03",
+      "text": "NVI",
+      "start_ms": 10971,
+      "end_ms": 11150,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0030",
+      "segment_id": "seg_04",
+      "text": "No",
+      "start_ms": 11338,
+      "end_ms": 11502,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0031",
+      "segment_id": "seg_04",
+      "text": "grego",
+      "start_ms": 11502,
+      "end_ms": 11844,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0032",
+      "segment_id": "seg_04",
+      "text": "original",
+      "start_ms": 11844,
+      "end_ms": 12497,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0033",
+      "segment_id": "seg_04",
+      "text": "a",
+      "start_ms": 12583,
+      "end_ms": 12730,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0034",
+      "segment_id": "seg_04",
+      "text": "palavra",
+      "start_ms": 12730,
+      "end_ms": 13236,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0035",
+      "segment_id": "seg_04",
+      "text": "escolhida",
+      "start_ms": 13236,
+      "end_ms": 13905,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0036",
+      "segment_id": "seg_04",
+      "text": "por",
+      "start_ms": 13905,
+      "end_ms": 14084,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0037",
+      "segment_id": "seg_04",
+      "text": "Mateus",
+      "start_ms": 14084,
+      "end_ms": 14442,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0038",
+      "segment_id": "seg_04",
+      "text": "é",
+      "start_ms": 14442,
+      "end_ms": 14590,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0039",
+      "segment_id": "seg_04",
+      "text": "makários",
+      "start_ms": 14590,
+      "end_ms": 15111,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0040",
+      "segment_id": "seg_05",
+      "text": "No",
+      "start_ms": 15300,
+      "end_ms": 15463,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0041",
+      "segment_id": "seg_05",
+      "text": "primeiro",
+      "start_ms": 15463,
+      "end_ms": 15985,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0042",
+      "segment_id": "seg_05",
+      "text": "século",
+      "start_ms": 15985,
+      "end_ms": 16474,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0043",
+      "segment_id": "seg_05",
+      "text": "makários",
+      "start_ms": 16560,
+      "end_ms": 17082,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0044",
+      "segment_id": "seg_05",
+      "text": "não",
+      "start_ms": 17082,
+      "end_ms": 17261,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0045",
+      "segment_id": "seg_05",
+      "text": "descrevia",
+      "start_ms": 17261,
+      "end_ms": 17798,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0046",
+      "segment_id": "seg_05",
+      "text": "uma",
+      "start_ms": 17798,
+      "end_ms": 18109,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0047",
+      "segment_id": "seg_05",
+      "text": "emoção",
+      "start_ms": 18109,
+      "end_ms": 18599,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0048",
+      "segment_id": "seg_05",
+      "text": "momentânea",
+      "start_ms": 18599,
+      "end_ms": 19284,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0049",
+      "segment_id": "seg_06",
+      "text": "Significava",
+      "start_ms": 19472,
+      "end_ms": 20304,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0050",
+      "segment_id": "seg_06",
+      "text": "estar",
+      "start_ms": 20304,
+      "end_ms": 20647,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0051",
+      "segment_id": "seg_06",
+      "text": "em",
+      "start_ms": 20647,
+      "end_ms": 20810,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0052",
+      "segment_id": "seg_06",
+      "text": "uma",
+      "start_ms": 20810,
+      "end_ms": 21120,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0053",
+      "segment_id": "seg_06",
+      "text": "condição",
+      "start_ms": 21120,
+      "end_ms": 21642,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0054",
+      "segment_id": "seg_06",
+      "text": "de",
+      "start_ms": 21642,
+      "end_ms": 21805,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0055",
+      "segment_id": "seg_06",
+      "text": "honra",
+      "start_ms": 21805,
+      "end_ms": 22148,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0056",
+      "segment_id": "seg_06",
+      "text": "e",
+      "start_ms": 22148,
+      "end_ms": 22295,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0057",
+      "segment_id": "seg_06",
+      "text": "favor",
+      "start_ms": 22295,
+      "end_ms": 22637,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0058",
+      "segment_id": "seg_06",
+      "text": "diante",
+      "start_ms": 22637,
+      "end_ms": 22996,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0059",
+      "segment_id": "seg_06",
+      "text": "de",
+      "start_ms": 22996,
+      "end_ms": 23159,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0060",
+      "segment_id": "seg_06",
+      "text": "Deus",
+      "start_ms": 23159,
+      "end_ms": 23354,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0061",
+      "segment_id": "seg_07",
+      "text": "Por",
+      "start_ms": 23543,
+      "end_ms": 23722,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0062",
+      "segment_id": "seg_07",
+      "text": "isso",
+      "start_ms": 23722,
+      "end_ms": 24048,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0063",
+      "segment_id": "seg_07",
+      "text": "Jesus",
+      "start_ms": 24048,
+      "end_ms": 24391,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0064",
+      "segment_id": "seg_07",
+      "text": "chama",
+      "start_ms": 24391,
+      "end_ms": 24733,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0065",
+      "segment_id": "seg_07",
+      "text": "de",
+      "start_ms": 24733,
+      "end_ms": 24896,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0066",
+      "segment_id": "seg_07",
+      "text": "abençoados",
+      "start_ms": 24896,
+      "end_ms": 25581,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0067",
+      "segment_id": "seg_07",
+      "text": "justamente",
+      "start_ms": 25581,
+      "end_ms": 26266,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0068",
+      "segment_id": "seg_07",
+      "text": "os",
+      "start_ms": 26266,
+      "end_ms": 26430,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0069",
+      "segment_id": "seg_07",
+      "text": "pobres",
+      "start_ms": 26430,
+      "end_ms": 26788,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0070",
+      "segment_id": "seg_07",
+      "text": "em",
+      "start_ms": 26788,
+      "end_ms": 26951,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0071",
+      "segment_id": "seg_07",
+      "text": "espírito",
+      "start_ms": 26951,
+      "end_ms": 27604,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0072",
+      "segment_id": "seg_08",
+      "text": "Quem",
+      "start_ms": 27793,
+      "end_ms": 27988,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0073",
+      "segment_id": "seg_08",
+      "text": "reconhece",
+      "start_ms": 27988,
+      "end_ms": 28657,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0074",
+      "segment_id": "seg_08",
+      "text": "que",
+      "start_ms": 28657,
+      "end_ms": 28836,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0075",
+      "segment_id": "seg_08",
+      "text": "depende",
+      "start_ms": 28836,
+      "end_ms": 29342,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0076",
+      "segment_id": "seg_08",
+      "text": "totalmente",
+      "start_ms": 29342,
+      "end_ms": 30027,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0077",
+      "segment_id": "seg_08",
+      "text": "da",
+      "start_ms": 30027,
+      "end_ms": 30190,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0078",
+      "segment_id": "seg_08",
+      "text": "graça",
+      "start_ms": 30190,
+      "end_ms": 30532,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0079",
+      "segment_id": "seg_08",
+      "text": "já",
+      "start_ms": 30532,
+      "end_ms": 30695,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0080",
+      "segment_id": "seg_08",
+      "text": "pertence",
+      "start_ms": 30695,
+      "end_ms": 31217,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0081",
+      "segment_id": "seg_08",
+      "text": "ao",
+      "start_ms": 31217,
+      "end_ms": 31380,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0082",
+      "segment_id": "seg_08",
+      "text": "Reino",
+      "start_ms": 31380,
+      "end_ms": 31723,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0083",
+      "segment_id": "seg_09",
+      "text": "Sua",
+      "start_ms": 31911,
+      "end_ms": 32090,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0084",
+      "segment_id": "seg_09",
+      "text": "alegria",
+      "start_ms": 32090,
+      "end_ms": 32596,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0085",
+      "segment_id": "seg_09",
+      "text": "no",
+      "start_ms": 32596,
+      "end_ms": 32759,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0086",
+      "segment_id": "seg_09",
+      "text": "evangelho",
+      "start_ms": 32759,
+      "end_ms": 33428,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0087",
+      "segment_id": "seg_09",
+      "text": "não",
+      "start_ms": 33428,
+      "end_ms": 33608,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0088",
+      "segment_id": "seg_09",
+      "text": "depende",
+      "start_ms": 33608,
+      "end_ms": 34113,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0089",
+      "segment_id": "seg_09",
+      "text": "de",
+      "start_ms": 34113,
+      "end_ms": 34276,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0090",
+      "segment_id": "seg_09",
+      "text": "um",
+      "start_ms": 34276,
+      "end_ms": 34440,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0091",
+      "segment_id": "seg_09",
+      "text": "dia",
+      "start_ms": 34440,
+      "end_ms": 34619,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0092",
+      "segment_id": "seg_09",
+      "text": "fácil",
+      "start_ms": 34619,
+      "end_ms": 34961,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0093",
+      "segment_id": "seg_09",
+      "text": "ou",
+      "start_ms": 34961,
+      "end_ms": 35125,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0094",
+      "segment_id": "seg_09",
+      "text": "perfeito",
+      "start_ms": 35125,
+      "end_ms": 35646,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0095",
+      "segment_id": "seg_10",
+      "text": "Ela",
+      "start_ms": 35835,
+      "end_ms": 36145,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0096",
+      "segment_id": "seg_10",
+      "text": "nasce",
+      "start_ms": 36145,
+      "end_ms": 36488,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0097",
+      "segment_id": "seg_10",
+      "text": "de",
+      "start_ms": 36488,
+      "end_ms": 36651,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0098",
+      "segment_id": "seg_10",
+      "text": "quem",
+      "start_ms": 36651,
+      "end_ms": 36846,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0099",
+      "segment_id": "seg_10",
+      "text": "reina",
+      "start_ms": 36846,
+      "end_ms": 37189,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0100",
+      "segment_id": "seg_10",
+      "text": "em",
+      "start_ms": 37189,
+      "end_ms": 37352,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0101",
+      "segment_id": "seg_10",
+      "text": "você",
+      "start_ms": 37352,
+      "end_ms": 37678,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0102",
+      "segment_id": "seg_10",
+      "text": "Qual",
+      "start_ms": 37867,
+      "end_ms": 38062,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0103",
+      "segment_id": "seg_10",
+      "text": "palavra",
+      "start_ms": 38062,
+      "end_ms": 38568,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0104",
+      "segment_id": "seg_10",
+      "text": "explico",
+      "start_ms": 38568,
+      "end_ms": 39073,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0105",
+      "segment_id": "seg_10",
+      "text": "depois",
+      "start_ms": 39073,
+      "end_ms": 39432,
+      "confidence": 0.95
+    }
+  ]
+}

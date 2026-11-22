@@ -1,0 +1,97 @@
+{
+  "preset_id": "pastor-andre-biblico",
+  "name": "Vox Bíblico — Canal Pastor André Bezerra",
+  "channel_url": "https://www.youtube.com/@pastorandrebezerra",
+  "channel_handle": "@pastorandrebezerra",
+  "default_bible_translation": "NVI",
+  "video": {
+    "aspect_ratio": "9:16",
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "preview_width": 540,
+    "preview_height": 960,
+    "preview_fps": 15,
+    "target_duration_sec": {
+      "min": 35,
+      "ideal": 42,
+      "max": 48
+    },
+    "scene_pacing_sec": {
+      "min": 2.5,
+      "max": 4.0
+    }
+  },
+  "safe_zones_px": {
+    "top": 220,
+    "bottom": 420,
+    "right": 160,
+    "left": 64
+  },
+  "palette": {
+    "parchment_bg": "#F4EDE1",
+    "charcoal_dark": "#181A1F",
+    "vox_gold": "#E5A93C",
+    "historical_navy": "#1E3A5F",
+    "terracotta_accent": "#9E3B2E",
+    "muted_ink": "#4A4E57",
+    "paper_shadow": "rgba(24, 26, 31, 0.24)"
+  },
+  "typography": {
+    "display_font": "Playfair Display",
+    "body_font": "Inter",
+    "mono_font": "JetBrains Mono",
+    "max_words_per_kinetic_block": 6,
+    "caption_style": "editorial_pill_subtle"
+  },
+  "audio_mix": {
+    "target_lufs": -14.0,
+    "true_peak_dbtp": -1.0,
+    "music_base_gain_db": -18.0,
+    "ducking": {
+      "threshold": 0.04,
+      "ratio": 6.0,
+      "attack_ms": 25,
+      "release_ms": 280
+    },
+    "default_sfx_gain_db": -6.0
+  },
+  "formats_series": [
+    {
+      "format_type": "mapa_contexto",
+      "label": "Mapa & Contexto",
+      "description": "Geografia, rotas, distâncias e contexto histórico-arqueológico de passagens bíblicas.",
+      "default_templates": ["timeline_map", "paper_collage", "bible_quote_card"],
+      "hook_types": ["mapa", "paradoxo"]
+    },
+    {
+      "format_type": "perdido_traducao",
+      "label": "Perdido na Tradução",
+      "description": "Termos originais em hebraico e grego que revelam camadas perdidas na leitura rápida.",
+      "default_templates": ["kinetic_captions", "bible_quote_card", "paper_collage"],
+      "hook_types": ["traducao", "paradoxo"]
+    },
+    {
+      "format_type": "mito_vs_texto",
+      "label": "Mito vs. Texto",
+      "description": "Desconstrução respeitosa de clichês e frases atribuídas à Bíblia usando o texto original.",
+      "default_templates": ["paper_collage", "bible_quote_card", "kinetic_captions"],
+      "hook_types": ["mito", "paradoxo"]
+    },
+    {
+      "format_type": "conexao_at_nt",
+      "label": "Conexão AT → NT",
+      "description": "Paralelos, símbolos e profecias conectando o Antigo ao Novo Testamento.",
+      "default_templates": ["timeline_map", "bible_quote_card", "paper_collage"],
+      "hook_types": ["paradoxo", "mapa"]
+    }
+  ],
+  "cost_guardrails": {
+    "default_tier": 1,
+    "default_image_provider": "gemini_hybrid",
+    "tier2_video_enabled_by_default": false,
+    "fal_3d_enabled_by_default": false,
+    "max_cost_per_scene_usd": 0.5,
+    "max_cost_per_video_usd": 2.5
+  }
+}

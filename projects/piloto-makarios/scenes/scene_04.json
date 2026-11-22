@@ -1,0 +1,41 @@
+{
+  "scene_id": "scene_04",
+  "order": 4,
+  "status": "rendered",
+  "tier": 1,
+  "template": "kinetic_captions",
+  "template_version": "1.0.0",
+  "timing": {
+    "start_word_id": "w_0030",
+    "end_word_id": "w_0039",
+    "resolved_start_ms": 11244,
+    "resolved_end_ms": 15206
+  },
+  "visual": {
+    "background_theme": "carvao",
+    "headline": "ΜΑΚΆΡΙΟΣ",
+    "subtext": "GREGO ORIGINAL · MAKÁRIOS",
+    "highlight_word_ids": [
+      "w_0039"
+    ],
+    "transition_in": "paper_tear",
+    "camera_motion": "subtle_zoom_in",
+    "reference_layout_asset": null,
+    "scripture_ref_id": null,
+    "original_term": null,
+    "stamp_text": null,
+    "series_label": null
+  },
+  "assets": [],
+  "sfx_cues": [
+    {
+      "sfx_id": "paper_tear_01",
+      "anchor_word_id": "w_0030",
+      "offset_ms": -50,
+      "gain_db": -6.0
+    }
+  ],
+  "review_pins": [],
+  "cache_hash": "2fd6dcb04172568d791279fcef5931907e788f6b5832e405276d5a2c8de11857",
+  "cost_usd": 0.0
+}

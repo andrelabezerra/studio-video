@@ -1,0 +1,42 @@
+{
+  "scene_id": "scene_08",
+  "order": 8,
+  "status": "rendered",
+  "tier": 1,
+  "template": "bible_quote_card",
+  "template_version": "1.0.0",
+  "timing": {
+    "start_word_id": "w_0072",
+    "end_word_id": "w_0082",
+    "resolved_start_ms": 27698,
+    "resolved_end_ms": 31817
+  },
+  "visual": {
+    "background_theme": "pergaminho",
+    "headline": "DELES É O REINO",
+    "subtext": "Mateus 5:3 · NVI",
+    "highlight_word_ids": [
+      "w_0078",
+      "w_0082"
+    ],
+    "transition_in": "whip_pan",
+    "camera_motion": "subtle_zoom_in",
+    "reference_layout_asset": null,
+    "scripture_ref_id": null,
+    "original_term": null,
+    "stamp_text": null,
+    "series_label": null
+  },
+  "assets": [],
+  "sfx_cues": [
+    {
+      "sfx_id": "page_flip_01",
+      "anchor_word_id": "w_0072",
+      "offset_ms": -40,
+      "gain_db": -6.0
+    }
+  ],
+  "review_pins": [],
+  "cache_hash": "46fc26d6f7e08525ac21c19e222edec7f7d643fa3c9d0efbfe67f830d5434a12",
+  "cost_usd": 0.0
+}

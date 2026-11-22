@@ -1,0 +1,196 @@
+{
+  "schema_version": "1.0.0",
+  "templates": [
+    {
+      "id": "paper_collage",
+      "label": "Paper Collage Editorial",
+      "tier": 1,
+      "default_cost_usd": 0.0,
+      "description": "Recorte tátil em papel rasgado com sombra real, fita crepe, seta SVG e marca-texto dourado.",
+      "recommended_formats": [
+        "mapa_contexto",
+        "perdido_traducao",
+        "mito_vs_texto",
+        "conexao_at_nt"
+      ],
+      "editable_fields": [
+        {
+          "key": "headline",
+          "label": "Título Principal (Headline)",
+          "type": "text",
+          "placeholder": "MAKÁRIOS"
+        },
+        {
+          "key": "subtext",
+          "label": "Subtexto / Referência",
+          "type": "text",
+          "placeholder": "Grego · Mateus 5"
+        },
+        {
+          "key": "original_term",
+          "label": "Termo Original / Destaque",
+          "type": "text",
+          "placeholder": "μακάριος"
+        },
+        {
+          "key": "stamp_text",
+          "label": "Carimbo Editorial (Opcional)",
+          "type": "text",
+          "placeholder": "MITO"
+        }
+      ]
+    },
+    {
+      "id": "bible_quote_card",
+      "label": "Cartão de Versículo Bíblico",
+      "tier": 1,
+      "default_cost_usd": 0.0,
+      "description": "Cartão editorial inclinado com referência bíblica verificada e grifo progressivo nas palavras-chave.",
+      "recommended_formats": [
+        "perdido_traducao",
+        "mito_vs_texto",
+        "conexao_at_nt",
+        "mapa_contexto"
+      ],
+      "editable_fields": [
+        {
+          "key": "headline",
+          "label": "Síntese / Destaque do Versículo",
+          "type": "text",
+          "placeholder": "Deles é o Reino dos Céus"
+        },
+        {
+          "key": "subtext",
+          "label": "Referência & Tradução",
+          "type": "text",
+          "placeholder": "Mateus 5:3 · NVI"
+        },
+        {
+          "key": "original_term",
+          "label": "Termo-Chave / Nota Lexical",
+          "type": "text",
+          "placeholder": "Reino dos Céus"
+        },
+        {
+          "key": "stamp_text",
+          "label": "Selo de Verificação",
+          "type": "text",
+          "placeholder": "TEXTO VERIFICADO"
+        }
+      ]
+    },
+    {
+      "id": "kinetic_captions",
+      "label": "Tipografia Cinética Vox",
+      "tier": 1,
+      "default_cost_usd": 0.0,
+      "description": "Blocos tipográficos de alto impacto (4 a 6 palavras) com badge de termo original e carimbo editorial.",
+      "recommended_formats": [
+        "perdido_traducao",
+        "mito_vs_texto"
+      ],
+      "editable_fields": [
+        {
+          "key": "headline",
+          "label": "Frase-Âncora / Hook",
+          "type": "text",
+          "placeholder": "NÃO É SÓ FELICIDADE"
+        },
+        {
+          "key": "subtext",
+          "label": "Contexto / Idioma Original",
+          "type": "text",
+          "placeholder": "GREGO · μακάριος"
+        },
+        {
+          "key": "original_term",
+          "label": "Termo Original (Grego / Hebraico)",
+          "type": "text",
+          "placeholder": "μακάριος (makários)"
+        },
+        {
+          "key": "stamp_text",
+          "label": "Carimbo Terracota",
+          "type": "text",
+          "placeholder": "ATENÇÃO"
+        }
+      ]
+    },
+    {
+      "id": "timeline_map",
+      "label": "Mapa & Linha do Tempo SVG",
+      "tier": 1,
+      "default_cost_usd": 0.0,
+      "description": "Cartografia histórica com rota SVG animada (stroke-dashoffset) e linha do tempo AT -> NT.",
+      "recommended_formats": [
+        "mapa_contexto",
+        "conexao_at_nt"
+      ],
+      "editable_fields": [
+        {
+          "key": "headline",
+          "label": "Título / Marco Principal",
+          "type": "text",
+          "placeholder": "ROTA: GALILEIA → JERUSALÉM"
+        },
+        {
+          "key": "subtext",
+          "label": "Coordenadas / Contexto",
+          "type": "text",
+          "placeholder": "120 km · Contexto Histórico"
+        },
+        {
+          "key": "original_term",
+          "label": "Origem → Destino (ou Época AT → NT)",
+          "type": "text",
+          "placeholder": "Cafarnaum → Jerusalém"
+        },
+        {
+          "key": "stamp_text",
+          "label": "Selo Cartográfico / Carimbo",
+          "type": "text",
+          "placeholder": "ROTA HISTÓRICA"
+        }
+      ]
+    },
+    {
+      "id": "tier2_video",
+      "label": "Nível 2 · Vídeo / Arte Generativa",
+      "tier": 2,
+      "default_cost_usd": 0.19,
+      "description": "Cena cinematográfica Nível 2 sob teto de custo USD com moldura Vox e movimento Ken Burns determinístico.",
+      "recommended_formats": [
+        "mapa_contexto",
+        "conexao_at_nt",
+        "mito_vs_texto",
+        "perdido_traducao"
+      ],
+      "editable_fields": [
+        {
+          "key": "headline",
+          "label": "Título Cinematográfico",
+          "type": "text",
+          "placeholder": "RECONSTRUÇÃO HISTÓRICA"
+        },
+        {
+          "key": "subtext",
+          "label": "Subtexto / Especificação Visual",
+          "type": "text",
+          "placeholder": "Nível 2 · Cena Assistida"
+        },
+        {
+          "key": "original_term",
+          "label": "Referência Visual / Local",
+          "type": "text",
+          "placeholder": "Jerusalém · Século I"
+        },
+        {
+          "key": "stamp_text",
+          "label": "Selo Editorial",
+          "type": "text",
+          "placeholder": "NÍVEL 2 · IA"
+        }
+      ]
+    }
+  ]
+}

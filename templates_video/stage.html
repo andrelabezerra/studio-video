@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Studio Video — Vox Bíblico Stage (1080×1920)</title>
+  <link rel="stylesheet" href="stage.css" />
+</head>
+<body>
+  <!-- Filtros e padrões SVG globais 100% offline (textura de papel, grão, bordas rasgadas) -->
+  <svg id="studio-svg-defs" aria-hidden="true" width="0" height="0" style="position:absolute;pointer-events:none;">
+    <defs>
+      <!-- Textura de papel pergaminho sutil -->
+      <filter id="vox-paper-grain" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" seed="11" stitchTiles="stitch" result="noise" />
+        <feColorMatrix type="matrix" in="noise" result="warmNoise" values="
+          0.32 0    0    0 0.62
+          0    0.29 0    0 0.56
+          0    0    0.24 0 0.45
+          0    0    0    0.16 0" />
+      </filter>
+
+      <!-- Textura de filme / papel carvão escuro -->
+      <filter id="vox-charcoal-grain" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.88" numOctaves="3" seed="23" stitchTiles="stitch" result="noise" />
+        <feColorMatrix type="matrix" in="noise" result="darkNoise" values="
+          0.9 0   0   0 0.06
+          0   0.9 0   0 0.06
+          0   0   0.9 0 0.07
+          0   0   0   0.13 0" />
+      </filter>
+
+      <!-- Desgaste orgânico para carimbo editorial terracota -->
+      <filter id="vox-stamp-grunge" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.14" numOctaves="3" seed="7" result="grunge" />
+        <feDisplacementMap in="SourceGraphic" in2="grunge" scale="2.4" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+
+      <!-- Padrão halftone editorial discreto -->
+      <pattern id="vox-halftone-dark" width="12" height="12" patternUnits="userSpaceOnUse">
+        <circle cx="3" cy="3" r="1.2" fill="#181A1F" opacity="0.12" />
+      </pattern>
+      <pattern id="vox-halftone-light" width="12" height="12" patternUnits="userSpaceOnUse">
+        <circle cx="3" cy="3" r="1.2" fill="#F4EDE1" opacity="0.10" />
+      </pattern>
+
+      <!-- Padrão de linhas milimetradas editoriais -->
+      <pattern id="vox-editorial-grid-dark" width="64" height="64" patternUnits="userSpaceOnUse">
+        <path d="M 64 0 L 0 0 0 64" fill="none" stroke="#1E3A5F" stroke-width="1" opacity="0.08" />
+      </pattern>
+      <pattern id="vox-editorial-grid-light" width="64" height="64" patternUnits="userSpaceOnUse">
+        <path d="M 64 0 L 0 0 0 64" fill="none" stroke="#F4EDE1" stroke-width="1" opacity="0.06" />
+      </pattern>
+
+      <!-- Clip path de borda rasgada para moldura de papel (objectBoundingBox 0..1) -->
+      <clipPath id="vox-torn-rect-clip" clipPathUnits="objectBoundingBox">
+        <path d="M 0.012,0.016 L 0.065,0.008 L 0.12,0.018 L 0.18,0.009 L 0.25,0.017 L 0.31,0.006 L 0.38,0.015 L 0.45,0.008 L 0.52,0.019 L 0.59,0.007 L 0.66,0.016 L 0.74,0.008 L 0.81,0.018 L 0.88,0.007 L 0.94,0.015 L 0.988,0.012 L 0.994,0.09 L 0.985,0.18 L 0.995,0.28 L 0.986,0.39 L 0.994,0.50 L 0.985,0.61 L 0.995,0.72 L 0.986,0.83 L 0.993,0.92 L 0.986,0.988 L 0.92,0.994 L 0.85,0.984 L 0.78,0.995 L 0.70,0.985 L 0.63,0.994 L 0.56,0.983 L 0.48,0.993 L 0.41,0.985 L 0.33,0.995 L 0.25,0.984 L 0.18,0.993 L 0.11,0.985 L 0.045,0.994 L 0.010,0.985 L 0.005,0.89 L 0.014,0.78 L 0.005,0.67 L 0.015,0.55 L 0.006,0.44 L 0.014,0.32 L 0.006,0.21 L 0.015,0.11 Z" />
+      </clipPath>
+
+      <!-- Clip path de cartão de versículo com topo e base rasgados -->
+      <clipPath id="vox-torn-card-clip" clipPathUnits="objectBoundingBox">
+        <path d="M 0.006,0.014 L 0.05,0.006 L 0.10,0.015 L 0.16,0.007 L 0.22,0.014 L 0.29,0.005 L 0.36,0.014 L 0.43,0.006 L 0.50,0.015 L 0.58,0.007 L 0.65,0.014 L 0.72,0.006 L 0.79,0.015 L 0.86,0.007 L 0.93,0.013 L 0.994,0.008 L 0.997,0.988 L 0.94,0.995 L 0.87,0.985 L 0.80,0.994 L 0.73,0.986 L 0.66,0.995 L 0.59,0.985 L 0.51,0.994 L 0.44,0.986 L 0.36,0.995 L 0.29,0.985 L 0.21,0.994 L 0.14,0.986 L 0.07,0.995 L 0.005,0.986 Z" />
+      </clipPath>
+    </defs>
+  </svg>
+
+  <main id="viewport-shell" class="viewport-shell">
+    <div id="stage-frame" class="stage-frame">
+      <div id="stage" class="stage theme-pergaminho" data-template="">
+        <!-- Camada de fundo editorial com textura SVG e grade -->
+        <div id="stage-bg" class="stage-bg">
+          <div class="bg-gradient"></div>
+          <svg class="bg-grid-svg" viewBox="0 0 1080 1920" preserveAspectRatio="none">
+            <rect id="bg-grid-rect" width="1080" height="1920" fill="url(#vox-editorial-grid-dark)" />
+            <rect id="bg-grain-rect" width="1080" height="1920" filter="url(#vox-paper-grain)" opacity="0.72" />
+            <rect id="bg-halftone-top" x="0" y="0" width="1080" height="320" fill="url(#vox-halftone-dark)" opacity="0.38" />
+          </svg>
+          <div class="bg-vignette"></div>
+        </div>
+
+        <!-- Container com câmera/transição determinística -->
+        <div id="camera-rig" class="camera-rig">
+          <!-- Cabeçalho editorial superior (estritamente dentro de safe-zones: y >= 224, x: 64..920) -->
+          <header id="editorial-chrome" class="editorial-chrome">
+            <div class="chrome-left">
+              <span class="chrome-dot"></span>
+              <span id="chrome-series" class="chrome-series">VOX BÍBLICO</span>
+              <span id="chrome-sep" class="chrome-sep">·</span>
+              <span id="chrome-order" class="chrome-order">01</span>
+            </div>
+            <div class="chrome-right">
+              <span id="chrome-handle" class="chrome-handle">@pastorandrebezerra</span>
+            </div>
+            <div class="chrome-rule">
+              <div id="chrome-progress" class="chrome-progress"></div>
+            </div>
+          </header>
+
+          <!-- Raiz onde cada template monta sua cena dentro da área nobre (x: 64..920, y: 288..1320) -->
+          <section id="scene-root" class="scene-root" aria-label="Cena Editorial Vox"></section>
+
+          <!-- Barra de legenda editorial sutil (faixa inferior segura: y <= 1488, x: 64..920) -->
+          <footer id="caption-bar" class="caption-bar" aria-label="Legenda Editorial">
+            <div id="caption-pill" class="caption-pill">
+              <div id="caption-words" class="caption-words"></div>
+            </div>
+          </footer>
+        </div>
+
+        <!-- Camada de transição tátil (paper_tear / whip_pan / stamp_drop) -->
+        <div id="transition-layer" class="transition-layer" aria-hidden="true"></div>
+
+        <!-- Overlay de Safe-Zones 9:16 (ativado apenas quando show_safe_zones === true) -->
+        <div id="safe-zones-overlay" class="safe-zones-overlay" hidden aria-hidden="true">
+          <div class="sz-band sz-top"><span>TOP SAFE ≥ 220px</span></div>
+          <div class="sz-band sz-bottom"><span>BOTTOM SAFE ≥ 420px (y ≤ 1500)</span></div>
+          <div class="sz-band sz-left"><span>L 64</span></div>
+          <div class="sz-band sz-right"><span>RIGHT SAFE ≥ 160px</span></div>
+          <div class="sz-frame">
+            <span class="sz-frame-label">ÁREA NOBRE 9:16 · 856×1280</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controles do Modo Demo Interativo (visíveis APENAS com ?demo=1, fora do palco) -->
+    <aside id="demo-controls" class="demo-controls" hidden>
+      <div class="demo-header">
+        <div class="demo-title">
+          <strong>Vox Bíblico Stage</strong>
+          <span id="demo-meta" class="demo-meta">1080×1920 · 30fps</span>
+        </div>
+        <div class="demo-scenes" id="demo-scene-buttons"></div>
+      </div>
+
+      <div class="demo-transport">
+        <button type="button" id="demo-play" class="demo-btn demo-btn-primary">▶ Play</button>
+        <button type="button" id="demo-prev-frame" class="demo-btn">−1f</button>
+        <button type="button" id="demo-next-frame" class="demo-btn">+1f</button>
+        <input type="range" id="demo-scrubber" class="demo-scrubber" min="0" max="3500" step="10" value="0" />
+        <span id="demo-timecode" class="demo-timecode">0000ms · f000</span>
+      </div>
+
+      <div class="demo-toggles">
+        <label class="demo-check">
+          <input type="checkbox" id="demo-safe-zones" />
+          <span>Safe-Zones 9:16</span>
+        </label>
+        <button type="button" id="demo-toggle-theme" class="demo-btn">Alternar Tema</button>
+      </div>
+    </aside>
+  </main>
+
+  <script src="stage_engine.js"></script>
+  <script src="templates/paper_collage.js"></script>
+  <script src="templates/bible_quote_card.js"></script>
+  <script src="templates/kinetic_captions.js"></script>
+  <script src="templates/timeline_map.js"></script>
+</body>
+</html>

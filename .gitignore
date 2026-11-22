@@ -1,0 +1,40 @@
+# Segredos e variáveis locais (NUNCA versionar)
+.env
+.env.local
+.env.*.local
+
+# Ambientes e caches Python / Node
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+app/node_modules/
+app/dist/
+
+# Mídia pesada e renders intermediários (devem viver em STUDIO_CACHE_DIR fora do OneDrive)
+cache/
+renders/
+tmp/
+*.mp4
+*.mov
+*.mkv
+*.wav
+*.mp3
+*.flac
+*.png
+*.jpg
+*.jpeg
+*.webp
+!assets/references/.gitkeep
+projects/*/media/
+projects/*/renders/
+projects/*/frames/
+
+# Sistema / IDEs
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log

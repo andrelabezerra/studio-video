@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "slug": "piloto-makarios",
+  "title": "O que Jesus realmente disse em 'Bem-aventurados' (Mateus 5:3)",
+  "created_at": "2026-11-21T17:30:00-03:00",
+  "updated_at": "2026-11-21T20:16:00.297890-03:00",
+  "preset_id": "pastor-andre-biblico",
+  "series": {
+    "series_id": "perdido_traducao",
+    "format_type": "perdido_traducao",
+    "episode_number": 1,
+    "batch_id": "retomada-lote-01"
+  },
+  "gates": {
+    "briefing_approved": true,
+    "scripture_verified": true,
+    "script_gate_1_approved": true,
+    "audio_aligned": true,
+    "scenes_approved": true,
+    "qa_passed": true
+  },
+  "cost_ledger": {
+    "currency": "USD",
+    "estimated_total": 0.0,
+    "spent_total": 0.0,
+    "cap_usd": 2.5,
+    "items": []
+  },
+  "metrics_48h": {
+    "published_at": null,
+    "viewed_vs_swiped_pct": null,
+    "avg_retention_pct": null,
+    "comments_count": null
+  }
+}

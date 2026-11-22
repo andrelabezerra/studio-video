@@ -1,0 +1,15 @@
+{
+  "raw_idea": "Explicar que bem-aventurado em Mateus 5:3 (grego makarios) não é felicidade passageira, mas condição de honra e favor diante de Deus.",
+  "seed_reference": "Mt 5:3",
+  "bible_translation": "NVI",
+  "target_duration_sec": 40,
+  "audio_mode": "recorded",
+  "human_seal_mode": "paper_cutout",
+  "recommended_format": {
+    "format_type": "perdido_traducao",
+    "confidence": 0.96,
+    "rationale": "O gancho central depende do termo grego makarios e do contraste com o sentido moderno de felicidade passageira."
+  },
+  "selected_format_type": "perdido_traducao",
+  "optional_reference_layout": null
+}

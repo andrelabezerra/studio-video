@@ -1,0 +1,50 @@
+{
+  "scene_id": "scene_02",
+  "order": 2,
+  "status": "rendered",
+  "tier": 1,
+  "template": "paper_collage",
+  "template_version": "1.0.0",
+  "timing": {
+    "start_word_id": "w_0009",
+    "end_word_id": "w_0019",
+    "resolved_start_ms": 3276,
+    "resolved_end_ms": 8150
+  },
+  "visual": {
+    "background_theme": "pergaminho",
+    "headline": "BEM-AVENTURADOS?",
+    "subtext": "LEITURA MODERNA VS. ORIGINAL",
+    "highlight_word_ids": [
+      "w_0012"
+    ],
+    "transition_in": "paper_tear",
+    "camera_motion": "subtle_zoom_in",
+    "reference_layout_asset": null,
+    "scripture_ref_id": null,
+    "original_term": null,
+    "stamp_text": null,
+    "series_label": null
+  },
+  "assets": [
+    {
+      "asset_id": "img_pergaminho_grego",
+      "provider": "gemini_hybrid",
+      "prompt": "Editorial Vox style paper collage cutout of an ancient Greek papyrus scroll with warm sepia ink, torn paper edges, isolated on plain cream background, no readable modern text",
+      "apply_rembg": true,
+      "cache_relpath": null,
+      "sha256": null
+    }
+  ],
+  "sfx_cues": [
+    {
+      "sfx_id": "paper_tear_01",
+      "anchor_word_id": "w_0009",
+      "offset_ms": -50,
+      "gain_db": -6.0
+    }
+  ],
+  "review_pins": [],
+  "cache_hash": "3ecd7a58259b97a4fa9bc94411d53b3104a9beee02941a4f5a33f0b1e57e658f",
+  "cost_usd": 0.0
+}

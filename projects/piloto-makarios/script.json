@@ -1,0 +1,110 @@
+{
+  "selected_hook_id": "hook_2",
+  "hooks": [
+    {
+      "id": "hook_1",
+      "hook_type": "traducao",
+      "spoken_text": "Você sempre leu Mateus cinco do jeito errado.",
+      "visual_interrupt": "Rasgo de papel revelando o texto grego 'μακάριος' com marca-texto dourado."
+    },
+    {
+      "id": "hook_2",
+      "hook_type": "paradoxo",
+      "spoken_text": "Jesus não prometeu felicidade fácil em Mateus 5.",
+      "visual_interrupt": "Carimbo terracota sobre 'felicidade fácil' em fundo carvão editorial."
+    },
+    {
+      "id": "hook_3",
+      "hook_type": "mito",
+      "spoken_text": "Bem-aventurado não significa estar sempre sorrindo.",
+      "visual_interrupt": "Palavra 'BEM-AVENTURADO' riscada e substituída por 'MAKÁRIOS'."
+    }
+  ],
+  "narration_segments": [
+    {
+      "segment_id": "seg_01",
+      "role": "hook",
+      "display_text": "Jesus não prometeu felicidade fácil em Mateus 5.",
+      "tts_text": "Jesus não prometeu felicidade fácil em Mateus, capítulo cinco."
+    },
+    {
+      "segment_id": "seg_02",
+      "role": "body",
+      "display_text": "Quando você lê bem-aventurados hoje, quase sempre pensa em alegria passageira.",
+      "tts_text": "Quando você lê bem-aventurados hoje, quase sempre pensa em alegria passageira."
+    },
+    {
+      "segment_id": "seg_03",
+      "role": "body",
+      "display_text": "Mas olha o texto exato de Mateus 5:3 na NVI.",
+      "tts_text": "Mas olha o texto exato de Mateus, capítulo cinco, versículo três, na NVI."
+    },
+    {
+      "segment_id": "seg_04",
+      "role": "body",
+      "display_text": "No grego original, a palavra escolhida por Mateus é makários.",
+      "tts_text": "No grego original, a palavra escolhida por Mateus é macários."
+    },
+    {
+      "segment_id": "seg_05",
+      "role": "body",
+      "display_text": "No primeiro século, makários não descrevia uma emoção momentânea.",
+      "tts_text": "No primeiro século, macários não descrevia uma emoção momentânea."
+    },
+    {
+      "segment_id": "seg_06",
+      "role": "body",
+      "display_text": "Significava estar em uma condição de honra e favor diante de Deus.",
+      "tts_text": "Significava estar em uma condição de honra e favor diante de Deus."
+    },
+    {
+      "segment_id": "seg_07",
+      "role": "body",
+      "display_text": "Por isso Jesus chama de abençoados justamente os pobres em espírito.",
+      "tts_text": "Por isso Jesus chama de abençoados justamente os pobres em espírito."
+    },
+    {
+      "segment_id": "seg_08",
+      "role": "body",
+      "display_text": "Quem reconhece que depende totalmente da graça já pertence ao Reino.",
+      "tts_text": "Quem reconhece que depende totalmente da graça já pertence ao Reino."
+    },
+    {
+      "segment_id": "seg_09",
+      "role": "application",
+      "display_text": "Sua alegria no evangelho não depende de um dia fácil ou perfeito.",
+      "tts_text": "Sua alegria no evangelho não depende de um dia fácil ou perfeito."
+    },
+    {
+      "segment_id": "seg_10",
+      "role": "cta",
+      "display_text": "Ela nasce de quem reina em você. Qual palavra explico depois?",
+      "tts_text": "Ela nasce de quem reina em você. Qual palavra explico depois?"
+    }
+  ],
+  "scripture_refs": [
+    {
+      "ref_id": "ref_01",
+      "citation": "Mateus 5:3",
+      "translation": "NVI",
+      "exact_text": "Bem-aventurados os pobres em espírito, pois deles é o Reino dos céus.",
+      "verified_by_human": true
+    }
+  ],
+  "distribution_pack": {
+    "shorts_title": "O que Jesus realmente disse em 'Bem-aventurados'?",
+    "caption_reels_tiktok": "No grego original, 'makários' muda completamente a forma de ler Mateus 5:3. Qual palavra bíblica você quer ver no próximo episódio?",
+    "hashtags": [
+      "#pastorandrebezerra",
+      "#estudobiblico",
+      "#mateus5",
+      "#perdidonatraducao"
+    ],
+    "pinned_comment": "Texto base: Mateus 5:3 (NVI) — 'Bem-aventurados os pobres em espírito, pois deles é o Reino dos céus.' Comenta aqui qual palavra bíblica você quer ver no próximo episódio!",
+    "cover_spec": {
+      "headline": "NÃO É SÓ FELICIDADE",
+      "subheadline": "MATEUS 5:3 NO GREGO",
+      "highlight_word": "FELICIDADE"
+    }
+  }
+}
