@@ -46,6 +46,7 @@ from backend.services.qa_service import (
     ensure_scene_thumbnail,
     generate_contact_sheet,
     inspect_video_ffprobe,
+    validate_project_content,
     validate_project_timing,
 )
 
@@ -176,12 +177,19 @@ def _templates_fingerprint(templates_dir: Path, template_name: str) -> str:
         templates_dir / "stage.html",
         templates_dir / "stage.css",
         templates_dir / "stage_engine.js",
+        templates_dir / "template_registry.json",
         templates_dir / "templates" / f"{template_name}.js",
     ]
+    # Inclui eventuais módulos JS compartilhados na raiz de templates_video/ (ex.: helpers de atmosfera/SVG)
+    if templates_dir.is_dir():
+        for extra_js in sorted(templates_dir.glob("*.js")):
+            if extra_js not in relevant_files:
+                relevant_files.append(extra_js)
+
     hashes: dict[str, str] = {}
     for fpath in relevant_files:
         if fpath.is_file():
-            hashes[fpath.name] = sha256_file(fpath)
+            hashes[fpath.relative_to(templates_dir).as_posix()] = sha256_file(fpath)
     return sha256_json(hashes)
 
 
@@ -269,7 +277,13 @@ def compute_expected_scene_hash(
 def _resolve_scripture_ref(scene: Scene, script: Script) -> ScriptureRef | None:
     if scene.visual.scripture_ref_id:
         return script.get_scripture_ref(scene.visual.scripture_ref_id)
-    if scene.template.value == "bible_quote_card" and script.scripture_refs:
+    if (
+        scene.template.value == "bible_quote_card"
+        or (
+            scene.template.value == "editorial_motion"
+            and scene.visual.composition == "scripture_spotlight"
+        )
+    ) and script.scripture_refs:
         return script.scripture_refs[0]
     return None
 
@@ -424,6 +438,12 @@ def render_scene_clip(
     captions_enabled: bool = True,
 ) -> tuple[Path, str, bool]:
     """Renderiza (ou recupera do cache SHA-256) o clipe MP4 isolado de uma cena e garante sua miniatura."""
+    content_errors = validate_project_content(script, [scene], require_verified_scripture=False)
+    if content_errors:
+        raise ValueError(
+            "Bloqueio Fail-Fast anti-placeholder ao renderizar cena: " + "; ".join(content_errors)
+        )
+
     t_dir = (templates_dir or (WORKSPACE_ROOT / "templates_video")).resolve()
     width, height, fps = _profile_dimensions(preset, profile)
     scene_words = alignment.get_word_range(scene.timing.start_word_id, scene.timing.end_word_id)
@@ -593,11 +613,11 @@ def render_project(
         presets_dir=cfg.workspace_root / "config" / "style_presets",
     )
 
-    # Checkpoint de Rigor Bíblico (AGENTS.md Regra 8)
+    # Checkpoint de Rigor Bíblico & Bloqueio Anti-Placeholder (AGENTS.md Regra 8)
     if not script.all_scripture_verified():
         raise ValueError(
             "Checkpoint de Rigor Bíblico reprovado: existem referências em scripture_refs[] "
-            "com verified_by_human=False."
+            "com verified_by_human=False ou contendo placeholders proibidos."
         )
 
     # 1) Áudio Primeiro ($0) + 2) Forced Alignment (reaproveita se já alinhado e inalterado)
@@ -642,10 +662,10 @@ def render_project(
     raw_scenes = store.load_all_scenes(slug, storyboard=storyboard)
     resolved_scenes = resolve_scene_timings(raw_scenes, alignment)
 
-    timing_report = validate_project_timing(resolved_scenes, alignment, preset)
+    timing_report = validate_project_timing(resolved_scenes, alignment, preset, script=script)
     if not timing_report.ok:
         raise ValueError(
-            "Falha na validação de timing do projeto: " + "; ".join(timing_report.errors)
+            "Falha na validação de timing/conteúdo do projeto: " + "; ".join(timing_report.errors)
         )
 
     # 3) SFX & Mixagem em Passo Único

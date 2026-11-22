@@ -26,7 +26,7 @@ from backend.models.preset import (
     TransitionIn,
 )
 from backend.models.project import ProjectManifest
-from backend.models.scene import Scene, SceneAsset, SceneTiming, SceneVisual, SfxCue
+from backend.models.scene import Scene, SceneAsset, SceneBeat, SceneTiming, SceneVisual, SfxCue
 from backend.models.script import (
     CoverSpec,
     DistributionPack,
@@ -37,6 +37,7 @@ from backend.models.script import (
     SegmentRole,
 )
 from backend.models.storyboard import Storyboard
+from backend.models.validation import assert_no_placeholders, find_placeholder_match
 from backend.services.alignment_service import normalize_biblical_text, tokenize_display_text
 
 logger = logging.getLogger(__name__)
@@ -204,6 +205,125 @@ def _extract_topic_phrase(raw_idea: str, max_words: int = 5) -> str:
     if not words:
         return "esta passagem bíblica"
     return " ".join(words[:max_words])
+
+
+def _split_raw_sentences(text: str) -> list[str]:
+    """Divide texto livre em frases preservando referências bíblicas com ':'."""
+    sentences: list[str] = []
+    for block in re.split(r"\n+", text.strip()):
+        cleaned_block = re.sub(r"\s+", " ", block).strip()
+        if not cleaned_block:
+            continue
+        parts = re.split(r"(?<=[.!?])\s+", cleaned_block)
+        for part in parts:
+            item = part.strip()
+            if item:
+                sentences.append(item)
+    return sentences
+
+
+def _is_ready_script(raw_idea: str) -> bool:
+    """Identifica quando o usuário forneceu um roteiro completo (>2 frases) em vez de uma ideia curta."""
+    sentences = _split_raw_sentences(raw_idea)
+    word_count = len(raw_idea.split())
+    return len(sentences) >= 3 or word_count >= 28
+
+
+def _split_long_sentence(sentence: str, max_words: int = 16) -> list[str]:
+    """Quebra frases longas em trechos menores para manter o ritmo de legendas 9:16."""
+    words = sentence.split()
+    if len(words) <= max_words:
+        return [sentence]
+
+    clauses = [c.strip() for c in re.split(r"(?<=[,;:])\s+", sentence) if c.strip()]
+    chunks: list[str] = []
+    current = ""
+    for clause in clauses:
+        candidate = f"{current} {clause}".strip() if current else clause
+        if len(candidate.split()) <= max_words:
+            current = candidate
+        else:
+            if current:
+                chunks.append(current)
+            if len(clause.split()) <= max_words:
+                current = clause
+            else:
+                clause_words = clause.split()
+                total_cw = len(clause_words)
+                # Divide em partes equilibradas (sem deixar palavras órfãs < 5 palavras no final)
+                num_parts = max(2, (total_cw + max_words - 1) // max_words)
+                step = (total_cw + num_parts - 1) // num_parts
+                for idx in range(0, total_cw, step):
+                    chunks.append(" ".join(clause_words[idx : idx + step]))
+                current = ""
+    if current:
+        chunks.append(current)
+    return chunks or [sentence]
+
+
+def _classify_segment_role(text: str, index: int, total: int) -> SegmentRole:
+    if index == 0:
+        return SegmentRole.HOOK
+    lower = _fold_text(text)
+    has_cta_kw = any(
+        kw in lower
+        for kw in ("comenta", "salva", "compartilha", "inscreva", "proximo video")
+    )
+    if has_cta_kw:
+        return SegmentRole.CTA
+    if index == total - 1:
+        if "?" in text:
+            return SegmentRole.CTA
+        return SegmentRole.APPLICATION
+    if total >= 4 and index == total - 2:
+        return SegmentRole.APPLICATION
+    if re.match(r"^(mas|porem|todavia|so que|na verdade|acontece que|presta atencao|olha so)\b", lower):
+        return SegmentRole.PIVOT
+    return SegmentRole.BODY
+
+
+def _coalesce_short_pieces(pieces: list[str], *, min_words: int = 5, max_merged_words: int = 20) -> list[str]:
+    """Elimina fragmentos órfãos de 1–4 palavras (ex.: 'devia.', 'precisado dela.') fundindo com vizinhos."""
+    if len(pieces) <= 1:
+        return pieces
+
+    merged: list[str] = []
+    idx = 0
+    while idx < len(pieces):
+        piece = pieces[idx].strip()
+        w_count = len(piece.split())
+        if w_count < min_words:
+            if merged and len(merged[-1].split()) + w_count <= max_merged_words:
+                merged[-1] = f"{merged[-1]} {piece}".strip()
+                idx += 1
+                continue
+            if idx + 1 < len(pieces) and w_count + len(pieces[idx + 1].split()) <= max_merged_words:
+                pieces[idx + 1] = f"{piece} {pieces[idx + 1]}".strip()
+                idx += 1
+                continue
+        merged.append(piece)
+        idx += 1
+
+    # Segunda passada caso o último pedaço ainda tenha ficado órfão (< min_words)
+    if len(merged) >= 2 and len(merged[-1].split()) < min_words:
+        merged[-2] = f"{merged[-2]} {merged[-1]}".strip()
+        merged.pop()
+    return merged
+
+
+def _build_segments_from_ready_script(raw_idea: str) -> list[tuple[str, SegmentRole, str]]:
+    """Segmenta um roteiro pronto preservando seu texto original sem criar fragmentos órfãos de 1–4 palavras."""
+    sentences = _split_raw_sentences(raw_idea)
+    pieces: list[str] = []
+    for sentence in sentences:
+        pieces.extend(_split_long_sentence(sentence, max_words=16))
+    pieces = _coalesce_short_pieces(pieces, min_words=5, max_merged_words=20)
+
+    total = len(pieces)
+    return [
+        (f"seg_{idx + 1:02d}", _classify_segment_role(piece, idx, total), piece)
+        for idx, piece in enumerate(pieces)
+    ]
 
 
 def _extract_json_block(raw_content: str) -> dict[str, Any]:
@@ -409,18 +529,26 @@ def _build_local_script(briefing: Briefing, preset: StylePreset) -> Script:
         ]
 
     selected_hook = hooks[0]
-    segment_drafts: list[tuple[str, SegmentRole, str]] = [
-        ("seg_01", SegmentRole.HOOK, selected_hook.spoken_text),
-        ("seg_02", SegmentRole.BODY, f"Quando olhamos para {topic}, quase sempre passamos rápido demais pelo texto."),
-        ("seg_03", SegmentRole.BODY, f"Mas abra comigo exatamente em {ref} na tradução {translation}."),
-        ("seg_04", SegmentRole.PIVOT, "É aqui que a leitura rasa cai por terra diante do contexto."),
-        ("seg_05", SegmentRole.BODY, f"Na série {spec.label}, cada detalhe histórico revela a intenção do autor."),
-        ("seg_06", SegmentRole.PIVOT, "Presta atenção na virada que o próprio texto constrói logo depois."),
-        ("seg_07", SegmentRole.BODY, "Deus não está falando de aparência externa, mas de transformação real do coração."),
-        ("seg_08", SegmentRole.BODY, "Esse ensino aponta diretamente para a graça e o caráter fiel de Cristo."),
-        ("seg_09", SegmentRole.APPLICATION, "Quando você entende o texto no contexto, sua fé ganha raiz profunda."),
-        ("seg_10", SegmentRole.CTA, "Qual passagem bíblica você quer que eu explique no próximo vídeo?"),
-    ]
+    if _is_ready_script(briefing.raw_idea):
+        segment_drafts = _build_segments_from_ready_script(briefing.raw_idea)
+        if segment_drafts:
+            first_hook_text = _clamp_hook_words(segment_drafts[0][2], 8)
+            if first_hook_text:
+                hooks[0] = hooks[0].model_copy(update={"spoken_text": first_hook_text})
+                selected_hook = hooks[0]
+    else:
+        segment_drafts = [
+            ("seg_01", SegmentRole.HOOK, selected_hook.spoken_text),
+            ("seg_02", SegmentRole.BODY, f"Quando olhamos para {topic}, quase sempre passamos rápido demais pelo texto."),
+            ("seg_03", SegmentRole.BODY, f"Mas abra comigo exatamente em {ref} na tradução {translation}."),
+            ("seg_04", SegmentRole.PIVOT, "É aqui que a leitura rasa cai por terra diante do contexto."),
+            ("seg_05", SegmentRole.BODY, f"Na série {spec.label}, cada detalhe histórico revela a intenção do autor."),
+            ("seg_06", SegmentRole.PIVOT, "Presta atenção na virada que o próprio texto constrói logo depois."),
+            ("seg_07", SegmentRole.BODY, "Deus não está falando de aparência externa, mas de transformação real do coração."),
+            ("seg_08", SegmentRole.BODY, "Esse ensino aponta diretamente para a graça e o caráter fiel de Cristo."),
+            ("seg_09", SegmentRole.APPLICATION, "Quando você entende o texto no contexto, sua fé ganha raiz profunda."),
+            ("seg_10", SegmentRole.CTA, "Qual passagem bíblica você quer que eu explique no próximo vídeo?"),
+        ]
 
     narration_segments = [
         NarrationSegment(
@@ -493,9 +621,15 @@ def generate_script(
             "Você é roteirista editorial do canal Pastor André Bezerra (estilo Vox Bíblico 9:16, PT-BR). "
             "Responda APENAS JSON válido no contrato script.json: "
             "selected_hook_id, hooks (exatamente 3 hooks com <= 8 palavras em spoken_text), "
-            "narration_segments (8 a 10 segmentos curtos de 6 a 12 palavras, ~40s totais), "
+            "narration_segments (8 a 10 segmentos curtos de 6 a 14 palavras para ideia curta, "
+            "ou quantos segmentos forem necessários caso o usuário forneça um roteiro pronto), "
             "scripture_refs (ao menos 1 referência com verified_by_human=false), "
             "distribution_pack (shorts_title <= 60 chars, caption_reels_tiktok, hashtags, pinned_comment, cover_spec). "
+            "IMPORTANTE: Se briefing.raw_idea já contiver um roteiro pronto (mais de 2 frases ou múltiplos parágrafos), "
+            "preserve fielmente a mensagem, argumentos, ordem e voz pastoral do texto fornecido, "
+            "apenas ajustando o ritmo e dividindo em narration_segments naturais (>= 5 palavras cada, sem fragmentos de 1–3 palavras). "
+            "NUNCA escreva placeholders como '[Conferir...]', '[TODO]', 'TBD' ou '[Inserir...]' em nenhum campo. "
+            "Em scripture_refs[].exact_text escreva o versículo bíblico real na tradução solicitada. "
             "Sem saudações genéricas."
         )
         # Contexto estritamente isolado: apenas briefing + resumo do formato-série
@@ -721,11 +855,307 @@ def refine_script(
     return script.model_copy(update={"distribution_pack": updated_dist}), "local"
 
 
-def _pick_headline_from_tokens(tokens: list[str], fallback: str) -> str:
-    stop = {"de", "da", "do", "das", "dos", "e", "em", "na", "no", "o", "a", "os", "as", "que", "um", "uma", "para", "com", "por"}
+def _pick_headline_from_tokens(tokens: list[str], fallback: str, max_words: int = 4) -> str:
+    stop = {
+        "de", "da", "do", "das", "dos", "e", "em", "na", "no", "o", "a", "os", "as",
+        "que", "um", "uma", "para", "com", "por", "se", "ao", "aos", "ele", "ela",
+        "mas", "pois", "como", "mais", "seu", "sua", "seus", "suas", "esse", "essa",
+        "aquele", "aquela", "isso", "isto", "foi", "era", "tem", "ter", "nao",
+    }
     salient = [t.upper() for t in tokens if _fold_text(t) not in stop and len(t) >= 3]
-    chosen = salient[:3] if len(salient) >= 2 else [t.upper() for t in tokens[:3]]
+    chosen = salient[:max_words] if len(salient) >= 2 else [t.upper() for t in tokens[:max_words]]
     return " ".join(chosen) if chosen else fallback
+
+
+def _group_segments_into_scene_blocks(
+    segment_word_ranges: list[tuple[NarrationSegment, list[tuple[str, str]]]],
+    *,
+    target_duration_sec: int,
+) -> list[list[tuple[NarrationSegment, list[tuple[str, str]]]]]:
+    """Agrupa segmentos narrativos em blocos fluidos de ~4s a 8s (jamais 1 frase curta = 1 cena).
+
+    - Vídeos curtos (~35–48s, <=125 palavras): ~8–10 cenas (~10–15 palavras cada).
+    - Vídeos médios/longos (~55–90s, >125 palavras): ~10–14 cenas (~14–24 palavras cada).
+    - Garante zero micro-cenas (< 6 palavras) preservando 100% contiguidade de word_id.
+    """
+    if len(segment_word_ranges) <= 1:
+        return [segment_word_ranges] if segment_word_ranges else []
+
+    total_words = sum(len(pairs) for _, pairs in segment_word_ranges)
+    est_duration_sec = max(float(target_duration_sec), total_words / 2.85)
+
+    if total_words <= 125:
+        desired_scenes = max(1, min(10, int(round(est_duration_sec / 4.4))))
+        min_scene_words = 6
+        target_words = max(9, int(round(total_words / desired_scenes)))
+        max_scene_words = max(target_words + 5, 16)
+    else:
+        desired_scenes = max(10, min(14, int(round(est_duration_sec / 6.2))))
+        min_scene_words = 10
+        target_words = max(14, int(round(total_words / desired_scenes)))
+        max_scene_words = max(target_words + 7, int(round(target_words * 1.45)))
+
+    # Se o número de segmentos já cabe no orçamento e nenhum é micro-segmento (<6 palavras), mantém blocos naturais
+    all_substantial = all(len(pairs) >= 6 for _, pairs in segment_word_ranges)
+    if total_words <= 125 and len(segment_word_ranges) <= desired_scenes + 1 and all_substantial:
+        return [[item] for item in segment_word_ranges]
+
+    blocks: list[list[tuple[NarrationSegment, list[tuple[str, str]]]]] = []
+    current: list[tuple[NarrationSegment, list[tuple[str, str]]]] = []
+    current_words = 0
+
+    for idx, item in enumerate(segment_word_ranges):
+        seg, pairs = item
+        seg_words = len(pairs)
+
+        if not current:
+            current.append(item)
+            current_words = seg_words
+            continue
+
+        is_hook_block = idx == 1 and current[0][0].role == SegmentRole.HOOK
+        if is_hook_block and current_words >= 6 and (total_words <= 125 or current_words >= 9):
+            blocks.append(current)
+            current = [item]
+            current_words = seg_words
+            continue
+
+        is_narrative_turn = seg.role in (
+            SegmentRole.PIVOT,
+            SegmentRole.APPLICATION,
+            SegmentRole.CTA,
+        )
+        if is_narrative_turn and current_words >= min_scene_words:
+            blocks.append(current)
+            current = [item]
+            current_words = seg_words
+            continue
+
+        if current_words < target_words and (current_words + seg_words) <= max_scene_words:
+            current.append(item)
+            current_words += seg_words
+            continue
+
+        if seg_words < 6 and (current_words + seg_words) <= max_scene_words + 4:
+            current.append(item)
+            current_words += seg_words
+            continue
+
+        blocks.append(current)
+        current = [item]
+        current_words = seg_words
+
+    if current:
+        blocks.append(current)
+
+    # Pós-passagem inviolável: nenhum bloco pode ter < 6 palavras (evita micro-cenas)
+    idx = len(blocks) - 1
+    while idx > 0:
+        w_cnt = sum(len(pairs) for _, pairs in blocks[idx])
+        if w_cnt < 6:
+            blocks[idx - 1].extend(blocks[idx])
+            blocks.pop(idx)
+        idx -= 1
+
+    if len(blocks) > 1 and sum(len(pairs) for _, pairs in blocks[0]) < 6:
+        blocks[1] = blocks[0] + blocks[1]
+        blocks.pop(0)
+
+    # Se ainda exceder 14 cenas em vídeos longos, consolida os dois blocos adjacentes mais curtos
+    while total_words > 125 and len(blocks) > 14:
+        best_i = min(
+            range(len(blocks) - 1),
+            key=lambda i: (
+                sum(len(p) for _, p in blocks[i]) + sum(len(p) for _, p in blocks[i + 1])
+            ),
+        )
+        blocks[best_i].extend(blocks[best_i + 1])
+        blocks.pop(best_i + 1)
+
+    return blocks
+
+
+_COMPOSITION_VISUAL_ACTIONS: dict[str, tuple[str, str, str]] = {
+    "debt_scale": ("weigh_debt", "tilt_scale", "balance_shift"),
+    "forgiveness_seal": ("reveal_decree", "strike_debt", "wax_seal"),
+    "dramatic_split": ("open_left", "reveal_right", "contrast_lock"),
+    "rhetorical_question": ("pose_question", "underline_tension", "echo_pause"),
+    "grace_illumination": ("warm_dawn", "expand_rays", "anchor_truth"),
+    "narrative_arc": ("arc_step_1", "arc_step_2", "arc_climax"),
+    "counter_impact": ("count_up", "peak_impact", "settle_weight"),
+    "scripture_spotlight": ("open_reference", "highlight_clause", "hold_reflection"),
+}
+
+
+def _infer_composition(
+    block_text: str,
+    roles: list[SegmentRole],
+    idx: int,
+    total_blocks: int,
+    *,
+    has_clean_ref: bool,
+    prev_composition: str | None,
+) -> Literal[
+    "debt_scale",
+    "forgiveness_seal",
+    "dramatic_split",
+    "rhetorical_question",
+    "grace_illumination",
+    "narrative_arc",
+    "counter_impact",
+    "scripture_spotlight",
+]:
+    folded = _fold_text(block_text)
+    candidates: list[
+        Literal[
+            "debt_scale",
+            "forgiveness_seal",
+            "dramatic_split",
+            "rhetorical_question",
+            "grace_illumination",
+            "narrative_arc",
+            "counter_impact",
+            "scripture_spotlight",
+        ]
+    ] = []
+
+    if "?" in block_text:
+        candidates.append("rhetorical_question")
+    if any(kw in folded for kw in ("perdo", "cancel", "livre", "liberd", "absolv")):
+        candidates.append("forgiveness_seal")
+    if any(kw in folded for kw in ("divid", "pagar", "cobranc", "balanc", "quantia", "peso", "talento", "denario")):
+        candidates.append("debt_scale")
+    if any(kw in folded for kw in ("graca", "misericord", "cristo", "jesus", "amor", "luz", "esperanc")):
+        candidates.append("grace_illumination")
+    if re.search(r"\b\d+\b", folded) or any(kw in folded for kw in ("tanto", "mil", "milhoes", "impagavel")):
+        candidates.append("counter_impact")
+    if SegmentRole.PIVOT in roles or any(kw in folded for kw in ("mas ", "porem", "enquanto", "ao inves", "contraste")):
+        candidates.append("dramatic_split")
+    if has_clean_ref and idx in (3, max(2, total_blocks // 2)):
+        candidates.append("scripture_spotlight")
+    if idx == total_blocks or SegmentRole.APPLICATION in roles or SegmentRole.CTA in roles:
+        candidates.append("narrative_arc")
+
+    rotation: tuple[
+        Literal[
+            "debt_scale",
+            "forgiveness_seal",
+            "dramatic_split",
+            "rhetorical_question",
+            "grace_illumination",
+            "narrative_arc",
+            "counter_impact",
+            "scripture_spotlight",
+        ],
+        ...,
+    ] = (
+        "counter_impact",
+        "narrative_arc",
+        "dramatic_split",
+        "rhetorical_question",
+        "grace_illumination",
+        "debt_scale",
+        "forgiveness_seal",
+        "scripture_spotlight",
+    )
+    for cand in candidates:
+        if cand != prev_composition:
+            return cand
+    fallback = rotation[(idx - 1) % len(rotation)]
+    if fallback == prev_composition:
+        fallback = rotation[idx % len(rotation)]
+    return fallback
+
+
+def _build_scene_beats(
+    block: list[tuple[NarrationSegment, list[tuple[str, str]]]],
+    *,
+    composition: str,
+    scene_idx: int,
+    subtext_fallback: str,
+) -> list[SceneBeat]:
+    """Cria 2–3 beats internos ancorados em word_id para garantir evolução visual contínua sem cortes secos."""
+    all_pairs = [pair for _, pairs in block for pair in pairs]
+    total_words = len(all_pairs)
+    if total_words < 4:
+        return []
+
+    actions = _COMPOSITION_VISUAL_ACTIONS.get(composition, ("reveal", "develop", "resolve"))
+    emphases: tuple[Literal["gold", "terracotta", "navy", "light"], ...] = (
+        "gold",
+        "terracotta",
+        "light",
+    )
+    shifts: tuple[Literal["push_in", "pan_right", "tilt_drama", "settle"], ...] = (
+        "push_in",
+        "pan_right",
+        "settle",
+    )
+
+    beats: list[SceneBeat] = []
+    if len(block) >= 2:
+        # Até 3 beats ancorados nos segmentos reais agrupados na cena
+        chosen_segs = block[:3]
+        if len(block) > 3:
+            chosen_segs = [block[0], block[len(block) // 2], block[-1]]
+
+        word_pos_map = {wid: pos for pos, (wid, _) in enumerate(all_pairs)}
+        for b_idx, (seg, seg_pairs) in enumerate(chosen_segs, start=1):
+            anchor_wid = seg_pairs[0][0]
+            pos = word_pos_map.get(anchor_wid, 0)
+            prog = round(pos / max(1, total_words), 3)
+            tokens_seg = [tok for _, tok in seg_pairs]
+            beat_headline = _pick_headline_from_tokens(tokens_seg, f"MOMENTO {b_idx}", max_words=4)
+            emphasis: Literal["gold", "terracotta", "navy", "light"] = (
+                "terracotta" if seg.role == SegmentRole.PIVOT else emphases[(b_idx - 1) % len(emphases)]
+            )
+            cam_shift: Literal["push_in", "pan_right", "tilt_drama", "settle"] = (
+                "tilt_drama" if seg.role == SegmentRole.PIVOT else shifts[(b_idx - 1) % len(shifts)]
+            )
+            beats.append(
+                SceneBeat(
+                    beat_id=f"s{scene_idx:02d}_b{b_idx}",
+                    anchor_word_id=anchor_wid,
+                    progress=prog,
+                    headline=beat_headline,
+                    subtext=subtext_fallback if b_idx == 1 else None,
+                    emphasis=emphasis,
+                    visual_action=actions[(b_idx - 1) % len(actions)],
+                    camera_shift=cam_shift,
+                )
+            )
+        return beats
+
+    # Bloco com 1 segmento longo (>= 8 palavras): gera 2 beats fluidos (início e virada no meio)
+    if total_words >= 8:
+        mid_idx = total_words // 2
+        first_tokens = [tok for _, tok in all_pairs[:mid_idx]]
+        second_tokens = [tok for _, tok in all_pairs[mid_idx:]]
+        beats.append(
+            SceneBeat(
+                beat_id=f"s{scene_idx:02d}_b1",
+                anchor_word_id=all_pairs[0][0],
+                progress=0.0,
+                headline=_pick_headline_from_tokens(first_tokens, f"CENA {scene_idx:02d}", max_words=4),
+                subtext=subtext_fallback,
+                emphasis="gold",
+                visual_action=actions[0],
+                camera_shift="push_in",
+            )
+        )
+        beats.append(
+            SceneBeat(
+                beat_id=f"s{scene_idx:02d}_b2",
+                anchor_word_id=all_pairs[mid_idx][0],
+                progress=round(mid_idx / total_words, 3),
+                headline=_pick_headline_from_tokens(second_tokens, f"CENA {scene_idx:02d}", max_words=4),
+                subtext=None,
+                emphasis="terracotta" if block[0][0].role == SegmentRole.PIVOT else "light",
+                visual_action=actions[1],
+                camera_shift="settle",
+            )
+        )
+    return beats
 
 
 def generate_storyboard_and_scenes(
@@ -735,16 +1165,27 @@ def generate_storyboard_and_scenes(
     script: Script,
     preset: StylePreset,
 ) -> tuple[Storyboard, list[Scene]]:
-    """Gera storyboard.json + scenes/scene_01..XX.json ancorados em word_id após Gate 1."""
+    """Gera storyboard.json + scenes/scene_01..XX.json agrupados em blocos fluidos (4–8s) com multi-beats."""
     format_spec = preset.get_format_spec(briefing.selected_format_type)
-    template_cycle = list(format_spec.default_templates)
     series_label = f"{format_spec.label.upper()} · EP. {manifest.series.episode_number:02d}"
     first_ref = script.scripture_refs[0] if script.scripture_refs else None
+
+    # Bloqueio Fail-Fast anti-placeholder antes de compor storyboard/cenas
+    for ref in script.scripture_refs:
+        if ref.verified_by_human:
+            assert_no_placeholders(
+                ref.exact_text,
+                field_path=f"scripture_refs[{ref.ref_id}].exact_text",
+            )
+    has_clean_ref = (
+        first_ref is not None and find_placeholder_match(first_ref.exact_text) is None
+    )
 
     # Constrói mapeamento exato segmento -> fatia de word_id (100% compatível com align_audio_to_script)
     segment_word_ranges: list[tuple[NarrationSegment, list[tuple[str, str]]]] = []
     word_cursor = 0
     for seg in script.narration_segments:
+        assert_no_placeholders(seg.display_text, field_path=f"narration_segments[{seg.segment_id}].display_text")
         tokens = tokenize_display_text(seg.display_text)
         if not tokens:
             continue
@@ -757,36 +1198,103 @@ def generate_storyboard_and_scenes(
     if not segment_word_ranges:
         raise ValueError("Roteiro sem palavras tokenizáveis para gerar cenas.")
 
+    scene_blocks = _group_segments_into_scene_blocks(
+        segment_word_ranges,
+        target_duration_sec=briefing.target_duration_sec,
+    )
+    total_blocks = len(scene_blocks)
+
+    camera_cycle = (
+        "cinematic_push",
+        "editorial_glide",
+        "beat_reactive",
+        "subtle_zoom_in",
+        "subtle_pan_right",
+    )
+    transition_cycle = (
+        TransitionIn.STAMP_DROP,
+        TransitionIn.EDITORIAL_WIPE,
+        TransitionIn.CROSS_MOTION,
+        TransitionIn.PAPER_TEAR,
+        TransitionIn.ZOOM_THROUGH,
+        TransitionIn.INK_WASH,
+        TransitionIn.WHIP_PAN,
+    )
+    atmosphere_by_theme: dict[str, Literal["warm_paper", "dramatic_spotlight", "grace_glow", "ink_vignette"]] = {
+        "pergaminho": "warm_paper",
+        "carvao": "dramatic_spotlight",
+        "azul_marinho": "ink_vignette",
+    }
+
     scenes: list[Scene] = []
-    for idx, (seg, word_pairs) in enumerate(segment_word_ranges, start=1):
+    prev_template: SceneTemplate | None = None
+    prev_composition: str | None = None
+
+    for idx, block in enumerate(scene_blocks, start=1):
         scene_id = f"scene_{idx:02d}"
+        word_pairs = [pair for _, pairs in block for pair in pairs]
+        roles = [seg.role for seg, _ in block]
+        block_text = " ".join(seg.display_text for seg, _ in block)
         start_wid = word_pairs[0][0]
         end_wid = word_pairs[-1][0]
         mid_wid = word_pairs[len(word_pairs) // 2][0]
         tokens_only = [tok for _, tok in word_pairs]
 
-        # Escolha editorial de template alternando a paleta de templates da série
-        if idx == 1:
-            template = template_cycle[0]
-        elif idx == 3 and first_ref is not None:
-            template = SceneTemplate.BIBLE_QUOTE_CARD
-        elif seg.role == SegmentRole.CTA:
-            template = SceneTemplate.KINETIC_CAPTIONS
-        else:
-            template = template_cycle[(idx - 1) % len(template_cycle)]
+        composition = _infer_composition(
+            block_text,
+            roles,
+            idx,
+            total_blocks,
+            has_clean_ref=has_clean_ref,
+            prev_composition=prev_composition,
+        )
 
-        bg_theme = "carvao" if idx == 1 or idx % 3 == 1 else "pergaminho"
+        # Seleção editorial rica: privilegia editorial_motion variando composições + paper_collage / timeline_map / kinetic / quote limpo
+        if idx == 1:
+            template = SceneTemplate.EDITORIAL_MOTION
+        elif composition == "scripture_spotlight" and has_clean_ref and prev_template != SceneTemplate.BIBLE_QUOTE_CARD:
+            template = SceneTemplate.EDITORIAL_MOTION if idx % 2 == 0 else SceneTemplate.BIBLE_QUOTE_CARD
+        elif (
+            briefing.selected_format_type in (FormatType.MAPA_CONTEXTO, FormatType.CONEXAO_AT_NT)
+            and idx % 4 == 2
+            and prev_template != SceneTemplate.TIMELINE_MAP
+        ):
+            template = SceneTemplate.TIMELINE_MAP
+        elif idx % 4 == 0 and prev_template != SceneTemplate.PAPER_COLLAGE:
+            template = SceneTemplate.PAPER_COLLAGE
+        elif SegmentRole.CTA in roles and idx == total_blocks and prev_template != SceneTemplate.KINETIC_CAPTIONS:
+            template = SceneTemplate.EDITORIAL_MOTION
+        else:
+            template = SceneTemplate.EDITORIAL_MOTION
+
+        prev_template = template
+        prev_composition = composition
+
         if template == SceneTemplate.BIBLE_QUOTE_CARD:
             bg_theme = "pergaminho"
         elif template == SceneTemplate.TIMELINE_MAP:
             bg_theme = "azul_marinho" if idx % 2 == 0 else "pergaminho"
+        elif composition in ("grace_illumination", "forgiveness_seal", "scripture_spotlight"):
+            bg_theme = "pergaminho"
+        elif composition in ("rhetorical_question", "counter_impact") or idx == 1:
+            bg_theme = "carvao"
+        else:
+            bg_theme = "carvao" if idx % 2 == 1 else "pergaminho"
 
-        headline = _pick_headline_from_tokens(tokens_only, f"CENA {idx:02d}")
+        atmosphere: Literal["warm_paper", "dramatic_spotlight", "grace_glow", "ink_vignette"] = (
+            "grace_glow"
+            if composition in ("grace_illumination", "forgiveness_seal")
+            else "dramatic_spotlight"
+            if bg_theme == "carvao"
+            else atmosphere_by_theme.get(bg_theme, "warm_paper")
+        )
+
+        headline = _pick_headline_from_tokens(tokens_only, f"CENA {idx:02d}", max_words=4)
         subtext = (
             series_label
             if idx == 1
             else f"{first_ref.citation.upper()} · {first_ref.translation}"
-            if template == SceneTemplate.BIBLE_QUOTE_CARD and first_ref
+            if (template == SceneTemplate.BIBLE_QUOTE_CARD or composition == "scripture_spotlight") and has_clean_ref and first_ref
             else format_spec.label.upper()
         )
 
@@ -795,26 +1303,24 @@ def generate_storyboard_and_scenes(
             sfx_id = "stamp_drop_01"
             offset_ms = 0
             gain_db = -5.0
-        elif template == SceneTemplate.PAPER_COLLAGE:
-            transition = TransitionIn.PAPER_TEAR
-            sfx_id = "paper_tear_01"
-            offset_ms = -50
-            gain_db = -6.0
-        elif template == SceneTemplate.BIBLE_QUOTE_CARD:
-            transition = TransitionIn.PAPER_TEAR
-            sfx_id = "page_flip_01"
-            offset_ms = -40
-            gain_db = -6.5
-        elif template == SceneTemplate.TIMELINE_MAP:
-            transition = TransitionIn.WHIP_PAN
-            sfx_id = "editorial_click_01"
-            offset_ms = 0
-            gain_db = -7.0
         else:
-            transition = TransitionIn.CUT if idx % 2 == 0 else TransitionIn.STAMP_DROP
-            sfx_id = "editorial_click_01" if transition == TransitionIn.CUT else "stamp_drop_01"
-            offset_ms = 0
-            gain_db = -6.5
+            transition = transition_cycle[idx % len(transition_cycle)]
+            if transition == TransitionIn.PAPER_TEAR:
+                sfx_id = "paper_tear_01"
+                offset_ms = -50
+                gain_db = -6.0
+            elif transition in (TransitionIn.EDITORIAL_WIPE, TransitionIn.INK_WASH):
+                sfx_id = "page_flip_01"
+                offset_ms = -40
+                gain_db = -6.5
+            elif transition == TransitionIn.STAMP_DROP:
+                sfx_id = "stamp_drop_01"
+                offset_ms = 0
+                gain_db = -6.0
+            else:
+                sfx_id = "editorial_click_01"
+                offset_ms = 0
+                gain_db = -7.0
 
         assets: list[SceneAsset] = []
         if template == SceneTemplate.PAPER_COLLAGE:
@@ -834,16 +1340,54 @@ def generate_storyboard_and_scenes(
                 )
             )
 
+        beats = _build_scene_beats(
+            block,
+            composition=composition,
+            scene_idx=idx,
+            subtext_fallback=subtext,
+        )
+        highlight_ids = [mid_wid]
+        if beats and beats[-1].anchor_word_id and beats[-1].anchor_word_id not in highlight_ids:
+            highlight_ids.append(beats[-1].anchor_word_id)
+
+        motion_data: dict[str, Any] = {}
+        if has_clean_ref and first_ref and (
+            composition == "scripture_spotlight" or template == SceneTemplate.BIBLE_QUOTE_CARD
+        ):
+            motion_data["reference"] = first_ref.citation
+            motion_data["translation"] = first_ref.translation
+            motion_data["quote_ref"] = f"{first_ref.citation} ({first_ref.translation})"
+        if composition == "dramatic_split" and len(block) >= 2:
+            left_lbl = _pick_headline_from_tokens([t for _, t in block[0][1]], "ANTES", max_words=3)
+            right_lbl = _pick_headline_from_tokens([t for _, t in block[-1][1]], "DEPOIS", max_words=3)
+            motion_data["top_title"] = left_lbl
+            motion_data["bottom_title"] = right_lbl
+            motion_data["divider_symbol"] = "VS"
+        elif composition == "narrative_arc" and idx == total_blocks:
+            motion_data["show_handle_end"] = True
+
+        linked_ref_id = (
+            first_ref.ref_id
+            if has_clean_ref
+            and first_ref is not None
+            and (template == SceneTemplate.BIBLE_QUOTE_CARD or composition == "scripture_spotlight")
+            else None
+        )
+
         visual = SceneVisual(
             background_theme=bg_theme,
             headline=headline,
             subtext=subtext,
-            highlight_word_ids=[mid_wid],
+            highlight_word_ids=highlight_ids,
             transition_in=transition,
-            camera_motion="subtle_zoom_in" if idx % 2 == 1 else "subtle_pan_right",
-            scripture_ref_id=first_ref.ref_id if template == SceneTemplate.BIBLE_QUOTE_CARD and first_ref else None,
+            camera_motion=camera_cycle[(idx - 1) % len(camera_cycle)],
+            scripture_ref_id=linked_ref_id,
             stamp_text="MITO" if briefing.selected_format_type == FormatType.MITO_VS_TEXTO and idx == 2 else None,
-            series_label=series_label if idx in (1, len(segment_word_ranges)) else None,
+            series_label=series_label if idx in (1, total_blocks) else None,
+            composition=composition if template == SceneTemplate.EDITORIAL_MOTION else "auto",
+            atmosphere=atmosphere,
+            beats=beats,
+            motion_data=motion_data,
         )
 
         scenes.append(
@@ -853,7 +1397,7 @@ def generate_storyboard_and_scenes(
                 status=SceneStatus.DRAFT,
                 tier=1,
                 template=template,
-                template_version="1.0.0",
+                template_version="2.0.0" if template == SceneTemplate.EDITORIAL_MOTION else "1.0.0",
                 timing=SceneTiming(
                     start_word_id=start_wid,
                     end_word_id=end_wid,

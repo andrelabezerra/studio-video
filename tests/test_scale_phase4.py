@@ -56,7 +56,7 @@ def test_templates_manifest_includes_all_five_templates_and_timeline_map(
     payload = resp.json()
     assert "templates" in payload
     templates = payload["templates"]
-    assert len(templates) == 5
+    assert len(templates) == 6
 
     ids = [t["id"] for t in templates]
     assert set(ids) == {
@@ -64,6 +64,7 @@ def test_templates_manifest_includes_all_five_templates_and_timeline_map(
         "bible_quote_card",
         "kinetic_captions",
         "timeline_map",
+        "editorial_motion",
         "tier2_video",
     }
 

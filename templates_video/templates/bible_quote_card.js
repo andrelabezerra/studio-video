@@ -1,9 +1,10 @@
 /* ============================================================================
-   Template 2: bible_quote_card (Cartão Editorial de Versículo Vox Bíblico)
-   - Cartão inclinado (-1.4deg) com borda rasgada SVG e sombra multicamadas
-   - Barra de referência em Azul-Marinho #1E3A5F (ex.: Mateus 5:3 · NVI)
-   - Marcador-texto dourado #E5A93C animado progressivamente nas palavras-chave
-   - Aspas tipográficas gigantes em marca d'água + micro-paralaxe contínua
+   Template 2: bible_quote_card (Citação Bíblica Editorial — Redesign Limpo)
+   - ELIMINA o visual burocrático e o selo padrão "TEXTO VERIFICADO"
+   - Prancha documental leve com filete dourado animado via SVG (stroke-dashoffset)
+   - Referência editorial discreta em Azul-Marinho/Dourado + aspas com paralaxe
+   - Marcador-texto dourado #E5A93C sincronizado às palavras + suporte a beats[]
+   - 100% retrocompatível com projetos anteriores (ex: piloto-makarios)
    ============================================================================ */
 
 (function () {
@@ -39,14 +40,23 @@
   }
 
   window.__STUDIO__.registerTemplate("bible_quote_card", function createBibleQuoteCard(ctx) {
-    const { root, visual, preset, words, durationMs, scriptureRef, Math: M } = ctx;
+    const { root, visual, preset, words, beats, durationMs, scriptureRef, assetEntry, imageLayout, Math: M } = ctx;
+    const useInlineCard = Boolean(assetEntry && imageLayout === "card");
+    const fitStyle = visual.image_fit === "contain" ? "object-fit:contain;" : "object-fit:cover;";
+    const opStyle = `opacity:${M.clamp(Number(visual.image_opacity) || 1.0, 0.1, 1.0)};`;
+
+    // Jamais renderiza o selo burocrático "TEXTO VERIFICADO" (rejeitado pelo usuário).
+    // Só exibe nota/selo editorial se o diretor passar explicitamente show_stamp=true e stamp_text válido.
+    const rawStamp = String(visual.stamp_text || "").trim();
+    const isForbidden = window.__STUDIO__ && window.__STUDIO__.isForbiddenSeal(rawStamp);
+    const showCustomNote = visual.show_stamp === true && rawStamp.length > 0 && !isForbidden;
 
     const citationLabel = resolveCitationLabel(scriptureRef, visual, preset);
     const verseText = resolveVerseText(scriptureRef, visual, words);
     const footerKicker =
       visual.headline && M.normalizeToken(visual.headline) !== M.normalizeToken(citationLabel)
         ? visual.headline
-        : visual.subtext || "Leitura no Contexto Original";
+        : visual.original_term || visual.subtext || "Leitura no Contexto Original";
 
     // Mapeia palavras-chave de highlight_word_ids -> timing local exato
     const hlIdSet = new Set(visual.highlight_word_ids || []);
@@ -55,12 +65,11 @@
       if (hlIdSet.has(w.word_id)) {
         const key = M.normalizeToken(w.text);
         if (key && hlTimingByNorm[key] === undefined) {
-          hlTimingByNorm[key] = Math.max(380, w.local_start_ms);
+          hlTimingByNorm[key] = Math.max(360, w.local_start_ms);
         }
       }
     });
 
-    // Também checa palavras do headline caso highlight_word_ids não coincida diretamente com o texto do versículo
     const headlineNorms = new Set(
       String(visual.headline || "")
         .split(/\s+/)
@@ -81,25 +90,23 @@
       };
     });
 
-    // Fallback inteligente se highlight_word_ids não casou textualmente com o versículo
     if (!tokenPlans.some((p) => p.highlight)) {
       let matchedHeadline = false;
       tokenPlans.forEach((p, idx) => {
         if (headlineNorms.has(p.norm)) {
           p.highlight = true;
-          p.highlightStartMs = 520 + idx * 110;
+          p.highlightStartMs = 480 + idx * 110;
           matchedHeadline = true;
         }
       });
 
       if (!matchedHeadline && tokenPlans.length > 0) {
-        // Destaca os primeiros 1–3 termos substantivos fortes do versículo progressivamente
         const candidates = tokenPlans.filter((p) => p.norm.length >= 5);
         const picks = (candidates.length ? candidates : tokenPlans).slice(0, Math.min(3, tokenPlans.length));
-        const step = Math.max(260, Math.min(480, (durationMs - 900) / Math.max(1, picks.length)));
+        const step = Math.max(260, Math.min(520, (durationMs - 900) / Math.max(1, picks.length)));
         picks.forEach((p, i) => {
           p.highlight = true;
-          p.highlightStartMs = Math.round(520 + i * step);
+          p.highlightStartMs = Math.round(480 + i * step);
         });
       }
     }
@@ -112,108 +119,122 @@
       .join("");
 
     root.innerHTML = `
-      <div class="bq-scene">
+      <div class="bq-scene bq-editorial-clean">
         <div class="bq-watermark-quote bq-watermark-open" aria-hidden="true">“</div>
         <div class="bq-watermark-quote bq-watermark-close" aria-hidden="true">”</div>
 
-        <div class="bq-back-card" aria-hidden="true"></div>
+        <article class="bq-editorial-sheet">
+          <!-- Filete editorial dourado desenhado ao vivo (esquerda + topo) -->
+          <svg class="bq-frame-svg" viewBox="0 0 800 840" preserveAspectRatio="none" aria-hidden="true">
+            <path class="bq-frame-path" d="M 8,832 L 8,8 L 280,8" fill="none" stroke="#E5A93C" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1120" stroke-dashoffset="1120" />
+          </svg>
 
-        <div class="bq-card-shadow">
-          <div class="vox-tape bq-tape-top"></div>
-          <article class="bq-card-surface">
-            <!-- Marcas editoriais sutis de registro -->
-            <svg class="bq-margin-marks" viewBox="0 0 788 700" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M12,26 L12,12 L26,12 M762,12 L776,12 L776,26 M12,674 L12,688 L26,688 M762,688 L776,688 L776,674"
-                    fill="none" stroke="#1E3A5F" stroke-width="2" opacity="0.22" />
+          <div class="bq-ref-bar">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5Z" stroke="#E5A93C" stroke-width="2.2" stroke-linejoin="round"/>
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="#E5A93C" stroke-width="2.2"/>
             </svg>
+            <span>${M.escapeHtml(citationLabel)}</span>
+          </div>
 
-            <div class="bq-ref-bar">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5Z" stroke="#E5A93C" stroke-width="2.2" stroke-linejoin="round"/>
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="#E5A93C" stroke-width="2.2"/>
-              </svg>
-              <span>${M.escapeHtml(citationLabel)}</span>
-            </div>
+          ${
+            useInlineCard
+              ? `<div class="tpl-inline-media-card" style="height:260px;">
+                   <div class="tpl-inline-media-inner">
+                     <img class="tpl-inline-media-img" style="${fitStyle}${opStyle}" src="${M.escapeHtml(assetEntry.url)}" alt="${M.escapeHtml(citationLabel)}" />
+                   </div>
+                 </div>`
+              : ""
+          }
 
-            <blockquote class="bq-verse-text" style="font-size:${fitVerseFontSize(verseText)}px;">
-              ${verseHtml}
-            </blockquote>
+          <blockquote class="bq-verse-text" style="font-size:${useInlineCard ? Math.min(44, fitVerseFontSize(verseText)) : fitVerseFontSize(verseText)}px;">
+            ${verseHtml}
+          </blockquote>
 
-            <div class="bq-footer">
+          <div class="bq-footer">
+            <div class="bq-footer-rule"><div class="bq-footer-rule-fill"></div></div>
+            <div class="bq-footer-row">
               <div class="bq-footer-kicker">${M.escapeHtml(footerKicker)}</div>
-              <div class="bq-footer-seal">TEXTO VERIFICADO</div>
+              ${showCustomNote ? `<div class="bq-footer-note-pill">${M.escapeHtml(rawStamp)}</div>` : ""}
             </div>
-          </article>
-        </div>
+          </div>
+        </article>
       </div>
     `;
 
     const wmOpen = root.querySelector(".bq-watermark-open");
     const wmClose = root.querySelector(".bq-watermark-close");
-    const backCard = root.querySelector(".bq-back-card");
-    const cardShadow = root.querySelector(".bq-card-shadow");
-    const tapeTop = root.querySelector(".bq-tape-top");
+    const sheetEl = root.querySelector(".bq-editorial-sheet");
+    const framePath = root.querySelector(".bq-frame-path");
     const refBar = root.querySelector(".bq-ref-bar");
     const footerEl = root.querySelector(".bq-footer");
+    const footerKickerEl = root.querySelector(".bq-footer-kicker");
+    const footerRuleFill = root.querySelector(".bq-footer-rule-fill");
     const wordEls = Array.from(root.querySelectorAll(".bq-word"));
+    const inlineImg = root.querySelector(".tpl-inline-media-img");
 
     return {
-      seek(t, pGlobal) {
-        // 1. Aspas gigantes em marca d'água com micro-paralaxe contínua
-        const wmP = M.power3Out(M.progress(t, 40, 520));
+      seek(t, pGlobal, beatState, tReal) {
+        const tm = Number.isFinite(tReal) ? tReal : t;
+
+        // 1. Aspas gigantes em marca d'água com paralaxe contínua
+        const wmP = M.power3Out(M.progress(tm, 40, 520));
         wmOpen.style.opacity = String(wmP);
-        wmOpen.style.transform = `translate3d(${M.lerp(-24, 14, pGlobal).toFixed(2)}px, ${M.lerp(-18, 12, pGlobal).toFixed(2)}px, 0)`;
+        wmOpen.style.transform = `translate3d(${M.lerp(-24, 20, pGlobal).toFixed(2)}px, ${M.lerp(-18, 16, pGlobal).toFixed(2)}px, 0)`;
         wmClose.style.opacity = String(wmP);
-        wmClose.style.transform = `translate3d(${M.lerp(22, -16, pGlobal).toFixed(2)}px, ${M.lerp(18, -14, pGlobal).toFixed(2)}px, 0)`;
+        wmClose.style.transform = `translate3d(${M.lerp(22, -20, pGlobal).toFixed(2)}px, ${M.lerp(18, -16, pGlobal).toFixed(2)}px, 0)`;
 
-        // 2. Cartão de apoio azul-marinho atrás (inclinação oposta para profundidade tátil)
-        const backP = M.backOut(M.progress(t, 60, 440), 1.2);
-        const backRot = M.lerp(5.2, 2.0, backP) - pGlobal * 0.6;
-        backCard.style.opacity = String(M.clamp(M.progress(t, 40, 220), 0, 1));
-        backCard.style.transform =
-          `translate3d(${M.lerp(30, 12, backP).toFixed(2)}px, ${M.lerp(54, 14, backP).toFixed(2)}px, 0) rotate(${backRot.toFixed(2)}deg)`;
+        // 2. Prancha editorial limpa com flutuação respiratória contínua
+        const sheetP = M.power3Out(M.progress(tm, 80, 480));
+        const breatheY = Math.sin(pGlobal * Math.PI * 2) * 5;
+        sheetEl.style.opacity = String(M.clamp(M.progress(tm, 60, 220), 0, 1));
+        sheetEl.style.transform =
+          `translate3d(0, ${(M.lerp(42, 0, sheetP) + breatheY).toFixed(2)}px, 0) scale(${M.lerp(0.96, 1.0, sheetP).toFixed(4)})`;
 
-        // 3. Cartão principal de versículo inclinado (-1.4deg) com entrada back.out + micro-paralaxe
-        const cardP = M.backOut(M.progress(t, 100, 480), 1.35);
-        const cardY = M.lerp(90, 0, cardP) + Math.sin(pGlobal * Math.PI) * -6;
-        const cardScale = M.lerp(0.90, 1.0, cardP);
-        const cardRot = M.lerp(-4.0, -1.4, cardP) + Math.sin(pGlobal * Math.PI * 1.2) * 0.25;
-        cardShadow.style.opacity = String(M.clamp(M.progress(t, 80, 200), 0, 1));
-        cardShadow.style.transform =
-          `translate3d(0, ${cardY.toFixed(2)}px, 0) scale(${cardScale.toFixed(4)}) rotate(${cardRot.toFixed(2)}deg)`;
+        // 3. Filete dourado SVG desenhando ao longo da cena
+        const frameP = M.expoOut(M.progress(tm, 100, Math.min(2000, durationMs * 0.65)));
+        framePath.style.strokeDashoffset = String((1120 * (1 - frameP)).toFixed(1));
 
-        // 4. Fita crepe superior
-        const tapeP = M.expoOut(M.progress(t, 280, 220));
-        tapeTop.style.opacity = String(tapeP);
-        tapeTop.style.transform = `translate3d(0, ${M.lerp(-22, 0, tapeP).toFixed(2)}px, 0) rotate(-2.2deg)`;
-
-        // 5. Barra de referência Azul-Marinho #1E3A5F
-        const refP = M.expoOut(M.progress(t, 220, 340));
+        // 4. Barra de referência
+        const refP = M.expoOut(M.progress(tm, 160, 340));
         refBar.style.opacity = String(refP);
-        refBar.style.transform = `translate3d(${M.lerp(-36, 0, refP).toFixed(2)}px, 0, 0)`;
+        refBar.style.transform = `translate3d(${M.lerp(-28, 0, refP).toFixed(2)}px, 0, 0)`;
 
-        // 6. Revelação editorial suave das palavras + marcador-texto #E5A93C progressivo
-        const staggerPerWord = Math.min(34, 420 / Math.max(1, wordEls.length));
+        // 5. Revelação editorial suave das palavras + marca-texto #E5A93C progressivo
+        const staggerPerWord = Math.min(38, Math.max(18, (durationMs * 0.42) / Math.max(1, wordEls.length)));
         wordEls.forEach((wEl, idx) => {
-          const wStart = 240 + idx * staggerPerWord;
-          const wP = M.power3Out(M.progress(t, wStart, 220));
-          wEl.style.opacity = String(wP);
-          wEl.style.transform = `translate3d(0, ${M.lerp(16, 0, wP).toFixed(2)}px, 0)`;
+          const wStart = 200 + idx * staggerPerWord;
+          const wP = M.power3Out(M.progress(tm, wStart, 240));
+          wEl.style.opacity = String(M.lerp(0.15, 1.0, wP).toFixed(3));
+          wEl.style.transform = `translate3d(0, ${M.lerp(14, 0, wP).toFixed(2)}px, 0)`;
 
           const plan = tokenPlans[idx];
           if (plan && plan.highlight) {
             const hlEl = wEl.querySelector(".bq-word-hl");
             if (hlEl) {
-              const hlP = M.expoOut(M.progress(t, plan.highlightStartMs, 360));
+              const hlP = M.expoOut(M.progress(tm, plan.highlightStartMs, 380));
               hlEl.style.transform = `scaleX(${hlP.toFixed(4)}) rotate(-0.6deg)`;
             }
           }
         });
 
-        // 7. Rodapé do cartão
-        const footP = M.power3Out(M.progress(t, 520, 340));
+        // 6. Rodapé com evolução por beats (se houver)
+        if (inlineImg && window.__STUDIO__ && typeof window.__STUDIO__.evaluateImageTransform === "function") {
+          const imgTf = window.__STUDIO__.evaluateImageTransform(visual, pGlobal, tm, durationMs);
+          inlineImg.style.transform = imgTf.css;
+        }
+        const footP = M.power3Out(M.progress(tm, 480, 360));
         footerEl.style.opacity = String(footP);
         footerEl.style.transform = `translate3d(0, ${M.lerp(14, 0, footP).toFixed(2)}px, 0)`;
+        footerRuleFill.style.transform = `scaleX(${M.expoOut(M.progress(tm, 420, Math.min(1600, durationMs * 0.55))).toFixed(4)})`;
+
+        if (beatState && beatState.hasBeats && beatState.activeBeat && beatState.activeBeat.headline && footerKickerEl) {
+          const nextText = beatState.activeBeat.headline;
+          if (footerKickerEl.dataset.lastText !== nextText) {
+            footerKickerEl.textContent = nextText;
+            footerKickerEl.dataset.lastText = nextText;
+          }
+        }
       },
     };
   });

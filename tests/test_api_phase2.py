@@ -230,8 +230,9 @@ def test_full_cocreation_gate1_audio_asset_cover_and_guardrails(
     assert approved_project["manifest"]["gates"]["scripture_verified"] is True
     assert approved_project["manifest"]["gates"]["script_gate_1_approved"] is True
     assert approved_project["storyboard"] is not None
-    assert len(approved_project["scenes"]) == len(current_script["narration_segments"])
+    assert 6 <= len(approved_project["scenes"]) <= len(current_script["narration_segments"])
     assert approved_project["scenes"][0]["timing"]["start_word_id"] == "w_0001"
+    assert any(scene["visual"]["beats"] for scene in approved_project["scenes"])
 
     # 7) Upload de áudio gravado + forced alignment (no cache fora do OneDrive!)
     wav_bytes = _make_sample_wav_bytes(duration_sec=3.0)
@@ -358,3 +359,119 @@ def test_sse_hub_cross_thread_delivery() -> None:
     assert frames[0].startswith("event: heartbeat")
     assert "event: progress" in frames[1]
     assert "event: done" in frames[2]
+
+
+def test_ready_script_multi_sentence_over_2000_chars(
+    api_client: tuple[TestClient, Path, Path],
+) -> None:
+    client, _, _ = api_client
+
+    ready_script = (
+        "Você já leu Filipenses 4:13 achando que é uma promessa de sucesso imediato?\n"
+        "Na verdade, Paulo escreveu essa carta dentro de uma prisão romana, cercado de incertezas. "
+        "Quando ele diz que tudo pode naquele que o fortalece, o contexto anterior fala de passar fome e fartura. "
+        "Mas a cultura moderna transformou o versículo em um slogan de conquista pessoal sem cruz. "
+        "Olha só como o texto original revela uma força muito mais profunda para os dias difíceis. "
+        "Cristo não promete remover todas as tempestades, ele sustenta você no meio delas. "
+        "Qual versículo você quer entender no contexto no próximo vídeo? "
+    ) + ("Esse detalhe histórico transforma completamente a leitura devocional da passagem. " * 25)
+    assert len(ready_script) > 2000
+
+    r_create = client.post(
+        "/api/projects",
+        json={
+            "title": "Roteiro pronto Filipenses 4 13",
+            "raw_idea": ready_script,
+            "seed_reference": "Fp 4:13",
+            "bible_translation": "NVI",
+        },
+    )
+    assert r_create.status_code == 200
+    slug = r_create.json()["manifest"]["slug"]
+
+    r_gen = client.post(
+        f"/api/projects/{slug}/script/generate",
+        json={"use_llm": False},
+    )
+    assert r_gen.status_code == 200
+    script = r_gen.json()["script"]
+    segments = script["narration_segments"]
+    assert len(segments) >= 7
+    assert "Filipenses" in segments[0]["display_text"]
+    assert segments[0]["role"] == "hook"
+    assert any("prisão romana" in seg["display_text"] for seg in segments)
+    assert any(seg["role"] == "pivot" for seg in segments)
+    assert any(seg["role"] == "cta" for seg in segments)
+
+
+def test_scene_wide_image_and_animation_editing_and_asset_library(
+    api_client: tuple[TestClient, Path, Path],
+) -> None:
+    client, _, _ = api_client
+    slug = "piloto-makarios"
+
+    # 1) Atualizar cena com subtext=None (regressão HTTP 422) + novos campos de imagem e animação
+    r_update = client.put(
+        f"/api/projects/{slug}/scenes/scene_02",
+        json={
+            "template": "bible_quote_card",
+            "visual": {
+                "headline": "NOVA HEADLINE",
+                "subtext": None,
+                "transition_in": "zoom_punch",
+                "camera_motion": "handheld_drift",
+                "image_layout": "background_blur",
+                "image_fit": "contain",
+                "image_scale": 1.35,
+                "image_offset_x": -12.0,
+                "image_offset_y": 8.0,
+                "image_opacity": 0.75,
+                "image_animation": "float",
+                "illustration_variant": "ancient_arch",
+                "element_animation": "pop_bounce",
+                "animation_speed": 1.3,
+                "motion_intensity": 1.5,
+                "show_stamp": True,
+            },
+        },
+    )
+    assert r_update.status_code == 200
+    updated_vis = r_update.json()["scene"]["visual"]
+    assert updated_vis["subtext"] == ""
+    assert updated_vis["transition_in"] == "zoom_punch"
+    assert updated_vis["camera_motion"] == "handheld_drift"
+    assert updated_vis["image_layout"] == "background_blur"
+    assert updated_vis["image_animation"] == "float"
+    assert updated_vis["element_animation"] == "pop_bounce"
+    assert updated_vis["animation_speed"] == 1.3
+    assert updated_vis["motion_intensity"] == 1.5
+    assert updated_vis["show_stamp"] is True
+    assert r_update.json()["scene"]["cache_hash"] is None
+
+    # 2) Subir imagem na scene_02 -> listar na biblioteca -> reutilizar na scene_03 -> remover da scene_02
+    png_bytes = _make_sample_png_bytes(1080, 1920)
+    r_upload = client.post(
+        f"/api/projects/{slug}/scenes/scene_02/asset",
+        files={"file": ("arte_editorial.png", png_bytes, "image/png")},
+        data={"apply_rembg": "false"},
+    )
+    assert r_upload.status_code == 200
+    uploaded_rel = r_upload.json()["scene"]["assets"][0]["cache_relpath"]
+    assert uploaded_rel
+
+    r_list = client.get(f"/api/projects/{slug}/assets")
+    assert r_list.status_code == 200
+    assets = r_list.json()["assets"]
+    assert any(a["cache_relpath"] == uploaded_rel for a in assets)
+
+    r_attach = client.post(
+        f"/api/projects/{slug}/scenes/scene_03/asset/attach",
+        json={"cache_relpath": uploaded_rel},
+    )
+    assert r_attach.status_code == 200
+    assert r_attach.json()["scene"]["assets"][0]["cache_relpath"] == uploaded_rel
+
+    r_del = client.delete(f"/api/projects/{slug}/scenes/scene_02/asset")
+    assert r_del.status_code == 200
+    assert r_del.json()["scene"]["assets"][0]["cache_relpath"] is None
+    assert r_del.json()["scene"]["cache_hash"] is None

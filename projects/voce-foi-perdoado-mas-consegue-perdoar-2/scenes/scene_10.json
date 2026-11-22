@@ -1,0 +1,89 @@
+{
+  "scene_id": "scene_10",
+  "order": 10,
+  "status": "rendered",
+  "tier": 1,
+  "template": "editorial_motion",
+  "template_version": "2.0.0",
+  "timing": {
+    "start_word_id": "w_0155",
+    "end_word_id": "w_0172",
+    "resolved_start_ms": 56552,
+    "resolved_end_ms": 62804
+  },
+  "visual": {
+    "background_theme": "pergaminho",
+    "headline": "FERIDOS VS. PERDOADOS",
+    "subtext": "MEMÓRIA SELETIVA",
+    "highlight_word_ids": [
+      "w_0163",
+      "w_0172"
+    ],
+    "transition_in": "cross_motion",
+    "camera_motion": "beat_reactive",
+    "reference_layout_asset": null,
+    "scripture_ref_id": null,
+    "original_term": null,
+    "stamp_text": null,
+    "series_label": "PARÁBOLA · MATEUS 18",
+    "image_layout": "auto",
+    "image_fit": "cover",
+    "image_scale": 1.0,
+    "image_offset_x": 0.0,
+    "image_offset_y": 0.0,
+    "image_opacity": 1.0,
+    "image_animation": "ken_burns_in",
+    "illustration_variant": "auto",
+    "element_animation": "vox_editorial",
+    "animation_speed": 1.0,
+    "motion_intensity": 1.15,
+    "show_stamp": null,
+    "composition": "dramatic_split",
+    "atmosphere": "warm_paper",
+    "beats": [
+      {
+        "beat_id": "s10_b1",
+        "anchor_word_id": "w_0155",
+        "progress": null,
+        "headline": "RÁPIDOS PARA LEMBRAR A FERIDA",
+        "subtext": "MEMÓRIA DA DOR",
+        "emphasis": "terracotta",
+        "visual_action": "focus_top",
+        "camera_shift": "pan_left"
+      },
+      {
+        "beat_id": "s10_b2",
+        "anchor_word_id": "w_0164",
+        "progress": null,
+        "headline": "E O QUANTO FOMOS PERDOADOS?",
+        "subtext": "MEMÓRIA DA GRAÇA",
+        "emphasis": "gold",
+        "visual_action": "focus_bottom",
+        "camera_shift": "pan_right"
+      }
+    ],
+    "motion_data": {
+      "top_tag": "SOMOS RÁPIDOS EM LEMBRAR",
+      "top_title": "QUANTO FOMOS FERIDOS",
+      "top_sub": "A dor fica viva na memória",
+      "top_tone": "terracotta",
+      "bottom_tag": "MAS ESQUECEMOS",
+      "bottom_title": "QUANTO FOMOS PERDOADOS",
+      "bottom_sub": "A grandeza da misericórdia de Deus",
+      "bottom_tone": "gold",
+      "divider_symbol": "VS"
+    }
+  },
+  "assets": [],
+  "sfx_cues": [
+    {
+      "sfx_id": "paper_tear_01",
+      "anchor_word_id": "w_0164",
+      "offset_ms": -30,
+      "gain_db": -6.5
+    }
+  ],
+  "review_pins": [],
+  "cache_hash": "c236bed48e973dae343e115687a843e01d101d1d59bccc1c4c5dd2263ff47a94",
+  "cost_usd": 0.0
+}

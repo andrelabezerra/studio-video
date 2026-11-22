@@ -55,6 +55,7 @@ class SceneTemplate(StrEnum):
     BIBLE_QUOTE_CARD = "bible_quote_card"
     KINETIC_CAPTIONS = "kinetic_captions"
     TIMELINE_MAP = "timeline_map"
+    EDITORIAL_MOTION = "editorial_motion"
     TIER2_VIDEO = "tier2_video"
 
 
@@ -63,6 +64,15 @@ class TransitionIn(StrEnum):
     PAPER_TEAR = "paper_tear"
     WHIP_PAN = "whip_pan"
     STAMP_DROP = "stamp_drop"
+    FADE_IN = "fade_in"
+    SLIDE_UP = "slide_up"
+    SLIDE_LEFT = "slide_left"
+    ZOOM_PUNCH = "zoom_punch"
+    IRIS_REVEAL = "iris_reveal"
+    EDITORIAL_WIPE = "editorial_wipe"
+    CROSS_MOTION = "cross_motion"
+    ZOOM_THROUGH = "zoom_through"
+    INK_WASH = "ink_wash"
 
 
 class DurationRange(BaseModel):

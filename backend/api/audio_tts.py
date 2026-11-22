@@ -35,6 +35,7 @@ from backend.services.tts_local_service import (
     generate_tts_narration,
     get_audio_capabilities,
     list_voice_samples,
+    resolve_effective_tts_venv_python,
     resolve_voice_sample_path,
     save_uploaded_voice_sample,
     validate_tts_generation_request,
@@ -51,6 +52,7 @@ class GenerateTtsRequest(BaseModel):
     engine: Literal["pilot_sapi", "xtts_v2", "f5_tts", "voicestudio"] = "pilot_sapi"
     voice_sample_id: str | None = None
     auto_align: bool = True
+    auto_setup: bool = False
 
 
 @router.get("/api/audio/capabilities")
@@ -135,6 +137,7 @@ def _run_tts_generation_background(
     engine: TtsEngineId,
     voice_sample_id: str | None,
     auto_align: bool,
+    auto_setup: bool = False,
     settings: StudioSettings,
     storage: ProjectStorage,
     hub: SSEHub,
@@ -159,7 +162,7 @@ def _run_tts_generation_background(
         )
 
         def _on_tts_progress(pct: int, msg: str) -> None:
-            mapped = int(round(pct * (0.72 if auto_align else 0.94)))
+            mapped = round(pct * (0.72 if auto_align else 0.94))
             hub.publish(
                 slug,
                 "progress",
@@ -179,6 +182,7 @@ def _run_tts_generation_background(
             engine=engine,
             voice_sample_id=voice_sample_id,
             target_duration_sec=target_dur,
+            allow_auto_setup=auto_setup,
             on_progress=_on_tts_progress,
         )
         _, duration_ms = _probe_audio_metadata(narration_wav)
@@ -210,7 +214,7 @@ def _run_tts_generation_background(
                 audio_source=audio_mode,
                 audio_cache_relpath="audio/narration_master.wav",
                 engine="auto",
-                tts_venv_python=settings.tts_venv_python,
+                tts_venv_python=resolve_effective_tts_venv_python(settings),
                 whisper_model=settings.whisper_model,
                 whisper_device=settings.whisper_device,
             )
@@ -312,7 +316,12 @@ def start_project_tts_generation(
 
     opts = body or GenerateTtsRequest()
     try:
-        validate_tts_generation_request(settings, opts.engine, opts.voice_sample_id)
+        validate_tts_generation_request(
+            settings,
+            opts.engine,
+            opts.voice_sample_id,
+            allow_auto_setup=opts.auto_setup,
+        )
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
@@ -325,6 +334,7 @@ def start_project_tts_generation(
             "engine": opts.engine,
             "voice_sample_id": opts.voice_sample_id,
             "auto_align": opts.auto_align,
+            "auto_setup": opts.auto_setup,
             "settings": settings,
             "storage": storage,
             "hub": hub,

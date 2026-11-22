@@ -50,16 +50,30 @@ _FALLBACK_TEMPLATES: tuple[dict[str, Any], ...] = (
     },
     {
         "id": "bible_quote_card",
-        "label": "Cartão de Citação Bíblica",
+        "label": "Citação Bíblica Editorial",
         "tier": 1,
         "default_cost_usd": 0.0,
-        "description": "Cartão documental de versículo com referência canônica, tradução e marca-texto sincronizado.",
+        "description": "Composição editorial limpa de versículo bíblico com referência canônica e destaque progressivo (sem selos burocráticos).",
         "recommended_formats": ["perdido_traducao", "mito_vs_texto", "conexao_at_nt", "mapa_contexto"],
         "editable_fields": [
             {"key": "headline", "label": "Referência / Destaque", "type": "text", "placeholder": "MATEUS 5:3 (NVI)"},
             {"key": "subtext", "label": "Nota Exegética", "type": "text", "placeholder": "Sermão do Monte"},
             {"key": "original_term", "label": "Termo Chave", "type": "text", "placeholder": "Bem-aventurados"},
-            {"key": "stamp_text", "label": "Selo de Tradução", "type": "text", "placeholder": "NVI VERIFICADA"},
+            {"key": "stamp_text", "label": "Nota Editorial (Opcional)", "type": "text", "placeholder": "EVANGELHO"},
+        ],
+    },
+    {
+        "id": "editorial_motion",
+        "label": "Editorial Motion Multi-Beat",
+        "tier": 1,
+        "default_cost_usd": 0.0,
+        "description": "Motor livre cinematográfico com composições SVG coreografadas, câmera viva, atmosfera dinâmica e beats[] ancorados em word_id.",
+        "recommended_formats": ["mapa_contexto", "perdido_traducao", "mito_vs_texto", "conexao_at_nt"],
+        "editable_fields": [
+            {"key": "headline", "label": "Headline Principal", "type": "text", "placeholder": "UMA DÍVIDA IMPAGÁVEL"},
+            {"key": "subtext", "label": "Subtexto / Contexto", "type": "text", "placeholder": "Mateus 18:21–35"},
+            {"key": "composition", "label": "Composição Visual SVG", "type": "text", "placeholder": "debt_scale"},
+            {"key": "atmosphere", "label": "Atmosfera / Iluminação", "type": "text", "placeholder": "dramatic_spotlight"},
         ],
     },
     {
@@ -512,7 +526,7 @@ def update_project_metrics_48h(
     try:
         validated_metrics = Metrics48h.model_validate(current)
     except ValidationError as exc:
-        raise HTTPException(status_code=422, detail=exc.errors()) from exc
+        raise HTTPException(status_code=422, detail=exc.errors(include_context=False)) from exc
 
     updated_manifest = manifest.model_copy(
         update={

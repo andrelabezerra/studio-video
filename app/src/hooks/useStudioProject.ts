@@ -7,6 +7,7 @@ import type {
   CloneWorkflowPayload,
   GenerateTtsPayload,
   Metrics48h,
+  ProjectAssetLibraryItem,
   ProjectDetail,
   ProjectSummary,
   QueueActionType,
@@ -300,6 +301,9 @@ export function useStudioProject() {
   });
   const [seriesAnalytics, setSeriesAnalytics] =
     useState<SeriesAnalyticsSummary | null>(null);
+  const [projectAssets, setProjectAssets] = useState<ProjectAssetLibraryItem[]>(
+    []
+  );
 
   const activeSlugRef = useRef<string | null>(null);
   activeSlugRef.current = activeSlug;
@@ -400,6 +404,26 @@ export function useStudioProject() {
       }
     }, []);
 
+  const refreshProjectAssets = useCallback(
+    async (slugOverride?: string): Promise<ProjectAssetLibraryItem[]> => {
+      const targetSlug = slugOverride || activeSlugRef.current;
+      if (!targetSlug) {
+        setProjectAssets([]);
+        return [];
+      }
+      try {
+        const res = await studioApi.listProjectAssets(targetSlug);
+        const list = res.assets || [];
+        setProjectAssets(list);
+        return list;
+      } catch (err) {
+        console.warn("[Studio] Falha ao listar biblioteca de imagens:", err);
+        return [];
+      }
+    },
+    []
+  );
+
   const loadProject = useCallback(
     async (slug: string) => {
       setLoading(true);
@@ -407,6 +431,12 @@ export function useStudioProject() {
         const detail = await studioApi.getProject(slug);
         setProject(detail);
         setActiveSlug(detail.manifest.slug);
+        void refreshProjectAssets(detail.manifest.slug);
+        try {
+          window.localStorage.setItem("studio_active_slug", detail.manifest.slug);
+        } catch {
+          // ignore storage quota errors
+        }
         setRenderProgress(INITIAL_PROGRESS);
         setTtsPreview(null);
         setMediaRevision((v) => v + 1);
@@ -416,10 +446,10 @@ export function useStudioProject() {
         setLoading(false);
       }
     },
-    [pushToast]
+    [pushToast, refreshProjectAssets]
   );
 
-  // Boot inicial: carrega lista, capacidades de áudio, templates, fila, analytics e abre 'piloto-makarios' por padrão
+  // Boot inicial: carrega lista, capacidades de áudio, templates, fila, analytics e abre o último projeto ativo
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -434,13 +464,23 @@ export function useStudioProject() {
           refreshSeriesAnalytics(),
         ]);
         if (!mounted) return;
+        let savedSlug: string | null = null;
+        try {
+          savedSlug = window.localStorage.getItem("studio_active_slug");
+        } catch {
+          savedSlug = null;
+        }
         const preferred =
-          list.find((p) => p.slug === "piloto-makarios") || list[0];
+          (savedSlug ? list.find((p) => p.slug === savedSlug) : undefined) ||
+          list.find((p) => p.slug !== "piloto-makarios") ||
+          list.find((p) => p.slug === "piloto-makarios") ||
+          list[0];
         if (preferred) {
           const detail = await studioApi.getProject(preferred.slug);
           if (!mounted) return;
           setProject(detail);
           setActiveSlug(detail.manifest.slug);
+          void refreshProjectAssets(detail.manifest.slug);
         }
       } catch (err) {
         if (mounted) {
@@ -514,6 +554,11 @@ export function useStudioProject() {
           refreshProjectsList().catch((err) => {
             console.warn("[Studio] Falha ao atualizar lista de projetos:", err);
           });
+          if (ev.stage === "tts_generate") {
+            refreshAudioCapabilities().catch((err) => {
+              console.warn("[Studio] Falha ao atualizar capacidades TTS:", err);
+            });
+          }
         }
         return;
       }
@@ -914,32 +959,40 @@ export function useStudioProject() {
     async (sceneId: string, patch: Partial<SceneData>) => {
       if (!activeSlug) return;
       return withBusy(`scene_save_${sceneId}`, async () => {
-        const res = await studioApi.updateScene(activeSlug, sceneId, patch);
-        const updatedScene = "scene" in res ? res.scene : res;
-        setProject((prev) => {
-          if (!prev) return prev;
-          const nextScenes = prev.scenes.map((sc) =>
-            sc.scene_id === sceneId ? updatedScene : sc
-          );
-          const allApproved =
-            nextScenes.length > 0 &&
-            nextScenes.every(
-              (s) => s.status === "approved" || s.status === "rendered"
+        try {
+          const res = await studioApi.updateScene(activeSlug, sceneId, patch);
+          const updatedScene = "scene" in res ? res.scene : res;
+          setProject((prev) => {
+            if (!prev) return prev;
+            const nextScenes = prev.scenes.map((sc) =>
+              sc.scene_id === sceneId ? updatedScene : sc
             );
-          return {
-            ...prev,
-            scenes: nextScenes,
-            manifest: {
-              ...prev.manifest,
-              gates: { ...prev.manifest.gates, scenes_approved: allApproved },
-            },
-          };
-        });
-        await refreshCurrentProject(false).catch((err) => {
-          console.warn("[Studio] Falha ao recalcular status reativo da cena:", err);
-        });
-        pushToast("success", `Cena ${sceneId.toUpperCase()} atualizada.`);
-        return updatedScene;
+            const allApproved =
+              nextScenes.length > 0 &&
+              nextScenes.every(
+                (s) => s.status === "approved" || s.status === "rendered"
+              );
+            return {
+              ...prev,
+              scenes: nextScenes,
+              manifest: {
+                ...prev.manifest,
+                gates: { ...prev.manifest.gates, scenes_approved: allApproved },
+              },
+            };
+          });
+          await refreshCurrentProject(false).catch((err) => {
+            console.warn("[Studio] Falha ao recalcular status reativo da cena:", err);
+          });
+          pushToast("success", `Cena ${sceneId.toUpperCase()} atualizada.`);
+          return updatedScene;
+        } catch (err) {
+          pushToast(
+            "error",
+            `Não foi possível salvar ${sceneId.toUpperCase()}: ${extractErrorMessage(err)}`
+          );
+          return undefined;
+        }
       });
     },
     [activeSlug, withBusy, refreshCurrentProject, pushToast]
@@ -953,30 +1006,111 @@ export function useStudioProject() {
     ) => {
       if (!activeSlug) return;
       return withBusy(`scene_asset_${sceneId}`, async () => {
-        const res = await studioApi.uploadSceneAsset(
-          activeSlug,
-          sceneId,
-          file,
-          options
-        );
-        setProject((prev) => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            scenes: prev.scenes.map((sc) =>
-              sc.scene_id === sceneId ? res.scene : sc
-            ),
-          };
-        });
-        await refreshCurrentProject(true).catch((err) => {
-          console.warn("[Studio] Falha ao recalcular runtime pós-upload:", err);
-          setMediaRevision((v) => v + 1);
-        });
-        pushToast(
-          "success",
-          `Arte Gemini PRO anexada em ${sceneId.toUpperCase()}.`
-        );
-        return res;
+        try {
+          const res = await studioApi.uploadSceneAsset(
+            activeSlug,
+            sceneId,
+            file,
+            options
+          );
+          setProject((prev) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              scenes: prev.scenes.map((sc) =>
+                sc.scene_id === sceneId ? res.scene : sc
+              ),
+            };
+          });
+          await Promise.all([
+            refreshCurrentProject(true).catch((err) => {
+              console.warn("[Studio] Falha ao recalcular runtime pós-upload:", err);
+              setMediaRevision((v) => v + 1);
+            }),
+            refreshProjectAssets(activeSlug),
+          ]);
+          pushToast(
+            "success",
+            `Imagem anexada em ${sceneId.toUpperCase()}.`
+          );
+          return res;
+        } catch (err) {
+          pushToast(
+            "error",
+            `Falha ao enviar imagem para ${sceneId.toUpperCase()}: ${extractErrorMessage(err)}`
+          );
+          return undefined;
+        }
+      });
+    },
+    [activeSlug, withBusy, refreshCurrentProject, refreshProjectAssets, pushToast]
+  );
+
+  const attachSceneAsset = useCallback(
+    async (
+      sceneId: string,
+      payload: { cache_relpath: string; asset_id?: string; apply_rembg?: boolean }
+    ) => {
+      if (!activeSlug) return;
+      return withBusy(`scene_asset_${sceneId}`, async () => {
+        try {
+          const res = await studioApi.attachSceneAsset(activeSlug, sceneId, payload);
+          setProject((prev) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              scenes: prev.scenes.map((sc) =>
+                sc.scene_id === sceneId ? res.scene : sc
+              ),
+            };
+          });
+          await refreshCurrentProject(true).catch(() => {
+            setMediaRevision((v) => v + 1);
+          });
+          pushToast(
+            "success",
+            `Imagem da biblioteca aplicada em ${sceneId.toUpperCase()}.`
+          );
+          return res;
+        } catch (err) {
+          pushToast(
+            "error",
+            `Falha ao aplicar imagem em ${sceneId.toUpperCase()}: ${extractErrorMessage(err)}`
+          );
+          return undefined;
+        }
+      });
+    },
+    [activeSlug, withBusy, refreshCurrentProject, pushToast]
+  );
+
+  const deleteSceneAsset = useCallback(
+    async (sceneId: string, assetId?: string) => {
+      if (!activeSlug) return;
+      return withBusy(`scene_asset_${sceneId}`, async () => {
+        try {
+          const res = await studioApi.deleteSceneAsset(activeSlug, sceneId, assetId);
+          setProject((prev) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              scenes: prev.scenes.map((sc) =>
+                sc.scene_id === sceneId ? res.scene : sc
+              ),
+            };
+          });
+          await refreshCurrentProject(true).catch(() => {
+            setMediaRevision((v) => v + 1);
+          });
+          pushToast("info", `Imagem removida de ${sceneId.toUpperCase()}.`);
+          return res.scene;
+        } catch (err) {
+          pushToast(
+            "error",
+            `Falha ao remover imagem de ${sceneId.toUpperCase()}: ${extractErrorMessage(err)}`
+          );
+          return undefined;
+        }
       });
     },
     [activeSlug, withBusy, refreshCurrentProject, pushToast]
@@ -986,28 +1120,36 @@ export function useStudioProject() {
     async (sceneId: string, profile: "preview" | "final" = "preview") => {
       if (!activeSlug) return;
       return withBusy(`scene_regen_${sceneId}`, async () => {
-        const res = await studioApi.regenerateScene(activeSlug, sceneId, {
-          profile,
-          force: true,
-        });
-        setProject((prev) => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            scenes: prev.scenes.map((sc) =>
-              sc.scene_id === sceneId ? res.scene : sc
-            ),
-          };
-        });
-        await refreshCurrentProject(true).catch((err) => {
-          console.warn("[Studio] Falha ao sincronizar miniatura pós-regen:", err);
-          setMediaRevision((v) => v + 1);
-        });
-        pushToast(
-          "success",
-          `Cena ${sceneId.toUpperCase()} regenerada (${profile}${res.cache_hit ? " · cache hit" : ""}).`
-        );
-        return res;
+        try {
+          const res = await studioApi.regenerateScene(activeSlug, sceneId, {
+            profile,
+            force: true,
+          });
+          setProject((prev) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              scenes: prev.scenes.map((sc) =>
+                sc.scene_id === sceneId ? res.scene : sc
+              ),
+            };
+          });
+          await refreshCurrentProject(true).catch((err) => {
+            console.warn("[Studio] Falha ao sincronizar miniatura pós-regen:", err);
+            setMediaRevision((v) => v + 1);
+          });
+          pushToast(
+            "success",
+            `Cena ${sceneId.toUpperCase()} regenerada (${profile}${res.cache_hit ? " · cache hit" : ""}).`
+          );
+          return res;
+        } catch (err) {
+          pushToast(
+            "error",
+            `Falha ao regenerar ${sceneId.toUpperCase()}: ${extractErrorMessage(err)}`
+          );
+          return undefined;
+        }
       });
     },
     [activeSlug, withBusy, refreshCurrentProject, pushToast]
@@ -1390,10 +1532,12 @@ export function useStudioProject() {
     tier2Catalog,
     queueState,
     seriesAnalytics,
+    projectAssets,
     pushToast,
     dismissToast,
     loadProject,
     refreshCurrentProject,
+    refreshProjectAssets,
     refreshAudioCapabilities,
     refreshTemplates,
     refreshTier2Catalog,
@@ -1415,6 +1559,8 @@ export function useStudioProject() {
     generateTtsAudio,
     updateScene,
     uploadSceneAsset,
+    attachSceneAsset,
+    deleteSceneAsset,
     regenerateScene,
     runPending,
     startRender,

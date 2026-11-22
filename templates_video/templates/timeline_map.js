@@ -538,7 +538,13 @@
   }
 
   window.__STUDIO__.registerTemplate("timeline_map", function createTimelineMap(ctx) {
-    const { root, scene, visual, theme, words, durationMs, scriptureRef, formatType, payload, Math: M } = ctx;
+    const { root, scene, visual, theme, words, durationMs, scriptureRef, formatType, payload, assetEntry, imageLayout, Math: M } = ctx;
+    const useCardImage = Boolean(assetEntry && imageLayout === "card");
+    const fitStyle = visual.image_fit === "contain" ? "object-fit:contain;" : "object-fit:cover;";
+    const opStyle = `opacity:${M.clamp(Number(visual.image_opacity) || 1.0, 0.1, 1.0)};`;
+    const rawStamp = String(visual.stamp_text || "").trim();
+    const isForbidden = window.__STUDIO__ && window.__STUDIO__.isForbiddenSeal(rawStamp);
+    const showStamp = !isForbidden && visual.show_stamp !== false;
 
     const effectiveFormat =
       formatType ||
@@ -600,11 +606,15 @@
             <div class="vox-tape tm-tape-br"></div>
             <div class="tm-board-outer">
               <div class="tm-board-inner">
-                ${svgMarkup}
+                ${
+                  useCardImage
+                    ? `<img class="tpl-inline-media-img" style="${fitStyle}${opStyle}" src="${M.escapeHtml(assetEntry.url)}" alt="${M.escapeHtml(headline)}" />`
+                    : svgMarkup
+                }
               </div>
             </div>
           </div>
-          <div class="vox-stamp tm-stamp">${M.escapeHtml(stampLabel)}</div>
+          ${showStamp ? `<div class="vox-stamp tm-stamp">${M.escapeHtml(stampLabel)}</div>` : ""}
         </div>
 
         <!-- Cartão de Citação / Contexto na Base Segura com Marca-Texto #E5A93C -->
@@ -638,6 +648,7 @@
     const stampEl = root.querySelector(".tm-stamp");
     const contextCard = root.querySelector(".tm-context-card");
     const ctxWordEls = Array.from(root.querySelectorAll(".tm-ctx-word"));
+    const boardImg = root.querySelector(".tpl-inline-media-img");
 
     const routeLen = Number((routePath && routePath.dataset.len) || 520);
     if (routePath) {
@@ -691,7 +702,19 @@
           ];
 
     return {
-      seek(t, pGlobal) {
+      seek(t, pGlobal, beatState, tReal) {
+        const tm = Number.isFinite(tReal) ? tReal : t;
+        // Evolução multi-beat do headline e subtext em cenas longas
+        if (beatState && beatState.hasBeats && beatState.activeBeat) {
+          const headSpan = headerEl && headerEl.querySelector(".tm-headline-text");
+          if (headSpan && beatState.activeBeat.headline && headSpan.textContent !== beatState.activeBeat.headline) {
+            headSpan.textContent = beatState.activeBeat.headline;
+          }
+          const subPill = headerEl && headerEl.querySelector(".tm-subtext-pill");
+          if (subPill && beatState.activeBeat.subtext && subPill.textContent !== beatState.activeBeat.subtext) {
+            subPill.textContent = beatState.activeBeat.subtext;
+          }
+        }
         // 1. Cabeçalho e barra dourada de título
         const headP = M.power3Out(M.progress(t, 40, 320));
         headerEl.style.opacity = String(headP);
@@ -700,14 +723,20 @@
         const barP = M.expoOut(M.progress(t, 220, 460));
         headlineBar.style.transform = `scaleX(${barP.toFixed(4)})`;
 
-        // 2. Folha traseira e prancha cartográfica principal
+        // 2. Folha traseira e prancha cartográfica principal com flutuação suave contínua
         const backP = M.backOut(M.progress(t, 60, 420), 1.2);
         backSheet.style.opacity = String(M.clamp(M.progress(t, 40, 200), 0, 1));
-        backSheet.style.transform = `translate3d(${M.lerp(-26, -8, backP).toFixed(2)}px, ${M.lerp(28, 10, backP).toFixed(2)}px, 0) rotate(${M.lerp(-3.5, -1.4, backP).toFixed(2)}deg)`;
+        backSheet.style.transform = `translate3d(${M.lerp(-26, -8, backP).toFixed(2)}px, ${M.lerp(28, 10, backP).toFixed(2)}px, 0) rotate(${(M.lerp(-3.5, -1.4, backP) + Math.sin(pGlobal * Math.PI * 2) * 0.45).toFixed(2)}deg)`;
 
         const boardP = M.backOut(M.progress(t, 100, 460), 1.35);
+        const floatY = Math.sin(pGlobal * Math.PI * 2) * 4;
         boardShadow.style.opacity = String(M.clamp(M.progress(t, 80, 200), 0, 1));
-        boardShadow.style.transform = `translate3d(0, ${M.lerp(56, 0, boardP).toFixed(2)}px, 0) scale(${M.lerp(0.92, 1.0, boardP).toFixed(4)}) rotate(${M.lerp(1.8, 0.4, boardP).toFixed(2)}deg)`;
+        boardShadow.style.transform = `translate3d(0, ${(M.lerp(56, 0, boardP) + floatY).toFixed(2)}px, 0) scale(${M.lerp(0.92, 1.0, boardP).toFixed(4)}) rotate(${(M.lerp(1.8, 0.4, boardP) + Math.cos(pGlobal * Math.PI * 1.5) * 0.35).toFixed(2)}deg)`;
+
+        if (boardImg && window.__STUDIO__ && typeof window.__STUDIO__.evaluateImageTransform === "function") {
+          const imgTf = window.__STUDIO__.evaluateImageTransform(visual, pGlobal, tm, durationMs);
+          boardImg.style.transform = imgTf.css;
+        }
 
         // 3. Fitas crepe
         const tape1P = M.expoOut(M.progress(t, 260, 220));
@@ -715,9 +744,9 @@
         tapeTl.style.opacity = String(tape1P);
         tapeBr.style.opacity = String(tape2P);
 
-        // 4. Traçado SVG determinístico da rota / arco conector (stroke-dashoffset)
-        const routeDrawDuration = Math.max(900, Math.min(2400, durationMs * 0.62));
-        const routeP = M.power2Out(M.progress(t, 260, routeDrawDuration));
+        // 4. Traçado SVG determinístico da rota / arco conector (acompanha toda a duração da cena)
+        const routeDrawDuration = Math.max(900, Math.min(4800, durationMs * 0.72));
+        const routeP = M.power2Out(M.progress(tm, 260, routeDrawDuration));
         if (routePath) {
           routePath.style.strokeDashoffset = String((routeLen * (1 - routeP)).toFixed(2));
         }

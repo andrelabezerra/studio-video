@@ -1,0 +1,98 @@
+{
+  "scene_id": "scene_02",
+  "order": 2,
+  "status": "rendered",
+  "tier": 1,
+  "template": "editorial_motion",
+  "template_version": "2.0.0",
+  "timing": {
+    "start_word_id": "w_0014",
+    "end_word_id": "w_0036",
+    "resolved_start_ms": 4910,
+    "resolved_end_ms": 11796
+  },
+  "visual": {
+    "background_theme": "pergaminho",
+    "headline": "DIANTE DO REI",
+    "subtext": "A SENTENÇA REAL",
+    "highlight_word_ids": [
+      "w_0019",
+      "w_0025",
+      "w_0031"
+    ],
+    "transition_in": "editorial_wipe",
+    "camera_motion": "beat_reactive",
+    "reference_layout_asset": null,
+    "scripture_ref_id": null,
+    "original_term": null,
+    "stamp_text": null,
+    "series_label": "PARÁBOLA · MATEUS 18",
+    "image_layout": "auto",
+    "image_fit": "cover",
+    "image_scale": 1.0,
+    "image_offset_x": 0.0,
+    "image_offset_y": 0.0,
+    "image_opacity": 1.0,
+    "image_animation": "ken_burns_in",
+    "illustration_variant": "auto",
+    "element_animation": "vox_editorial",
+    "animation_speed": 1.0,
+    "motion_intensity": 1.1,
+    "show_stamp": null,
+    "composition": "debt_scale",
+    "atmosphere": "warm_paper",
+    "beats": [
+      {
+        "beat_id": "s02_b1",
+        "anchor_word_id": "w_0014",
+        "progress": null,
+        "headline": "DIANTE DO REI",
+        "subtext": "PRESTAÇÃO DE CONTAS",
+        "emphasis": "navy",
+        "visual_action": "enter_scale",
+        "camera_shift": "none"
+      },
+      {
+        "beat_id": "s02_b2",
+        "anchor_word_id": "w_0023",
+        "progress": null,
+        "headline": "TUDO SERIA VENDIDO",
+        "subtext": "ORDEM DO TRONO",
+        "emphasis": "terracotta",
+        "visual_action": "tilt_scale",
+        "camera_shift": "tilt_drama"
+      },
+      {
+        "beat_id": "s02_b3",
+        "anchor_word_id": "w_0031",
+        "progress": null,
+        "headline": "NADA BASTAVA PARA PAGAR",
+        "subtext": "PESO ESMAGADOR",
+        "emphasis": "terracotta",
+        "visual_action": "hold_tilt",
+        "camera_shift": "push_in"
+      }
+    ],
+    "motion_data": {
+      "left_label": "A DÍVIDA",
+      "left_sub": "10.000 talentos",
+      "right_label": "SEUS BENS",
+      "right_sub": "Tudo o que possuía",
+      "tilt_direction": "left",
+      "resolve_to_balanced": false,
+      "verdict_label": "CONTA IMPOSSÍVEL DE QUITAR"
+    }
+  },
+  "assets": [],
+  "sfx_cues": [
+    {
+      "sfx_id": "page_flip_01",
+      "anchor_word_id": "w_0014",
+      "offset_ms": -40,
+      "gain_db": -6.5
+    }
+  ],
+  "review_pins": [],
+  "cache_hash": "a8646c67c15194ffc2e9399800bc5ff7b7c4e1c291f15730a359acbbd1f4ad60",
+  "cost_usd": 0.0
+}

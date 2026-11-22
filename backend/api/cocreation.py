@@ -19,6 +19,7 @@ from backend.api import (
 from backend.core.config import load_preset
 from backend.models.briefing import Briefing
 from backend.models.script import Script
+from backend.models.validation import collect_placeholder_errors
 from backend.services.cocreation_service import (
     generate_script,
     generate_storyboard_and_scenes,
@@ -32,7 +33,7 @@ router = APIRouter(prefix="/api/projects/{slug}", tags=["cocreation"])
 class RecommendBriefingRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    raw_idea: str = Field(min_length=1, max_length=2000)
+    raw_idea: str = Field(min_length=1, max_length=15000)
     seed_reference: str | None = Field(default=None, max_length=120)
 
 
@@ -115,7 +116,7 @@ def update_briefing(
     try:
         updated_briefing = Briefing.model_validate(merged)
     except ValidationError as exc:
-        raise HTTPException(status_code=422, detail=exc.errors()) from exc
+        raise HTTPException(status_code=422, detail=exc.errors(include_context=False)) from exc
 
     updated_manifest = manifest.model_copy(
         update={
@@ -246,7 +247,7 @@ def update_project_script(
     try:
         updated_script = Script.model_validate(merged)
     except ValidationError as exc:
-        raise HTTPException(status_code=422, detail=exc.errors()) from exc
+        raise HTTPException(status_code=422, detail=exc.errors(include_context=False)) from exc
 
     storage.save_script(slug, updated_script)
     scripture_ok = bool(updated_script.scripture_refs) and updated_script.all_scripture_verified()
@@ -304,6 +305,30 @@ def approve_script_gate_1(slug: str, request: Request) -> dict[str, Any]:
             detail=(
                 "Checkpoint de Rigor Bíblico pendente: marque 'verified_by_human=true' "
                 f"após conferir o texto exato de: {', '.join(unverified)}."
+            ),
+        )
+
+    placeholder_errors: list[str] = []
+    for ref in script.scripture_refs:
+        placeholder_errors.extend(
+            collect_placeholder_errors(
+                ref.exact_text,
+                field_path=f"scripture_refs[{ref.ref_id}].exact_text",
+            )
+        )
+    for seg in script.narration_segments:
+        placeholder_errors.extend(
+            collect_placeholder_errors(
+                seg.display_text,
+                field_path=f"narration_segments[{seg.segment_id}].display_text",
+            )
+        )
+    if placeholder_errors:
+        raise HTTPException(
+            status_code=422,
+            detail=(
+                "Checkpoint de Rigor Bíblico bloqueado (placeholder proibido): "
+                + "; ".join(placeholder_errors)
             ),
         )
 

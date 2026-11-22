@@ -1,0 +1,1898 @@
+{
+  "audio_source": "recorded",
+  "audio_cache_relpath": "audio/narration_master.wav",
+  "audio_sha256": "8e97e4e95a56e1721973bda6bacb23f0492a631eec1d9940d629726da9e33b1a",
+  "sample_rate_hz": 48000,
+  "duration_ms": 85975,
+  "alignment_engine": "deterministic_energy_syllabic",
+  "words": [
+    {
+      "word_id": "w_0001",
+      "segment_id": "seg_01",
+      "text": "Imagine",
+      "start_ms": 20,
+      "end_ms": 659,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0002",
+      "segment_id": "seg_01",
+      "text": "um",
+      "start_ms": 659,
+      "end_ms": 823,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0003",
+      "segment_id": "seg_01",
+      "text": "homem",
+      "start_ms": 823,
+      "end_ms": 1167,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0004",
+      "segment_id": "seg_01",
+      "text": "que",
+      "start_ms": 1167,
+      "end_ms": 1347,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0005",
+      "segment_id": "seg_01",
+      "text": "devia",
+      "start_ms": 1347,
+      "end_ms": 1690,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0006",
+      "segment_id": "seg_01",
+      "text": "tanto",
+      "start_ms": 1690,
+      "end_ms": 2034,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0007",
+      "segment_id": "seg_01",
+      "text": "dinheiro",
+      "start_ms": 2034,
+      "end_ms": 2558,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0008",
+      "segment_id": "seg_01",
+      "text": "que",
+      "start_ms": 2558,
+      "end_ms": 2738,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0009",
+      "segment_id": "seg_01",
+      "text": "jamais",
+      "start_ms": 2738,
+      "end_ms": 3097,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0010",
+      "segment_id": "seg_01",
+      "text": "conseguiria",
+      "start_ms": 3097,
+      "end_ms": 3801,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0011",
+      "segment_id": "seg_01",
+      "text": "pagar",
+      "start_ms": 3801,
+      "end_ms": 4145,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0012",
+      "segment_id": "seg_01",
+      "text": "sua",
+      "start_ms": 4145,
+      "end_ms": 4325,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0013",
+      "segment_id": "seg_01",
+      "text": "dívida",
+      "start_ms": 4325,
+      "end_ms": 4816,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0014",
+      "segment_id": "seg_02",
+      "text": "Ele",
+      "start_ms": 5005,
+      "end_ms": 5317,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0015",
+      "segment_id": "seg_02",
+      "text": "foi",
+      "start_ms": 5317,
+      "end_ms": 5497,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0016",
+      "segment_id": "seg_02",
+      "text": "levado",
+      "start_ms": 5497,
+      "end_ms": 5988,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0017",
+      "segment_id": "seg_02",
+      "text": "diante",
+      "start_ms": 5988,
+      "end_ms": 6348,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0018",
+      "segment_id": "seg_02",
+      "text": "do",
+      "start_ms": 6348,
+      "end_ms": 6512,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0019",
+      "segment_id": "seg_02",
+      "text": "rei",
+      "start_ms": 6512,
+      "end_ms": 6692,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0020",
+      "segment_id": "seg_03",
+      "text": "e",
+      "start_ms": 6846,
+      "end_ms": 6994,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0021",
+      "segment_id": "seg_03",
+      "text": "o",
+      "start_ms": 6994,
+      "end_ms": 7142,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0022",
+      "segment_id": "seg_03",
+      "text": "rei",
+      "start_ms": 7142,
+      "end_ms": 7322,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0023",
+      "segment_id": "seg_03",
+      "text": "ordenou",
+      "start_ms": 7322,
+      "end_ms": 7829,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0024",
+      "segment_id": "seg_03",
+      "text": "que",
+      "start_ms": 7829,
+      "end_ms": 8009,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0025",
+      "segment_id": "seg_03",
+      "text": "tudo",
+      "start_ms": 8009,
+      "end_ms": 8337,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0026",
+      "segment_id": "seg_03",
+      "text": "o",
+      "start_ms": 8337,
+      "end_ms": 8485,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0027",
+      "segment_id": "seg_03",
+      "text": "que",
+      "start_ms": 8485,
+      "end_ms": 8665,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0028",
+      "segment_id": "seg_03",
+      "text": "ele",
+      "start_ms": 8665,
+      "end_ms": 8976,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0029",
+      "segment_id": "seg_03",
+      "text": "possuía",
+      "start_ms": 8976,
+      "end_ms": 9352,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0030",
+      "segment_id": "seg_03",
+      "text": "fosse",
+      "start_ms": 9352,
+      "end_ms": 9696,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0031",
+      "segment_id": "seg_03",
+      "text": "vendido",
+      "start_ms": 9696,
+      "end_ms": 10203,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0032",
+      "segment_id": "seg_03",
+      "text": "para",
+      "start_ms": 10203,
+      "end_ms": 10531,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0033",
+      "segment_id": "seg_03",
+      "text": "pagar",
+      "start_ms": 10531,
+      "end_ms": 10875,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0034",
+      "segment_id": "seg_03",
+      "text": "o",
+      "start_ms": 10875,
+      "end_ms": 11022,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0035",
+      "segment_id": "seg_03",
+      "text": "que",
+      "start_ms": 11022,
+      "end_ms": 11202,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0036",
+      "segment_id": "seg_04",
+      "text": "devia",
+      "start_ms": 11357,
+      "end_ms": 11701,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0037",
+      "segment_id": "seg_05",
+      "text": "Desesperado",
+      "start_ms": 11890,
+      "end_ms": 12725,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0038",
+      "segment_id": "seg_05",
+      "text": "aquele",
+      "start_ms": 12811,
+      "end_ms": 13302,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0039",
+      "segment_id": "seg_05",
+      "text": "homem",
+      "start_ms": 13302,
+      "end_ms": 13646,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0040",
+      "segment_id": "seg_05",
+      "text": "se",
+      "start_ms": 13646,
+      "end_ms": 13810,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0041",
+      "segment_id": "seg_05",
+      "text": "ajoelhou",
+      "start_ms": 13810,
+      "end_ms": 14334,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0042",
+      "segment_id": "seg_05",
+      "text": "e",
+      "start_ms": 14334,
+      "end_ms": 14481,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0043",
+      "segment_id": "seg_05",
+      "text": "pediu",
+      "start_ms": 14481,
+      "end_ms": 14825,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0044",
+      "segment_id": "seg_05",
+      "text": "misericórdia",
+      "start_ms": 14825,
+      "end_ms": 15676,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0045",
+      "segment_id": "seg_06",
+      "text": "E",
+      "start_ms": 15865,
+      "end_ms": 16013,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0046",
+      "segment_id": "seg_06",
+      "text": "sabe",
+      "start_ms": 16013,
+      "end_ms": 16341,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0047",
+      "segment_id": "seg_06",
+      "text": "o",
+      "start_ms": 16341,
+      "end_ms": 16489,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0048",
+      "segment_id": "seg_06",
+      "text": "que",
+      "start_ms": 16489,
+      "end_ms": 16669,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0049",
+      "segment_id": "seg_06",
+      "text": "o",
+      "start_ms": 16669,
+      "end_ms": 16816,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0050",
+      "segment_id": "seg_06",
+      "text": "rei",
+      "start_ms": 16816,
+      "end_ms": 16996,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0051",
+      "segment_id": "seg_06",
+      "text": "fez",
+      "start_ms": 16996,
+      "end_ms": 17176,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0052",
+      "segment_id": "seg_07",
+      "text": "Perdoou",
+      "start_ms": 17365,
+      "end_ms": 17741,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0053",
+      "segment_id": "seg_07",
+      "text": "toda",
+      "start_ms": 17741,
+      "end_ms": 18069,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0054",
+      "segment_id": "seg_07",
+      "text": "a",
+      "start_ms": 18069,
+      "end_ms": 18216,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0055",
+      "segment_id": "seg_07",
+      "text": "dívida",
+      "start_ms": 18216,
+      "end_ms": 18708,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0056",
+      "segment_id": "seg_08",
+      "text": "Ele",
+      "start_ms": 18897,
+      "end_ms": 19209,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0057",
+      "segment_id": "seg_08",
+      "text": "saiu",
+      "start_ms": 19209,
+      "end_ms": 19405,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0058",
+      "segment_id": "seg_08",
+      "text": "dali",
+      "start_ms": 19405,
+      "end_ms": 19732,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0059",
+      "segment_id": "seg_08",
+      "text": "livre",
+      "start_ms": 19732,
+      "end_ms": 20076,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0060",
+      "segment_id": "seg_09",
+      "text": "Sua",
+      "start_ms": 20265,
+      "end_ms": 20445,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0061",
+      "segment_id": "seg_09",
+      "text": "dívida",
+      "start_ms": 20445,
+      "end_ms": 20936,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0062",
+      "segment_id": "seg_09",
+      "text": "havia",
+      "start_ms": 20936,
+      "end_ms": 21280,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0063",
+      "segment_id": "seg_09",
+      "text": "sido",
+      "start_ms": 21280,
+      "end_ms": 21608,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0064",
+      "segment_id": "seg_09",
+      "text": "completamente",
+      "start_ms": 21608,
+      "end_ms": 22475,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0065",
+      "segment_id": "seg_09",
+      "text": "cancelada",
+      "start_ms": 22475,
+      "end_ms": 23147,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0066",
+      "segment_id": "seg_10",
+      "text": "Mas",
+      "start_ms": 23336,
+      "end_ms": 23515,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0067",
+      "segment_id": "seg_10",
+      "text": "pouco",
+      "start_ms": 23601,
+      "end_ms": 23945,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0068",
+      "segment_id": "seg_10",
+      "text": "depois",
+      "start_ms": 23945,
+      "end_ms": 24305,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0069",
+      "segment_id": "seg_10",
+      "text": "encontrou",
+      "start_ms": 24391,
+      "end_ms": 24930,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0070",
+      "segment_id": "seg_10",
+      "text": "um",
+      "start_ms": 24930,
+      "end_ms": 25094,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0071",
+      "segment_id": "seg_10",
+      "text": "homem",
+      "start_ms": 25094,
+      "end_ms": 25438,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0072",
+      "segment_id": "seg_10",
+      "text": "que",
+      "start_ms": 25438,
+      "end_ms": 25618,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0073",
+      "segment_id": "seg_10",
+      "text": "lhe",
+      "start_ms": 25618,
+      "end_ms": 25798,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0074",
+      "segment_id": "seg_10",
+      "text": "devia",
+      "start_ms": 25798,
+      "end_ms": 26142,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0075",
+      "segment_id": "seg_10",
+      "text": "uma",
+      "start_ms": 26142,
+      "end_ms": 26453,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0076",
+      "segment_id": "seg_10",
+      "text": "pequena",
+      "start_ms": 26453,
+      "end_ms": 26961,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0077",
+      "segment_id": "seg_10",
+      "text": "quantia",
+      "start_ms": 26961,
+      "end_ms": 27337,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0078",
+      "segment_id": "seg_11",
+      "text": "Aquele",
+      "start_ms": 27526,
+      "end_ms": 28017,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0079",
+      "segment_id": "seg_11",
+      "text": "homem",
+      "start_ms": 28017,
+      "end_ms": 28361,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0080",
+      "segment_id": "seg_11",
+      "text": "implorou",
+      "start_ms": 28361,
+      "end_ms": 28884,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0081",
+      "segment_id": "seg_11",
+      "text": "pediu",
+      "start_ms": 28970,
+      "end_ms": 29314,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0082",
+      "segment_id": "seg_11",
+      "text": "paciência",
+      "start_ms": 29314,
+      "end_ms": 29854,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0083",
+      "segment_id": "seg_11",
+      "text": "e",
+      "start_ms": 29854,
+      "end_ms": 30001,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0084",
+      "segment_id": "seg_11",
+      "text": "prometeu",
+      "start_ms": 30001,
+      "end_ms": 30525,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0085",
+      "segment_id": "seg_11",
+      "text": "pagar",
+      "start_ms": 30525,
+      "end_ms": 30869,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0086",
+      "segment_id": "seg_12",
+      "text": "Mas",
+      "start_ms": 31058,
+      "end_ms": 31238,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0087",
+      "segment_id": "seg_12",
+      "text": "o",
+      "start_ms": 31238,
+      "end_ms": 31386,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0088",
+      "segment_id": "seg_12",
+      "text": "homem",
+      "start_ms": 31386,
+      "end_ms": 31729,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0089",
+      "segment_id": "seg_12",
+      "text": "que",
+      "start_ms": 31729,
+      "end_ms": 31909,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0090",
+      "segment_id": "seg_12",
+      "text": "acabara",
+      "start_ms": 31909,
+      "end_ms": 32548,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0091",
+      "segment_id": "seg_12",
+      "text": "de",
+      "start_ms": 32548,
+      "end_ms": 32712,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0092",
+      "segment_id": "seg_12",
+      "text": "receber",
+      "start_ms": 32712,
+      "end_ms": 33220,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0093",
+      "segment_id": "seg_12",
+      "text": "misericórdia",
+      "start_ms": 33220,
+      "end_ms": 34071,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0094",
+      "segment_id": "seg_12",
+      "text": "agarrou",
+      "start_ms": 34071,
+      "end_ms": 34579,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0095",
+      "segment_id": "seg_12",
+      "text": "seu",
+      "start_ms": 34579,
+      "end_ms": 34759,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0096",
+      "segment_id": "seg_12",
+      "text": "companheiro",
+      "start_ms": 34759,
+      "end_ms": 35462,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0097",
+      "segment_id": "seg_12",
+      "text": "pelo",
+      "start_ms": 35462,
+      "end_ms": 35790,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0098",
+      "segment_id": "seg_12",
+      "text": "pescoço",
+      "start_ms": 35790,
+      "end_ms": 36297,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0099",
+      "segment_id": "seg_12",
+      "text": "e",
+      "start_ms": 36297,
+      "end_ms": 36445,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0100",
+      "segment_id": "seg_12",
+      "text": "mandou",
+      "start_ms": 36445,
+      "end_ms": 36805,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0101",
+      "segment_id": "seg_12",
+      "text": "prendê-lo",
+      "start_ms": 36805,
+      "end_ms": 37344,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0102",
+      "segment_id": "seg_13",
+      "text": "até",
+      "start_ms": 37499,
+      "end_ms": 37811,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0103",
+      "segment_id": "seg_13",
+      "text": "que",
+      "start_ms": 37811,
+      "end_ms": 37991,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0104",
+      "segment_id": "seg_13",
+      "text": "pagasse",
+      "start_ms": 37991,
+      "end_ms": 38498,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0105",
+      "segment_id": "seg_13",
+      "text": "tudo",
+      "start_ms": 38498,
+      "end_ms": 38826,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0106",
+      "segment_id": "seg_14",
+      "text": "Quando",
+      "start_ms": 39015,
+      "end_ms": 39375,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0107",
+      "segment_id": "seg_14",
+      "text": "o",
+      "start_ms": 39375,
+      "end_ms": 39522,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0108",
+      "segment_id": "seg_14",
+      "text": "rei",
+      "start_ms": 39522,
+      "end_ms": 39702,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0109",
+      "segment_id": "seg_14",
+      "text": "soube",
+      "start_ms": 39702,
+      "end_ms": 40046,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0110",
+      "segment_id": "seg_14",
+      "text": "disso",
+      "start_ms": 40046,
+      "end_ms": 40390,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0111",
+      "segment_id": "seg_14",
+      "text": "ficou",
+      "start_ms": 40476,
+      "end_ms": 40819,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0112",
+      "segment_id": "seg_14",
+      "text": "indignado",
+      "start_ms": 40819,
+      "end_ms": 41491,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0113",
+      "segment_id": "seg_14",
+      "text": "e",
+      "start_ms": 41491,
+      "end_ms": 41639,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0114",
+      "segment_id": "seg_14",
+      "text": "perguntou",
+      "start_ms": 41639,
+      "end_ms": 42178,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0115",
+      "segment_id": "seg_15",
+      "text": "Eu",
+      "start_ms": 42333,
+      "end_ms": 42497,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0116",
+      "segment_id": "seg_15",
+      "text": "não",
+      "start_ms": 42497,
+      "end_ms": 42677,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0117",
+      "segment_id": "seg_15",
+      "text": "perdoei",
+      "start_ms": 42677,
+      "end_ms": 43052,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0118",
+      "segment_id": "seg_15",
+      "text": "toda",
+      "start_ms": 43052,
+      "end_ms": 43380,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0119",
+      "segment_id": "seg_15",
+      "text": "a",
+      "start_ms": 43380,
+      "end_ms": 43528,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0120",
+      "segment_id": "seg_15",
+      "text": "sua",
+      "start_ms": 43528,
+      "end_ms": 43708,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0121",
+      "segment_id": "seg_15",
+      "text": "dívida",
+      "start_ms": 43708,
+      "end_ms": 44199,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0122",
+      "segment_id": "seg_16",
+      "text": "Você",
+      "start_ms": 44388,
+      "end_ms": 44716,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0123",
+      "segment_id": "seg_16",
+      "text": "não",
+      "start_ms": 44716,
+      "end_ms": 44896,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0124",
+      "segment_id": "seg_16",
+      "text": "deveria",
+      "start_ms": 44896,
+      "end_ms": 45404,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0125",
+      "segment_id": "seg_16",
+      "text": "ter",
+      "start_ms": 45404,
+      "end_ms": 45583,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0126",
+      "segment_id": "seg_16",
+      "text": "tido",
+      "start_ms": 45583,
+      "end_ms": 45911,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0127",
+      "segment_id": "seg_16",
+      "text": "misericórdia",
+      "start_ms": 45911,
+      "end_ms": 46762,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0128",
+      "segment_id": "seg_16",
+      "text": "do",
+      "start_ms": 46762,
+      "end_ms": 46926,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0129",
+      "segment_id": "seg_16",
+      "text": "seu",
+      "start_ms": 46926,
+      "end_ms": 47106,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0130",
+      "segment_id": "seg_16",
+      "text": "companheiro",
+      "start_ms": 47106,
+      "end_ms": 47810,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0131",
+      "segment_id": "seg_16",
+      "text": "assim",
+      "start_ms": 47895,
+      "end_ms": 48239,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0132",
+      "segment_id": "seg_16",
+      "text": "como",
+      "start_ms": 48239,
+      "end_ms": 48567,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0133",
+      "segment_id": "seg_16",
+      "text": "eu",
+      "start_ms": 48567,
+      "end_ms": 48731,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0134",
+      "segment_id": "seg_16",
+      "text": "tive",
+      "start_ms": 48731,
+      "end_ms": 49058,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0135",
+      "segment_id": "seg_16",
+      "text": "de",
+      "start_ms": 49058,
+      "end_ms": 49222,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0136",
+      "segment_id": "seg_16",
+      "text": "você",
+      "start_ms": 49222,
+      "end_ms": 49550,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0137",
+      "segment_id": "seg_17",
+      "text": "E",
+      "start_ms": 49705,
+      "end_ms": 49852,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0138",
+      "segment_id": "seg_17",
+      "text": "existe",
+      "start_ms": 49852,
+      "end_ms": 50344,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0139",
+      "segment_id": "seg_17",
+      "text": "uma",
+      "start_ms": 50344,
+      "end_ms": 50656,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0140",
+      "segment_id": "seg_17",
+      "text": "pergunta",
+      "start_ms": 50656,
+      "end_ms": 51179,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0141",
+      "segment_id": "seg_17",
+      "text": "que",
+      "start_ms": 51179,
+      "end_ms": 51359,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0142",
+      "segment_id": "seg_17",
+      "text": "precisamos",
+      "start_ms": 51359,
+      "end_ms": 52046,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0143",
+      "segment_id": "seg_17",
+      "text": "fazer",
+      "start_ms": 52046,
+      "end_ms": 52390,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0144",
+      "segment_id": "seg_18",
+      "text": "Como",
+      "start_ms": 52545,
+      "end_ms": 52873,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0145",
+      "segment_id": "seg_18",
+      "text": "alguém",
+      "start_ms": 52873,
+      "end_ms": 53232,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0146",
+      "segment_id": "seg_18",
+      "text": "pode",
+      "start_ms": 53232,
+      "end_ms": 53560,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0147",
+      "segment_id": "seg_18",
+      "text": "receber",
+      "start_ms": 53560,
+      "end_ms": 54068,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0148",
+      "segment_id": "seg_18",
+      "text": "tanto",
+      "start_ms": 54068,
+      "end_ms": 54411,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0149",
+      "segment_id": "seg_18",
+      "text": "perdão",
+      "start_ms": 54411,
+      "end_ms": 54771,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0150",
+      "segment_id": "seg_18",
+      "text": "e",
+      "start_ms": 54771,
+      "end_ms": 54919,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0151",
+      "segment_id": "seg_18",
+      "text": "oferecer",
+      "start_ms": 54919,
+      "end_ms": 55574,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0152",
+      "segment_id": "seg_18",
+      "text": "tão",
+      "start_ms": 55574,
+      "end_ms": 55754,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0153",
+      "segment_id": "seg_18",
+      "text": "pouco",
+      "start_ms": 55754,
+      "end_ms": 56098,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0154",
+      "segment_id": "seg_18",
+      "text": "perdão",
+      "start_ms": 56098,
+      "end_ms": 56458,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0155",
+      "segment_id": "seg_19",
+      "text": "Nós",
+      "start_ms": 56647,
+      "end_ms": 56826,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0156",
+      "segment_id": "seg_19",
+      "text": "somos",
+      "start_ms": 56826,
+      "end_ms": 57170,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0157",
+      "segment_id": "seg_19",
+      "text": "rápidos",
+      "start_ms": 57170,
+      "end_ms": 57678,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0158",
+      "segment_id": "seg_19",
+      "text": "para",
+      "start_ms": 57678,
+      "end_ms": 58005,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0159",
+      "segment_id": "seg_19",
+      "text": "lembrar",
+      "start_ms": 58005,
+      "end_ms": 58381,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0160",
+      "segment_id": "seg_19",
+      "text": "o",
+      "start_ms": 58381,
+      "end_ms": 58529,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0161",
+      "segment_id": "seg_19",
+      "text": "quanto",
+      "start_ms": 58529,
+      "end_ms": 58889,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0162",
+      "segment_id": "seg_19",
+      "text": "fomos",
+      "start_ms": 58889,
+      "end_ms": 59232,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0163",
+      "segment_id": "seg_19",
+      "text": "feridos",
+      "start_ms": 59232,
+      "end_ms": 59740,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0164",
+      "segment_id": "seg_20",
+      "text": "mas",
+      "start_ms": 59895,
+      "end_ms": 60075,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0165",
+      "segment_id": "seg_20",
+      "text": "será",
+      "start_ms": 60075,
+      "end_ms": 60402,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0166",
+      "segment_id": "seg_20",
+      "text": "que",
+      "start_ms": 60402,
+      "end_ms": 60582,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0167",
+      "segment_id": "seg_20",
+      "text": "nos",
+      "start_ms": 60582,
+      "end_ms": 60762,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0168",
+      "segment_id": "seg_20",
+      "text": "lembramos",
+      "start_ms": 60762,
+      "end_ms": 61302,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0169",
+      "segment_id": "seg_20",
+      "text": "do",
+      "start_ms": 61302,
+      "end_ms": 61466,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0170",
+      "segment_id": "seg_20",
+      "text": "quanto",
+      "start_ms": 61466,
+      "end_ms": 61825,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0171",
+      "segment_id": "seg_20",
+      "text": "fomos",
+      "start_ms": 61825,
+      "end_ms": 62169,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0172",
+      "segment_id": "seg_20",
+      "text": "perdoados",
+      "start_ms": 62169,
+      "end_ms": 62709,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0173",
+      "segment_id": "seg_21",
+      "text": "Não",
+      "start_ms": 62898,
+      "end_ms": 63078,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0174",
+      "segment_id": "seg_21",
+      "text": "podemos",
+      "start_ms": 63078,
+      "end_ms": 63585,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0175",
+      "segment_id": "seg_21",
+      "text": "querer",
+      "start_ms": 63585,
+      "end_ms": 63945,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0176",
+      "segment_id": "seg_21",
+      "text": "viver",
+      "start_ms": 63945,
+      "end_ms": 64289,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0177",
+      "segment_id": "seg_21",
+      "text": "debaixo",
+      "start_ms": 64289,
+      "end_ms": 64796,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0178",
+      "segment_id": "seg_21",
+      "text": "da",
+      "start_ms": 64796,
+      "end_ms": 64960,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0179",
+      "segment_id": "seg_21",
+      "text": "misericórdia",
+      "start_ms": 64960,
+      "end_ms": 65811,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0180",
+      "segment_id": "seg_21",
+      "text": "de",
+      "start_ms": 65811,
+      "end_ms": 65975,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0181",
+      "segment_id": "seg_21",
+      "text": "Deus",
+      "start_ms": 65975,
+      "end_ms": 66171,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0182",
+      "segment_id": "seg_21",
+      "text": "enquanto",
+      "start_ms": 66171,
+      "end_ms": 66695,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0183",
+      "segment_id": "seg_21",
+      "text": "tratamos",
+      "start_ms": 66695,
+      "end_ms": 67218,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0184",
+      "segment_id": "seg_21",
+      "text": "as",
+      "start_ms": 67218,
+      "end_ms": 67382,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0185",
+      "segment_id": "seg_21",
+      "text": "pessoas",
+      "start_ms": 67382,
+      "end_ms": 67758,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0186",
+      "segment_id": "seg_21",
+      "text": "apenas",
+      "start_ms": 67758,
+      "end_ms": 68249,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0187",
+      "segment_id": "seg_21",
+      "text": "com",
+      "start_ms": 68249,
+      "end_ms": 68429,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0188",
+      "segment_id": "seg_21",
+      "text": "a",
+      "start_ms": 68429,
+      "end_ms": 68577,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0189",
+      "segment_id": "seg_22",
+      "text": "lógica",
+      "start_ms": 68732,
+      "end_ms": 69223,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0190",
+      "segment_id": "seg_22",
+      "text": "da",
+      "start_ms": 69223,
+      "end_ms": 69387,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0191",
+      "segment_id": "seg_22",
+      "text": "cobrança",
+      "start_ms": 69387,
+      "end_ms": 69911,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0192",
+      "segment_id": "seg_23",
+      "text": "Quem",
+      "start_ms": 70100,
+      "end_ms": 70296,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0193",
+      "segment_id": "seg_23",
+      "text": "compreendeu",
+      "start_ms": 70296,
+      "end_ms": 70867,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0194",
+      "segment_id": "seg_23",
+      "text": "o",
+      "start_ms": 70867,
+      "end_ms": 71015,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0195",
+      "segment_id": "seg_23",
+      "text": "tamanho",
+      "start_ms": 71015,
+      "end_ms": 71523,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0196",
+      "segment_id": "seg_23",
+      "text": "da",
+      "start_ms": 71523,
+      "end_ms": 71687,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0197",
+      "segment_id": "seg_23",
+      "text": "graça",
+      "start_ms": 71687,
+      "end_ms": 72030,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0198",
+      "segment_id": "seg_23",
+      "text": "que",
+      "start_ms": 72030,
+      "end_ms": 72210,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0199",
+      "segment_id": "seg_23",
+      "text": "recebeu",
+      "start_ms": 72210,
+      "end_ms": 72718,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0200",
+      "segment_id": "seg_23",
+      "text": "não",
+      "start_ms": 72718,
+      "end_ms": 72898,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0201",
+      "segment_id": "seg_23",
+      "text": "pode",
+      "start_ms": 72898,
+      "end_ms": 73225,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0202",
+      "segment_id": "seg_23",
+      "text": "continuar",
+      "start_ms": 73225,
+      "end_ms": 73765,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0203",
+      "segment_id": "seg_23",
+      "text": "vivendo",
+      "start_ms": 73765,
+      "end_ms": 74273,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0204",
+      "segment_id": "seg_23",
+      "text": "como",
+      "start_ms": 74273,
+      "end_ms": 74600,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0205",
+      "segment_id": "seg_23",
+      "text": "se",
+      "start_ms": 74600,
+      "end_ms": 74764,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0206",
+      "segment_id": "seg_23",
+      "text": "nunca",
+      "start_ms": 74764,
+      "end_ms": 75108,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0207",
+      "segment_id": "seg_23",
+      "text": "tivesse",
+      "start_ms": 75108,
+      "end_ms": 75615,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0208",
+      "segment_id": "seg_24",
+      "text": "precisado",
+      "start_ms": 75770,
+      "end_ms": 76441,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0209",
+      "segment_id": "seg_24",
+      "text": "dela",
+      "start_ms": 76441,
+      "end_ms": 76769,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0210",
+      "segment_id": "seg_25",
+      "text": "Você",
+      "start_ms": 76958,
+      "end_ms": 77286,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0211",
+      "segment_id": "seg_25",
+      "text": "não",
+      "start_ms": 77286,
+      "end_ms": 77466,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0212",
+      "segment_id": "seg_25",
+      "text": "precisa",
+      "start_ms": 77466,
+      "end_ms": 77973,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0213",
+      "segment_id": "seg_25",
+      "text": "fingir",
+      "start_ms": 77973,
+      "end_ms": 78333,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0214",
+      "segment_id": "seg_25",
+      "text": "que",
+      "start_ms": 78333,
+      "end_ms": 78513,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0215",
+      "segment_id": "seg_25",
+      "text": "não",
+      "start_ms": 78513,
+      "end_ms": 78693,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0216",
+      "segment_id": "seg_25",
+      "text": "foi",
+      "start_ms": 78693,
+      "end_ms": 78873,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0217",
+      "segment_id": "seg_25",
+      "text": "ferido",
+      "start_ms": 78873,
+      "end_ms": 79364,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0218",
+      "segment_id": "seg_26",
+      "text": "Mas",
+      "start_ms": 79553,
+      "end_ms": 79733,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0219",
+      "segment_id": "seg_26",
+      "text": "precisa",
+      "start_ms": 79733,
+      "end_ms": 80241,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0220",
+      "segment_id": "seg_26",
+      "text": "permitir",
+      "start_ms": 80241,
+      "end_ms": 80764,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0221",
+      "segment_id": "seg_26",
+      "text": "que",
+      "start_ms": 80764,
+      "end_ms": 80944,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0222",
+      "segment_id": "seg_26",
+      "text": "o",
+      "start_ms": 80944,
+      "end_ms": 81092,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0223",
+      "segment_id": "seg_26",
+      "text": "perdão",
+      "start_ms": 81092,
+      "end_ms": 81452,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0224",
+      "segment_id": "seg_26",
+      "text": "que",
+      "start_ms": 81452,
+      "end_ms": 81632,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0225",
+      "segment_id": "seg_26",
+      "text": "recebeu",
+      "start_ms": 81632,
+      "end_ms": 82139,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0226",
+      "segment_id": "seg_26",
+      "text": "de",
+      "start_ms": 82139,
+      "end_ms": 82303,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0227",
+      "segment_id": "seg_26",
+      "text": "Cristo",
+      "start_ms": 82303,
+      "end_ms": 82663,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0228",
+      "segment_id": "seg_26",
+      "text": "transforme",
+      "start_ms": 82663,
+      "end_ms": 83218,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0229",
+      "segment_id": "seg_26",
+      "text": "a",
+      "start_ms": 83218,
+      "end_ms": 83366,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0230",
+      "segment_id": "seg_26",
+      "text": "maneira",
+      "start_ms": 83366,
+      "end_ms": 83874,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0231",
+      "segment_id": "seg_26",
+      "text": "como",
+      "start_ms": 83874,
+      "end_ms": 84201,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0232",
+      "segment_id": "seg_26",
+      "text": "lida",
+      "start_ms": 84201,
+      "end_ms": 84529,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0233",
+      "segment_id": "seg_26",
+      "text": "com",
+      "start_ms": 84529,
+      "end_ms": 84709,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0234",
+      "segment_id": "seg_27",
+      "text": "quem",
+      "start_ms": 84864,
+      "end_ms": 85060,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0235",
+      "segment_id": "seg_27",
+      "text": "feriu",
+      "start_ms": 85060,
+      "end_ms": 85403,
+      "confidence": 0.95
+    },
+    {
+      "word_id": "w_0236",
+      "segment_id": "seg_27",
+      "text": "você",
+      "start_ms": 85403,
+      "end_ms": 85731,
+      "confidence": 0.95
+    }
+  ]
+}

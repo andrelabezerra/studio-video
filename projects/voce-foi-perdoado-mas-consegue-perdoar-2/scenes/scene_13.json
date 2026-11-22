@@ -1,0 +1,110 @@
+{
+  "scene_id": "scene_13",
+  "order": 13,
+  "status": "rendered",
+  "tier": 1,
+  "template": "editorial_motion",
+  "template_version": "2.0.0",
+  "timing": {
+    "start_word_id": "w_0210",
+    "end_word_id": "w_0236",
+    "resolved_start_ms": 76864,
+    "resolved_end_ms": 85975
+  },
+  "visual": {
+    "background_theme": "carvao",
+    "headline": "O PERDÃO DE CRISTO TRANSFORMA",
+    "subtext": "APLICAÇÃO FINAL",
+    "highlight_word_ids": [
+      "w_0217",
+      "w_0223",
+      "w_0227",
+      "w_0228"
+    ],
+    "transition_in": "cross_motion",
+    "camera_motion": "cinematic_push",
+    "reference_layout_asset": null,
+    "scripture_ref_id": null,
+    "original_term": null,
+    "stamp_text": null,
+    "series_label": "PARÁBOLA · MATEUS 18",
+    "image_layout": "auto",
+    "image_fit": "cover",
+    "image_scale": 1.0,
+    "image_offset_x": 0.0,
+    "image_offset_y": 0.0,
+    "image_opacity": 1.0,
+    "image_animation": "ken_burns_in",
+    "illustration_variant": "auto",
+    "element_animation": "vox_editorial",
+    "animation_speed": 1.0,
+    "motion_intensity": 1.15,
+    "show_stamp": null,
+    "composition": "narrative_arc",
+    "atmosphere": "grace_glow",
+    "beats": [
+      {
+        "beat_id": "s13_b1",
+        "anchor_word_id": "w_0210",
+        "progress": null,
+        "headline": "A FERIDA É REAL",
+        "subtext": "VOCÊ NÃO PRECISA FINGIR",
+        "emphasis": "light",
+        "visual_action": "step_1",
+        "camera_shift": "none"
+      },
+      {
+        "beat_id": "s13_b2",
+        "anchor_word_id": "w_0218",
+        "progress": null,
+        "headline": "O PERDÃO DE CRISTO",
+        "subtext": "GRAÇA QUE CURA A RAIZ",
+        "emphasis": "gold",
+        "visual_action": "step_2",
+        "camera_shift": "push_in"
+      },
+      {
+        "beat_id": "s13_b3",
+        "anchor_word_id": "w_0228",
+        "progress": null,
+        "headline": "TRANSFORMA COMO VOCÊ PERDOA",
+        "subtext": "MATEUS 18:21–35",
+        "emphasis": "gold",
+        "visual_action": "step_3",
+        "camera_shift": "settle"
+      }
+    ],
+    "motion_data": {
+      "steps": [
+        {
+          "tag": "01 · HONESTIDADE",
+          "title": "Não finja que não doeu",
+          "detail": "Deus conhece cada ferida"
+        },
+        {
+          "tag": "02 · CRUZ DE CRISTO",
+          "title": "O perdão que você recebeu",
+          "detail": "Uma graça infinitamente maior"
+        },
+        {
+          "tag": "03 · TRANSFORMAÇÃO",
+          "title": "Muda como você lida com quem feriu",
+          "detail": "Mateus 18:21–35"
+        }
+      ],
+      "show_handle_end": true
+    }
+  },
+  "assets": [],
+  "sfx_cues": [
+    {
+      "sfx_id": "stamp_drop_01",
+      "anchor_word_id": "w_0227",
+      "offset_ms": 0,
+      "gain_db": -6.0
+    }
+  ],
+  "review_pins": [],
+  "cache_hash": "334aeb4a6285e2186a605f172c23e43dc188e57c4ea77080299f63f001795efe",
+  "cost_usd": 0.0
+}

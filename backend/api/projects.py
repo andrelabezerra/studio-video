@@ -32,7 +32,7 @@ class CreateProjectRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     title: str = Field(min_length=1, max_length=160)
-    raw_idea: str = Field(min_length=1, max_length=2000)
+    raw_idea: str = Field(min_length=1, max_length=15000)
     seed_reference: str | None = Field(default=None, max_length=120)
     bible_translation: str | None = Field(default=None, max_length=20)
 

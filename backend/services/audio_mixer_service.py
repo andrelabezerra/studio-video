@@ -77,8 +77,8 @@ $synth.Dispose()
     with tempfile.TemporaryDirectory(prefix="studio_sapi_") as tmp_dir:
         txt_path = Path(tmp_dir) / "script_tts.txt"
         ps_path = Path(tmp_dir) / "speak.ps1"
-        txt_path.write_text(text, encoding="utf-8")
-        ps_path.write_text(ps_script, encoding="utf-8")
+        txt_path.write_text(text, encoding="utf-8-sig")
+        ps_path.write_text(ps_script, encoding="utf-8-sig")
         proc = subprocess.run(
             [
                 "powershell",
@@ -96,7 +96,7 @@ $synth.Dispose()
             capture_output=True,
             text=True,
             check=False,
-            timeout=60,
+            timeout=90,
         )
         if proc.returncode != 0 or not raw_wav_path.exists() or raw_wav_path.stat().st_size < 4096:
             logger.info("Windows SAPI indisponível ou sem saída válida (%s); usando fallback sintético.", proc.stderr.strip())
@@ -106,7 +106,7 @@ $synth.Dispose()
 
 def _synthesize_fallback_pilot_narration(output_wav: Path, duration_sec: float) -> None:
     """Gera faixa vocal piloto modulada em ~40s via FFmpeg lavfi (100% determinístico offline)."""
-    dur = max(10.0, float(duration_sec))
+    dur = max(10.0, duration_sec)
     # Modulação formântica suave com cadência de frases (pausas naturais a cada ~4s) para acionar o ducking
     expr = (
         "0.22*(sin(2*PI*145*t)+0.55*sin(2*PI*290*t)+0.25*sin(2*PI*435*t))"
@@ -178,12 +178,15 @@ def ensure_pilot_audio(
 
     if used_sapi:
         raw_dur = _probe_wav_duration_sec(sapi_raw)
-        # Se a duração SAPI estiver dentro da janela útil (20s..58s), ajusta sutilmente para ~target_duration_sec
-        if 20.0 <= raw_dur <= 58.0:
+        if raw_dur >= 0.5:
             filters = ["aresample=48000", "highpass=f=80"]
-            if raw_dur < 36.0 or raw_dur > 46.0:
-                tempo = max(0.72, min(1.38, raw_dur / target_duration_sec))
-                filters.append(f"atempo={tempo:.4f}")
+            if target_duration_sec <= 50.0 and raw_dur <= 75.0:
+                if raw_dur < 36.0 or raw_dur > 46.0:
+                    tempo = max(0.72, min(1.65, raw_dur / target_duration_sec))
+                    filters.append(f"atempo={tempo:.4f}")
+            elif raw_dur > 58.0:
+                # Roteiros longos mantêm a voz real SAPI com cadência editorial ágil (sem descartar a fala!)
+                filters.append("atempo=1.1800")
             _run_ffmpeg(
                 [
                     "-i",
@@ -255,7 +258,7 @@ def ensure_default_sfx_and_track(
 
     sfx_map: dict[str, Path] = {}
     for sfx_id, lavfi_args in sfx_specs.items():
-        workspace_candidate = None
+        workspace_candidate: Path | None = None
         if workspace_root is not None:
             for ext in (".wav", ".mp3", ".ogg"):
                 cand = workspace_root / "music" / "sfx" / f"{sfx_id}{ext}"
@@ -363,7 +366,7 @@ def mix_audio_single_pass(
         if not cue.path.exists():
             raise FileNotFoundError(f"Arquivo de SFX ausente para '{cue.sfx_id}': {cue.path}")
         inputs.extend(["-i", str(cue.path)])
-        delay_ms = max(0, int(cue.start_ms))
+        delay_ms = max(0, cue.start_ms)
         label = f"[sfx_{cue_i}]"
         filter_parts.append(
             f"[{next_input_idx}:a]aformat=sample_rates=48000:channel_layouts=stereo,"

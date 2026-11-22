@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "slug": "voce-foi-perdoado-mas-consegue-perdoar",
+  "title": "Você foi perdoado, mas consegue perdoar?",
+  "created_at": "2026-11-22T09:44:04.092975-03:00",
+  "updated_at": "2026-11-22T09:44:04.092975-03:00",
+  "preset_id": "pastor-andre-biblico",
+  "series": {
+    "series_id": "conexao_at_nt",
+    "format_type": "conexao_at_nt",
+    "episode_number": 1,
+    "batch_id": "retomada-lote-01"
+  },
+  "gates": {
+    "briefing_approved": false,
+    "scripture_verified": false,
+    "script_gate_1_approved": false,
+    "audio_aligned": false,
+    "scenes_approved": false,
+    "qa_passed": false
+  },
+  "cost_ledger": {
+    "currency": "USD",
+    "estimated_total": 0.0,
+    "spent_total": 0.0,
+    "cap_usd": 2.5,
+    "items": []
+  },
+  "metrics_48h": {
+    "published_at": null,
+    "viewed_vs_swiped_pct": null,
+    "avg_retention_pct": null,
+    "comments_count": null
+  }
+}

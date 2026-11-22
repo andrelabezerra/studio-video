@@ -14,7 +14,7 @@ export type AudioMode =
   | "voicestudio";
 export type TtsEngineId = "pilot_sapi" | "xtts_v2" | "f5_tts" | "voicestudio";
 export type HumanSealMode = "none" | "paper_cutout" | "real_clip_3s";
-export type BibleTranslation = "NVI" | "ARA" | "NAA";
+export type BibleTranslation = "NVI" | "ARA" | "NAA" | "KJA";
 
 export type SceneStatus =
   | "draft"
@@ -30,8 +30,73 @@ export type SceneTemplate =
   | "timeline_map"
   | "tier2_video";
 
-export type TransitionIn = "cut" | "paper_tear" | "whip_pan" | "stamp_drop";
+export type TransitionIn =
+  | "cut"
+  | "paper_tear"
+  | "whip_pan"
+  | "stamp_drop"
+  | "fade_in"
+  | "slide_up"
+  | "slide_left"
+  | "zoom_punch"
+  | "iris_reveal";
+
 export type BackgroundTheme = "pergaminho" | "carvao" | "azul_marinho";
+
+export type ImageLayoutMode =
+  | "auto"
+  | "card"
+  | "background"
+  | "background_blur"
+  | "cutout_overlay"
+  | "none";
+
+export type ImageFitMode = "cover" | "contain";
+
+export type ImageAnimationMode =
+  | "ken_burns_in"
+  | "ken_burns_out"
+  | "pan_left"
+  | "pan_right"
+  | "float"
+  | "pulse"
+  | "tilt"
+  | "static";
+
+export type IllustrationVariant =
+  | "auto"
+  | "greek_papyrus"
+  | "compass_map"
+  | "editorial_loupe"
+  | "ancient_arch";
+
+export type ElementAnimationMode =
+  | "vox_editorial"
+  | "pop_bounce"
+  | "slide_reveal"
+  | "type_fade"
+  | "dramatic_rise"
+  | "minimal";
+
+export type CameraMotionMode =
+  | "none"
+  | "subtle_zoom_in"
+  | "subtle_zoom_out"
+  | "dramatic_zoom_in"
+  | "pan_left"
+  | "pan_right"
+  | "subtle_pan_right"
+  | "pan_up"
+  | "pan_down"
+  | "handheld_drift"
+  | "tilt_drift";
+
+export interface ProjectAssetLibraryItem {
+  filename: string;
+  cache_relpath: string;
+  url: string;
+  size_bytes: number;
+}
 
 export interface ProjectGates {
   briefing_approved: boolean;
@@ -189,12 +254,24 @@ export interface SceneVisual {
   subtext: string | null;
   highlight_word_ids: string[];
   transition_in: TransitionIn | string;
-  camera_motion: string;
+  camera_motion: CameraMotionMode | string;
   reference_layout_asset?: string | null;
   scripture_ref_id?: string | null;
   original_term?: string | null;
   stamp_text?: string | null;
   series_label?: string | null;
+  image_layout?: ImageLayoutMode;
+  image_fit?: ImageFitMode;
+  image_scale?: number;
+  image_offset_x?: number;
+  image_offset_y?: number;
+  image_opacity?: number;
+  image_animation?: ImageAnimationMode;
+  illustration_variant?: IllustrationVariant;
+  element_animation?: ElementAnimationMode;
+  animation_speed?: number;
+  motion_intensity?: number;
+  show_stamp?: boolean | null;
 }
 
 export interface SceneAsset {
@@ -424,6 +501,7 @@ export interface GenerateTtsPayload {
   engine: TtsEngineId;
   voice_sample_id?: string | null;
   auto_align?: boolean;
+  auto_setup?: boolean;
 }
 
 export interface GenerateTtsResponse {

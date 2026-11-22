@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "slug": "voce-foi-perdoado-mas-consegue-perdoar-2",
+  "title": "Você foi perdoado, mas consegue perdoar?",
+  "created_at": "2026-11-22T09:49:41.207345-03:00",
+  "updated_at": "2026-11-22T14:53:55.530435-03:00",
+  "preset_id": "pastor-andre-biblico",
+  "series": {
+    "series_id": "conexao_at_nt",
+    "format_type": "conexao_at_nt",
+    "episode_number": 2,
+    "batch_id": "retomada-lote-01"
+  },
+  "gates": {
+    "briefing_approved": true,
+    "scripture_verified": true,
+    "script_gate_1_approved": true,
+    "audio_aligned": true,
+    "scenes_approved": true,
+    "qa_passed": true
+  },
+  "cost_ledger": {
+    "currency": "USD",
+    "estimated_total": 0.0,
+    "spent_total": 0.0,
+    "cap_usd": 2.5,
+    "items": [
+      {
+        "item_id": "tier2_scene_01_hailuo_3_cd724f",
+        "stage": "tier2_video",
+        "provider": "local_simulation",
+        "scene_id": "scene_01",
+        "cost_usd": 0.0,
+        "created_at": "2026-11-22T14:49:54.172445-03:00",
+        "note": "Simulação local ($0.00) · Hailuo 3 Max (6s 720p · Fiel ao layout)"
+      }
+    ]
+  },
+  "metrics_48h": {
+    "published_at": null,
+    "viewed_vs_swiped_pct": null,
+    "avg_retention_pct": null,
+    "comments_count": null
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "selected_hook_id": "hook_1",
+  "hooks": [
+    {
+      "id": "hook_1",
+      "hook_type": "paradoxo",
+      "spoken_text": "Imagine um homem que devia tanto dinheiro que jamais conseguiria pagar sua dívida.",
+      "visual_interrupt": "Contador monumental em carvão subindo até 10.000 talentos com impacto editorial e marca-texto dourado."
+    },
+    {
+      "id": "hook_2",
+      "hook_type": "mapa",
+      "spoken_text": "Essa parábola de Jesus expõe o coração humano.",
+      "visual_interrupt": "Balança editorial desenhada em traço vivo contrastando dívida impagável e pequena quantia."
+    },
+    {
+      "id": "hook_3",
+      "hook_type": "mito",
+      "spoken_text": "Você recebeu tanto perdão — por que oferece tão pouco?",
+      "visual_interrupt": "Split dramático em carvão e pergaminho revelando a desproporção da graça."
+    }
+  ],
+  "narration_segments": [
+    {
+      "segment_id": "seg_01",
+      "role": "hook",
+      "display_text": "Imagine um homem que devia tanto dinheiro que jamais conseguiria pagar sua dívida.",
+      "tts_text": "Imagine um homem que devia tanto dinheiro que jamais conseguiria pagar sua dívida."
+    },
+    {
+      "segment_id": "seg_02",
+      "role": "body",
+      "display_text": "Ele foi levado diante do rei,",
+      "tts_text": "Ele foi levado diante do rei,"
+    },
+    {
+      "segment_id": "seg_03",
+      "role": "body",
+      "display_text": "e o rei ordenou que tudo o que ele possuía fosse vendido para pagar o que",
+      "tts_text": "e o rei ordenou que tudo o que ele possuía fosse vendido para pagar o que"
+    },
+    {
+      "segment_id": "seg_04",
+      "role": "body",
+      "display_text": "devia.",
+      "tts_text": "devia."
+    },
+    {
+      "segment_id": "seg_05",
+      "role": "body",
+      "display_text": "Desesperado, aquele homem se ajoelhou e pediu misericórdia.",
+      "tts_text": "Desesperado, aquele homem se ajoelhou e pediu misericórdia."
+    },
+    {
+      "segment_id": "seg_06",
+      "role": "body",
+      "display_text": "E sabe o que o rei fez?",
+      "tts_text": "E sabe o que o rei fez?"
+    },
+    {
+      "segment_id": "seg_07",
+      "role": "body",
+      "display_text": "Perdoou toda a dívida!",
+      "tts_text": "Perdoou toda a dívida!"
+    },
+    {
+      "segment_id": "seg_08",
+      "role": "body",
+      "display_text": "Ele saiu dali livre.",
+      "tts_text": "Ele saiu dali livre."
+    },
+    {
+      "segment_id": "seg_09",
+      "role": "body",
+      "display_text": "Sua dívida havia sido completamente cancelada.",
+      "tts_text": "Sua dívida havia sido completamente cancelada."
+    },
+    {
+      "segment_id": "seg_10",
+      "role": "pivot",
+      "display_text": "Mas, pouco depois, encontrou um homem que lhe devia uma pequena quantia.",
+      "tts_text": "Mas, pouco depois, encontrou um homem que lhe devia uma pequena quantia."
+    },
+    {
+      "segment_id": "seg_11",
+      "role": "body",
+      "display_text": "Aquele homem implorou, pediu paciência e prometeu pagar.",
+      "tts_text": "Aquele homem implorou, pediu paciência e prometeu pagar."
+    },
+    {
+      "segment_id": "seg_12",
+      "role": "pivot",
+      "display_text": "Mas o homem que acabara de receber misericórdia agarrou seu companheiro pelo pescoço e mandou prendê-lo",
+      "tts_text": "Mas o homem que acabara de receber misericórdia agarrou seu companheiro pelo pescoço e mandou prendê-lo"
+    },
+    {
+      "segment_id": "seg_13",
+      "role": "body",
+      "display_text": "até que pagasse tudo.",
+      "tts_text": "até que pagasse tudo."
+    },
+    {
+      "segment_id": "seg_14",
+      "role": "body",
+      "display_text": "Quando o rei soube disso, ficou indignado e perguntou:",
+      "tts_text": "Quando o rei soube disso, ficou indignado e perguntou:"
+    },
+    {
+      "segment_id": "seg_15",
+      "role": "body",
+      "display_text": "\"Eu não perdoei toda a sua dívida?",
+      "tts_text": "\"Eu não perdoei toda a sua dívida?"
+    },
+    {
+      "segment_id": "seg_16",
+      "role": "body",
+      "display_text": "Você não deveria ter tido misericórdia do seu companheiro, assim como eu tive de você?\"",
+      "tts_text": "Você não deveria ter tido misericórdia do seu companheiro, assim como eu tive de você?\""
+    },
+    {
+      "segment_id": "seg_17",
+      "role": "body",
+      "display_text": "E existe uma pergunta que precisamos fazer:",
+      "tts_text": "E existe uma pergunta que precisamos fazer:"
+    },
+    {
+      "segment_id": "seg_18",
+      "role": "body",
+      "display_text": "Como alguém pode receber tanto perdão e oferecer tão pouco perdão?",
+      "tts_text": "Como alguém pode receber tanto perdão e oferecer tão pouco perdão?"
+    },
+    {
+      "segment_id": "seg_19",
+      "role": "body",
+      "display_text": "Nós somos rápidos para lembrar o quanto fomos feridos,",
+      "tts_text": "Nós somos rápidos para lembrar o quanto fomos feridos,"
+    },
+    {
+      "segment_id": "seg_20",
+      "role": "pivot",
+      "display_text": "mas será que nos lembramos do quanto fomos perdoados?",
+      "tts_text": "mas será que nos lembramos do quanto fomos perdoados?"
+    },
+    {
+      "segment_id": "seg_21",
+      "role": "body",
+      "display_text": "Não podemos querer viver debaixo da misericórdia de Deus enquanto tratamos as pessoas apenas com a",
+      "tts_text": "Não podemos querer viver debaixo da misericórdia de Deus enquanto tratamos as pessoas apenas com a"
+    },
+    {
+      "segment_id": "seg_22",
+      "role": "body",
+      "display_text": "lógica da cobrança.",
+      "tts_text": "lógica da cobrança."
+    },
+    {
+      "segment_id": "seg_23",
+      "role": "body",
+      "display_text": "Quem compreendeu o tamanho da graça que recebeu não pode continuar vivendo como se nunca tivesse",
+      "tts_text": "Quem compreendeu o tamanho da graça que recebeu não pode continuar vivendo como se nunca tivesse"
+    },
+    {
+      "segment_id": "seg_24",
+      "role": "body",
+      "display_text": "precisado dela.",
+      "tts_text": "precisado dela."
+    },
+    {
+      "segment_id": "seg_25",
+      "role": "body",
+      "display_text": "Você não precisa fingir que não foi ferido.",
+      "tts_text": "Você não precisa fingir que não foi ferido."
+    },
+    {
+      "segment_id": "seg_26",
+      "role": "application",
+      "display_text": "Mas precisa permitir que o perdão que recebeu de Cristo transforme a maneira como lida com",
+      "tts_text": "Mas precisa permitir que o perdão que recebeu de Cristo transforme a maneira como lida com"
+    },
+    {
+      "segment_id": "seg_27",
+      "role": "application",
+      "display_text": "quem feriu você.",
+      "tts_text": "quem feriu você."
+    }
+  ],
+  "scripture_refs": [
+    {
+      "ref_id": "ref_01",
+      "citation": "Mateus 18:32–33",
+      "translation": "KJA",
+      "exact_text": "Servo mau! Eu te perdoei toda aquela dívida, porque me suplicaste. Não devias tu, igualmente, ter compaixão do teu conservo, como eu também tive misericórdia de ti?",
+      "verified_by_human": true
+    }
+  ],
+  "distribution_pack": {
+    "shorts_title": "Você foi perdoado, mas consegue perdoar? (Mateus 18)",
+    "caption_reels_tiktok": "Na parábola do credor incompassivo (Mateus 18:21–35), Jesus confronta a distância entre a graça que recebemos e a cobrança que impomos. Salva para reler hoje.",
+    "hashtags": [
+      "#pastorandrebezerra",
+      "#estudobiblico",
+      "#mateus18",
+      "#perdao"
+    ],
+    "pinned_comment": "Texto base: Mateus 18:21–35 (KJA). O que mais confrontou você nessa parábola de Jesus?",
+    "cover_spec": {
+      "headline": "PERDOADO, MAS PERDOA?",
+      "subheadline": "MATEUS 18:21–35 · PARÁBOLA DO REI",
+      "highlight_word": "PERDOA?"
+    }
+  }
+}

@@ -34,3 +34,16 @@ members = []
 testpaths = ["tests"]
 pythonpath = ["."]
 addopts = "-q"
+
+[tool.pyright]
+include = ["backend", "tests"]
+extraPaths = ["."]
+venvPath = "."
+venv = ".venv"
+pythonVersion = "3.12"
+typeCheckingMode = "standard"
+
+[tool.pyrefly]
+project-includes = ["backend", "tests"]
+search-path = ["."]
+python-interpreter-path = ".venv/Scripts/python.exe"

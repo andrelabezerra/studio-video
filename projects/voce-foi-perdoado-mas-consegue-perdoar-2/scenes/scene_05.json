@@ -1,0 +1,100 @@
+{
+  "scene_id": "scene_05",
+  "order": 5,
+  "status": "rendered",
+  "tier": 1,
+  "template": "editorial_motion",
+  "template_version": "2.0.0",
+  "timing": {
+    "start_word_id": "w_0066",
+    "end_word_id": "w_0085",
+    "resolved_start_ms": 23242,
+    "resolved_end_ms": 30964
+  },
+  "visual": {
+    "background_theme": "pergaminho",
+    "headline": "MAS, POUCO DEPOIS...",
+    "subtext": "A DESPROPORÇÃO",
+    "highlight_word_ids": [
+      "w_0066",
+      "w_0076",
+      "w_0080"
+    ],
+    "transition_in": "whip_pan",
+    "camera_motion": "beat_reactive",
+    "reference_layout_asset": null,
+    "scripture_ref_id": null,
+    "original_term": null,
+    "stamp_text": null,
+    "series_label": "PARÁBOLA · MATEUS 18",
+    "image_layout": "auto",
+    "image_fit": "cover",
+    "image_scale": 1.0,
+    "image_offset_x": 0.0,
+    "image_offset_y": 0.0,
+    "image_opacity": 1.0,
+    "image_animation": "ken_burns_in",
+    "illustration_variant": "auto",
+    "element_animation": "vox_editorial",
+    "animation_speed": 1.0,
+    "motion_intensity": 1.15,
+    "show_stamp": null,
+    "composition": "dramatic_split",
+    "atmosphere": "ink_vignette",
+    "beats": [
+      {
+        "beat_id": "s05_b1",
+        "anchor_word_id": "w_0066",
+        "progress": null,
+        "headline": "MAS, POUCO DEPOIS...",
+        "subtext": "O ENCONTRO NA RUA",
+        "emphasis": "terracotta",
+        "visual_action": "reveal_top",
+        "camera_shift": "pan_left"
+      },
+      {
+        "beat_id": "s05_b2",
+        "anchor_word_id": "w_0076",
+        "progress": null,
+        "headline": "UMA PEQUENA QUANTIA",
+        "subtext": "FRAÇÃO MÍNIMA DO QUE RECEBEU",
+        "emphasis": "gold",
+        "visual_action": "reveal_bottom",
+        "camera_shift": "pan_right"
+      },
+      {
+        "beat_id": "s05_b3",
+        "anchor_word_id": "w_0080",
+        "progress": null,
+        "headline": "IMPLOROU POR PACIÊNCIA",
+        "subtext": "O MESMO APELO DE ANTES",
+        "emphasis": "navy",
+        "visual_action": "contrast_focus",
+        "camera_shift": "push_in"
+      }
+    ],
+    "motion_data": {
+      "top_tag": "O QUE LHE FOI PERDOADO",
+      "top_title": "10.000 TALENTOS",
+      "top_sub": "Dívida impagável cancelada na hora",
+      "top_tone": "gold",
+      "bottom_tag": "O QUE ELE COBROU",
+      "bottom_title": "PEQUENA QUANTIA",
+      "bottom_sub": "Um companheiro implorando paciência",
+      "bottom_tone": "terracotta",
+      "divider_symbol": "≠"
+    }
+  },
+  "assets": [],
+  "sfx_cues": [
+    {
+      "sfx_id": "paper_tear_01",
+      "anchor_word_id": "w_0066",
+      "offset_ms": -40,
+      "gain_db": -5.5
+    }
+  ],
+  "review_pins": [],
+  "cache_hash": "599024ea5bf55555c2d4ea32ab9904100fa9c20dccb3f2febf6012bc0fd5c413",
+  "cost_usd": 0.0
+}

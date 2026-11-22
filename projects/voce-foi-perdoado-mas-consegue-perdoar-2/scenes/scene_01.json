@@ -1,0 +1,98 @@
+{
+  "scene_id": "scene_01",
+  "order": 1,
+  "status": "rendered",
+  "tier": 2,
+  "template": "tier2_video",
+  "template_version": "2.0.0",
+  "timing": {
+    "start_word_id": "w_0001",
+    "end_word_id": "w_0013",
+    "resolved_start_ms": 0,
+    "resolved_end_ms": 4910
+  },
+  "visual": {
+    "background_theme": "carvao",
+    "headline": "UMA DÍVIDA IMPAGÁVEL",
+    "subtext": "MATEUS 18:21–35",
+    "highlight_word_ids": [
+      "w_0007",
+      "w_0009",
+      "w_0013"
+    ],
+    "transition_in": "stamp_drop",
+    "camera_motion": "cinematic_push",
+    "reference_layout_asset": null,
+    "scripture_ref_id": null,
+    "original_term": null,
+    "stamp_text": null,
+    "series_label": "PARÁBOLA · MATEUS 18",
+    "image_layout": "auto",
+    "image_fit": "cover",
+    "image_scale": 1.0,
+    "image_offset_x": 0.0,
+    "image_offset_y": 0.0,
+    "image_opacity": 1.0,
+    "image_animation": "ken_burns_in",
+    "illustration_variant": "auto",
+    "element_animation": "vox_editorial",
+    "animation_speed": 1.0,
+    "motion_intensity": 1.15,
+    "show_stamp": null,
+    "composition": "counter_impact",
+    "atmosphere": "dramatic_spotlight",
+    "beats": [
+      {
+        "beat_id": "s01_b1",
+        "anchor_word_id": "w_0001",
+        "progress": null,
+        "headline": "UMA DÍVIDA IMPAGÁVEL",
+        "subtext": "MATEUS 18:21–35",
+        "emphasis": "gold",
+        "visual_action": "count_up",
+        "camera_shift": "none"
+      },
+      {
+        "beat_id": "s01_b2",
+        "anchor_word_id": "w_0009",
+        "progress": null,
+        "headline": "JAMAIS CONSEGUIRIA PAGAR",
+        "subtext": "ESCALA IMPOSSÍVEL",
+        "emphasis": "terracotta",
+        "visual_action": "peak_impact",
+        "camera_shift": "push_in"
+      }
+    ],
+    "motion_data": {
+      "counter_from": 0,
+      "counter_to": 10000,
+      "counter_prefix": "",
+      "counter_suffix": "",
+      "unit_label": "TALENTOS DE DÍVIDA",
+      "compare_value": "200.000 ANOS",
+      "compare_label": "DE SALÁRIO HUMANO",
+      "footnote": "Uma soma além de qualquer esforço humano"
+    }
+  },
+  "assets": [
+    {
+      "asset_id": "tier2_hailuo_3",
+      "provider": "local",
+      "prompt": "Editorial Vox style paper collage cutout for 'UMA DÍVIDA IMPAGÁVEL', warm parchment tones, torn edges, subtle drop shadow",
+      "apply_rembg": false,
+      "cache_relpath": "assets/scene_01_tier2_hailuo_3.png",
+      "sha256": "c4d216515cc51c19b30cbef2892fb611005d67eb4f0abfaaa2568b5bf1fa5ec6"
+    }
+  ],
+  "sfx_cues": [
+    {
+      "sfx_id": "stamp_drop_01",
+      "anchor_word_id": "w_0001",
+      "offset_ms": 0,
+      "gain_db": -5.0
+    }
+  ],
+  "review_pins": [],
+  "cache_hash": "bcbed5a04043f60e1e4c0816904bb3c11f01209647aba843dbf1b12ac02b3bb2",
+  "cost_usd": 0.0
+}

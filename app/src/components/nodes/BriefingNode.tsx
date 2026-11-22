@@ -101,10 +101,11 @@ export function BriefingNode({ data }: NodeProps) {
 
       <div className="node-body nodrag nowheel">
         <div>
-          <label className="field-label">Ideia Bruta / Tema</label>
+          <label className="field-label">Ideia Bruta / Gancho ou Roteiro</label>
           <textarea
             className="textarea"
-            rows={2}
+            rows={4}
+            placeholder="Ideia curta ou roteiro já pronto (várias frases) para a IA ajustar..."
             value={draft.raw_idea}
             onChange={(e) => setDraft({ ...draft, raw_idea: e.target.value })}
             onBlur={() => {
@@ -205,6 +206,7 @@ export function BriefingNode({ data }: NodeProps) {
               <option value="NVI">NVI</option>
               <option value="ARA">ARA</option>
               <option value="NAA">NAA</option>
+              <option value="KJA">KJA</option>
             </select>
           </div>
 

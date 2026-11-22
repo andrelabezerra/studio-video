@@ -68,8 +68,11 @@
   }
 
   window.__STUDIO__.registerTemplate("kinetic_captions", function createKineticCaptions(ctx) {
-    const { root, visual, preset, theme, words, durationMs, Math: M } = ctx;
+    const { root, visual, preset, theme, words, durationMs, assetEntry, imageLayout, Math: M } = ctx;
     const minWordOpacity = theme === "carvao" || theme === "azul_marinho" ? 0.52 : 0.46;
+    const useInlineCard = Boolean(assetEntry && imageLayout === "card");
+    const fitStyle = visual.image_fit === "contain" ? "object-fit:contain;" : "object-fit:cover;";
+    const opStyle = `opacity:${M.clamp(Number(visual.image_opacity) || 1.0, 0.1, 1.0)};`;
 
     const maxPerBlock = (preset && preset.typography && preset.typography.max_words_per_kinetic_block) || 6;
     const headline = String(visual.headline || "").trim();
@@ -85,11 +88,16 @@
     const blocks = chunkKineticBlocks(words, Math.min(5, maxPerBlock), durationMs, headline);
     const lexicon = splitLexiconSubtext(subtext, headline, visual.original_term);
 
+    const rawStamp = String(visual.stamp_text || "").trim();
+    const isForbidden = window.__STUDIO__ && window.__STUDIO__.isForbiddenSeal(rawStamp);
     const showStamp =
-      String(visual.transition_in || "").toLowerCase() === "stamp_drop" ||
-      Boolean(visual.stamp_text);
+      isForbidden || visual.show_stamp === false
+        ? false
+        : visual.show_stamp === true ||
+          String(visual.transition_in || "").toLowerCase() === "stamp_drop" ||
+          Boolean(rawStamp);
     const stampLabel =
-      visual.stamp_text ||
+      rawStamp ||
       (/mito/i.test(`${headline} ${subtext}`) ? "MITO" : /nunca|não|nao/i.test(headline) ? "ATENÇÃO" : "DESTAQUE");
 
     // Encontra instante do carimbo (âncora na 1ª highlight_word ou 220ms)
@@ -136,9 +144,19 @@
             : ""
         }
 
+        ${
+          useInlineCard
+            ? `<div class="tpl-inline-media-card" style="height:290px;">
+                 <div class="tpl-inline-media-inner">
+                   <img class="tpl-inline-media-img" style="${fitStyle}${opStyle}" src="${M.escapeHtml(assetEntry.url)}" alt="${M.escapeHtml(headline || "Imagem da cena")}" />
+                 </div>
+               </div>`
+            : ""
+        }
+
         ${showAnchorHeadline ? `<div class="kc-anchor-headline">${M.escapeHtml(headline)}</div>` : ""}
 
-        <div class="kc-blocks-stage">
+        <div class="kc-blocks-stage"${useInlineCard ? ' style="min-height:320px;"' : ""}>
           ${blocksHtml}
         </div>
 
@@ -159,6 +177,7 @@
     const anchorEl = root.querySelector(".kc-anchor-headline");
     const railEl = root.querySelector(".kc-editorial-rail");
     const stampEl = root.querySelector(".kc-stamp");
+    const inlineImg = root.querySelector(".tpl-inline-media-img");
 
     const blockEntries = blocks.map((block, bIdx) => {
       const el = root.querySelector(`.kc-block[data-block="${bIdx}"]`);
@@ -182,12 +201,28 @@
     });
 
     return {
-      seek(t) {
+      seek(t, pGlobal, beatState, tReal) {
+        const tm = Number.isFinite(tReal) ? tReal : t;
+        if (inlineImg && window.__STUDIO__ && typeof window.__STUDIO__.evaluateImageTransform === "function") {
+          const imgTf = window.__STUDIO__.evaluateImageTransform(visual, pGlobal || 0, tm, durationMs);
+          inlineImg.style.transform = imgTf.css;
+        }
+        // Evolução multi-beat do anchor headline & rail text em cenas longas
+        if (beatState && beatState.hasBeats && beatState.activeBeat) {
+          if (anchorEl && beatState.activeBeat.headline && anchorEl.textContent !== beatState.activeBeat.headline) {
+            anchorEl.textContent = beatState.activeBeat.headline;
+          }
+          const railTxt = railEl && railEl.querySelector(".kc-rail-text");
+          if (railTxt && beatState.activeBeat.subtext && railTxt.textContent !== beatState.activeBeat.subtext) {
+            railTxt.textContent = beatState.activeBeat.subtext;
+          }
+        }
         // 1. Badge Mono de Termo Original
         if (lexCard) {
           const lp = M.expoOut(M.progress(t, 60, 320));
+          const drift = Math.sin((pGlobal || 0) * Math.PI * 2) * 3;
           lexCard.style.opacity = String(lp);
-          lexCard.style.transform = `translate3d(${M.lerp(-38, 0, lp).toFixed(2)}px, 0, 0)`;
+          lexCard.style.transform = `translate3d(${M.lerp(-38, 0, lp).toFixed(2)}px, ${drift.toFixed(2)}px, 0)`;
         }
 
         // 2. Anchor Headline editorial
@@ -199,7 +234,7 @@
 
         // 3. Blocos cinéticos (4–6 palavras por bloco, troca limpa sincronizada à fala)
         blockEntries.forEach(({ block, el, wordEntries }) => {
-          const isVisible = t >= block.startMs && t < block.endMs;
+          const isVisible = tm >= block.startMs && tm < block.endMs;
           if (!isVisible) {
             el.style.opacity = "0";
             el.style.pointerEvents = "none";
@@ -207,20 +242,19 @@
             return;
           }
 
-          // Saída sutil nos últimos 90ms do bloco (exceto no último)
           const fadeOut = block.endMs < durationMs
-            ? 1 - M.progress(t, block.endMs - 90, 90)
+            ? 1 - M.progress(tm, block.endMs - 90, 90)
             : 1;
-          const blockIntro = M.power3Out(M.progress(t, block.startMs, 180));
+          const blockIntro = M.power3Out(M.progress(tm, block.startMs, 180));
           el.style.opacity = String((blockIntro * fadeOut).toFixed(3));
           el.style.transform = `translate3d(0, calc(-50% + ${M.lerp(18, 0, blockIntro).toFixed(2)}px), 0)`;
 
           wordEntries.forEach(({ word, el: wEl, hlEl, ulPath, isHl }) => {
             const wStart = Math.max(block.startMs, word.local_start_ms - 40);
-            const enterP = M.backOut(M.progress(t, wStart, 220), 1.35);
-            const revealP = M.progress(t, wStart, 110);
+            const enterP = M.backOut(M.progress(tm, wStart, 220), 1.35);
+            const revealP = M.progress(tm, wStart, 110);
             const opacity = M.lerp(minWordOpacity, 1.0, revealP);
-            const isSpeaking = t >= word.local_start_ms && t <= word.local_end_ms + 50;
+            const isSpeaking = tm >= word.local_start_ms && tm <= word.local_end_ms + 50;
 
             const ty = M.lerp(14, 0, enterP);
             const sc = M.lerp(0.96, isSpeaking ? 1.03 : 1.0, enterP);
@@ -229,13 +263,12 @@
             wEl.style.transform = `translate3d(0, ${ty.toFixed(2)}px, 0) scale(${sc.toFixed(4)})`;
 
             if (isHl && hlEl) {
-              const hlP = M.expoOut(M.progress(t, word.local_start_ms, 260));
+              const hlP = M.expoOut(M.progress(tm, word.local_start_ms, 260));
               hlEl.style.transform = `scaleX(${hlP.toFixed(4)}) rotate(-0.8deg)`;
               wEl.classList.toggle("is-highlight-active", hlP > 0.35);
             } else if (ulPath) {
-              // Sublinhado sutil apenas enquanto a palavra é falada
               const ulP = isSpeaking
-                ? M.expoOut(M.progress(t, word.local_start_ms, Math.max(140, word.local_end_ms - word.local_start_ms)))
+                ? M.expoOut(M.progress(tm, word.local_start_ms, Math.max(140, word.local_end_ms - word.local_start_ms)))
                 : 0;
               ulPath.style.strokeDashoffset = String((110 * (1 - ulP)).toFixed(2));
               ulPath.style.opacity = isSpeaking ? "0.85" : "0";
@@ -252,8 +285,8 @@
 
         // 5. Carimbo terracota #9E3B2E (stamp_drop)
         if (stampEl) {
-          const stP = M.backOut(M.progress(t, stampTriggerMs, 260), 1.7);
-          const stOp = M.clamp(M.progress(t, stampTriggerMs, 90), 0, 1);
+          const stP = M.backOut(M.progress(tm, stampTriggerMs, 260), 1.7);
+          const stOp = M.clamp(M.progress(tm, stampTriggerMs, 90), 0, 1);
           stampEl.style.opacity = String(stOp.toFixed(3));
           stampEl.style.transform =
             `scale(${M.lerp(1.9, 1.0, stP).toFixed(4)}) rotate(${M.lerp(-18, -7.5, stP).toFixed(2)}deg)`;

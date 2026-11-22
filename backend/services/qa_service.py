@@ -17,28 +17,118 @@ from PIL import Image, ImageDraw, ImageFont
 from backend.models.audio import AudioAlignment
 from backend.models.preset import StylePreset
 from backend.models.scene import Scene
+from backend.models.script import Script
+from backend.models.validation import (
+    collect_placeholder_errors,
+    is_forbidden_bureaucratic_stamp,
+)
 
 
 @dataclass
 class TimingValidationReport:
-    """Relatório estruturado de auditoria de cobertura word_id e ritmo editorial."""
+    """Relatório estruturado de auditoria de cobertura word_id, ritmo, beats e integridade editorial."""
 
     ok: bool
     total_duration_ms: int
     scene_durations_ms: dict[str, int] = field(default_factory=dict)
+    scene_word_counts: dict[str, int] = field(default_factory=dict)
+    pacing_summary: dict[str, Any] = field(default_factory=dict)
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
+
+
+def validate_project_content(
+    script: Script | None,
+    scenes: list[Scene],
+    *,
+    require_verified_scripture: bool = True,
+) -> list[str]:
+    """Audita Fail-Fast contra placeholders ([Conferir...], [TODO], TBD) e selos burocráticos."""
+    errors: list[str] = []
+
+    if script is not None:
+        for ref in script.scripture_refs:
+            errors.extend(
+                collect_placeholder_errors(
+                    ref.citation,
+                    field_path=f"script.scripture_refs[{ref.ref_id}].citation",
+                )
+            )
+            errors.extend(
+                collect_placeholder_errors(
+                    ref.exact_text,
+                    field_path=f"script.scripture_refs[{ref.ref_id}].exact_text",
+                )
+            )
+            if require_verified_scripture and not ref.verified_by_human:
+                errors.append(
+                    f"script.scripture_refs[{ref.ref_id}] ({ref.citation}): "
+                    "referência bíblica ainda não validada por humano (verified_by_human=False)."
+                )
+        for seg in script.narration_segments:
+            errors.extend(
+                collect_placeholder_errors(
+                    seg.display_text,
+                    field_path=f"script.narration_segments[{seg.segment_id}].display_text",
+                )
+            )
+            errors.extend(
+                collect_placeholder_errors(
+                    seg.tts_text,
+                    field_path=f"script.narration_segments[{seg.segment_id}].tts_text",
+                )
+            )
+
+    for scene in scenes:
+        vis = scene.visual
+        prefix = f"{scene.scene_id}.visual"
+        for fname in ("headline", "subtext", "original_term", "stamp_text", "series_label"):
+            val = getattr(vis, fname, None)
+            if val:
+                errors.extend(collect_placeholder_errors(val, field_path=f"{prefix}.{fname}"))
+        if vis.stamp_text and is_forbidden_bureaucratic_stamp(vis.stamp_text):
+            errors.append(
+                f"{prefix}.stamp_text: selo burocrático proibido '{vis.stamp_text}'. "
+                "Remova o selo e utilize composição editorial limpa."
+            )
+        if vis.motion_data:
+            errors.extend(
+                collect_placeholder_errors(vis.motion_data, field_path=f"{prefix}.motion_data")
+            )
+        for beat in vis.beats:
+            if beat.headline:
+                errors.extend(
+                    collect_placeholder_errors(
+                        beat.headline,
+                        field_path=f"{prefix}.beats[{beat.beat_id}].headline",
+                    )
+                )
+            if beat.subtext:
+                errors.extend(
+                    collect_placeholder_errors(
+                        beat.subtext,
+                        field_path=f"{prefix}.beats[{beat.beat_id}].subtext",
+                    )
+                )
+
+    return errors
 
 
 def validate_project_timing(
     scenes: list[Scene],
     alignment: AudioAlignment,
     preset: StylePreset,
+    *,
+    script: Script | None = None,
 ) -> TimingValidationReport:
-    """Verifica cobertura contígua de word_id, bounds resolvidos e duração alvo do preset."""
+    """Verifica cobertura contígua de word_id, beats, ritmo anti-fragmentação e zero placeholders."""
     errors: list[str] = []
     warnings: list[str] = []
     scene_durations: dict[str, int] = {}
+    scene_word_counts: dict[str, int] = {}
+    micro_scene_ids: list[str] = []
+    short_scene_ids: list[str] = []
+    beats_total = 0
 
     if not scenes:
         return TimingValidationReport(
@@ -48,6 +138,8 @@ def validate_project_timing(
         )
 
     ordered = sorted(scenes, key=lambda s: s.order)
+    errors.extend(validate_project_content(script, ordered, require_verified_scripture=script is not None))
+
     word_index = {w.word_id: i for i, w in enumerate(alignment.words)}
     expected_word_idx = 0
     prev_end_ms = 0
@@ -67,12 +159,56 @@ def validate_project_timing(
             errors.append(
                 f"{scene.scene_id}: intervalo word_id invertido ({t.start_word_id} > {t.end_word_id})."
             )
+            continue
         if start_idx != expected_word_idx:
             errors.append(
                 f"{scene.scene_id}: quebra de contiguidade word_id "
                 f"(esperado índice {expected_word_idx}, recebido {start_idx} '{t.start_word_id}')."
             )
         expected_word_idx = end_idx + 1
+        word_count = end_idx - start_idx + 1
+        scene_word_counts[scene.scene_id] = word_count
+
+        # Valida integridade de highlight_word_ids, sfx_cues e beats[]
+        for hl_wid in scene.visual.highlight_word_ids:
+            if hl_wid not in word_index:
+                errors.append(
+                    f"{scene.scene_id}: highlight_word_id '{hl_wid}' inexistente no audio_alignment."
+                )
+        for cue in scene.sfx_cues:
+            if cue.anchor_word_id not in word_index:
+                errors.append(
+                    f"{scene.scene_id}: sfx_cue '{cue.sfx_id}' referencia anchor_word_id '{cue.anchor_word_id}' inexistente."
+                )
+
+        prev_beat_pos = -1.0
+        for beat in scene.visual.beats:
+            beats_total += 1
+            beat_pos: float | None = None
+            if beat.anchor_word_id is not None:
+                if beat.anchor_word_id not in word_index:
+                    errors.append(
+                        f"{scene.scene_id}: beat '{beat.beat_id}' referencia anchor_word_id "
+                        f"'{beat.anchor_word_id}' inexistente no audio_alignment."
+                    )
+                else:
+                    b_idx = word_index[beat.anchor_word_id]
+                    if b_idx < start_idx or b_idx > end_idx:
+                        errors.append(
+                            f"{scene.scene_id}: beat '{beat.beat_id}' anchor_word_id '{beat.anchor_word_id}' "
+                            f"está fora do intervalo da cena ({t.start_word_id}..{t.end_word_id})."
+                        )
+                    else:
+                        beat_pos = (b_idx - start_idx) / max(1, word_count)
+            elif beat.progress is not None:
+                beat_pos = beat.progress
+
+            if beat_pos is not None:
+                if beat_pos < prev_beat_pos - 1e-6:
+                    warnings.append(
+                        f"{scene.scene_id}: beat '{beat.beat_id}' fora de ordem cronológica dentro da cena."
+                    )
+                prev_beat_pos = max(prev_beat_pos, beat_pos)
 
         if t.resolved_start_ms is None or t.resolved_end_ms is None:
             errors.append(f"{scene.scene_id}: timings ainda não resolvidos (resolved_*_ms nulos).")
@@ -90,15 +226,37 @@ def validate_project_timing(
         prev_end_ms = t.resolved_end_ms
 
         dur_sec = dur_ms / 1000.0
+        # Bloqueio Fail-Fast contra micro-cenas fragmentadas (ex.: 1–3 palavras / < 1.8s)
+        if len(ordered) > 1 and word_count < 4 and dur_sec < 1.8:
+            micro_scene_ids.append(scene.scene_id)
+            errors.append(
+                f"{scene.scene_id}: micro-cena fragmentada ({word_count} palavra(s), {dur_sec:.2f}s). "
+                "Agrupe segmentos curtos em blocos narrativos fluidos (~4s–8s)."
+            )
+        if dur_sec < 2.5:
+            short_scene_ids.append(scene.scene_id)
+
+        max_comfortable_sec = (
+            preset.video.scene_pacing_sec.max + 2.0
+            if len(scene.visual.beats) >= 2
+            else preset.video.scene_pacing_sec.max + 1.5
+        )
         if dur_sec < preset.video.scene_pacing_sec.min - 0.5:
             warnings.append(
                 f"{scene.scene_id}: duração {dur_sec:.2f}s abaixo do ritmo editorial "
                 f"({preset.video.scene_pacing_sec.min}s)."
             )
-        elif dur_sec > preset.video.scene_pacing_sec.max + 1.5:
+        elif dur_sec > max_comfortable_sec:
             warnings.append(
                 f"{scene.scene_id}: duração {dur_sec:.2f}s acima do ritmo editorial "
                 f"({preset.video.scene_pacing_sec.max}s)."
+            )
+
+        # Alerta de dinamismo para cenas longas sem beats internos
+        if dur_sec >= 5.5 and len(scene.visual.beats) == 0:
+            warnings.append(
+                f"{scene.scene_id}: cena longa ({dur_sec:.2f}s) sem beats[] internos; "
+                "adicione 2–3 beats ancorados em word_id para movimento visual contínuo."
             )
 
     if expected_word_idx != len(alignment.words):
@@ -106,23 +264,50 @@ def validate_project_timing(
             f"Cobertura incompleta de palavras: cobertas {expected_word_idx}/{len(alignment.words)}."
         )
 
+    # Guardrail contra excesso de cortes frenéticos (ex.: 27 micro-cenas em 60–85s)
+    if len(ordered) >= 6 and scene_durations:
+        short_ratio = len(short_scene_ids) / len(ordered)
+        if short_ratio > 0.40:
+            errors.append(
+                f"Excesso de cortes rápidos: {len(short_scene_ids)}/{len(ordered)} cenas "
+                f"({short_ratio * 100:.0f}%) têm menos de 2.5s ({', '.join(short_scene_ids[:6])}). "
+                "Consolide em blocos narrativos de 4s–8s com multi-beats internos."
+            )
+
     total_ms = prev_end_ms
     total_sec = total_ms / 1000.0
     if total_sec < preset.video.target_duration_sec.min:
-        errors.append(
+        warnings.append(
             f"Duração total ({total_sec:.2f}s) abaixo do mínimo alvo "
             f"({preset.video.target_duration_sec.min}s)."
         )
     elif total_sec > preset.video.target_duration_sec.max:
-        errors.append(
+        warnings.append(
             f"Duração total ({total_sec:.2f}s) acima do máximo alvo "
             f"({preset.video.target_duration_sec.max}s)."
         )
+
+    durations_sec_list = [ms / 1000.0 for ms in scene_durations.values()]
+    pacing_summary = {
+        "scene_count": len(ordered),
+        "avg_scene_duration_sec": (
+            round(sum(durations_sec_list) / len(durations_sec_list), 2)
+            if durations_sec_list
+            else 0.0
+        ),
+        "min_scene_duration_sec": round(min(durations_sec_list), 2) if durations_sec_list else 0.0,
+        "max_scene_duration_sec": round(max(durations_sec_list), 2) if durations_sec_list else 0.0,
+        "short_scene_count": len(short_scene_ids),
+        "micro_scene_ids": micro_scene_ids,
+        "beats_total": beats_total,
+    }
 
     return TimingValidationReport(
         ok=len(errors) == 0,
         total_duration_ms=total_ms,
         scene_durations_ms=scene_durations,
+        scene_word_counts=scene_word_counts,
+        pacing_summary=pacing_summary,
         errors=errors,
         warnings=warnings,
     )
@@ -270,7 +455,7 @@ def generate_contact_sheet(
         raise ValueError("Nenhuma cena fornecida para gerar contact_sheet.jpg.")
 
     output_jpg.parent.mkdir(parents=True, exist_ok=True)
-    tile_height = int(round(tile_width * (preset.video.height / preset.video.width)))
+    tile_height = round(tile_width * (preset.video.height / preset.video.width))
     cols = max(1, min(cols, len(scene_mp4s)))
     rows = math.ceil(len(scene_mp4s) / cols)
 
@@ -298,10 +483,10 @@ def generate_contact_sheet(
 
     sx = tile_width / preset.video.width
     sy = tile_height / preset.video.height
-    x1_safe = int(round(preset.safe_zones_px.left * sx))
-    y1_safe = int(round(preset.safe_zones_px.top * sy))
-    x2_safe = int(round((preset.video.width - preset.safe_zones_px.right) * sx))
-    y2_safe = int(round((preset.video.height - preset.safe_zones_px.bottom) * sy))
+    x1_safe = round(preset.safe_zones_px.left * sx)
+    y1_safe = round(preset.safe_zones_px.top * sy)
+    x2_safe = round((preset.video.width - preset.safe_zones_px.right) * sx)
+    y2_safe = round((preset.video.height - preset.safe_zones_px.bottom) * sy)
 
     for idx, (scene_id, mp4_path) in enumerate(scene_mp4s):
         frame = _extract_midpoint_frame(mp4_path).resize((tile_width, tile_height), Image.Resampling.LANCZOS)

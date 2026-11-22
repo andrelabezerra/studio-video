@@ -10,11 +10,15 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
+
+WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
 
 
 def _contains_onedrive(path: Path) -> bool:
@@ -79,18 +83,46 @@ def build_setup_plan(
 
     commands: list[list[str]] = []
     if uv_bin:
-        commands.append([uv_bin, "venv", str(target_dir), "--python", "3.11"])
+        commands.append(
+            [uv_bin, "venv", "--allow-existing", str(target_dir), "--python", "3.11"]
+        )
         pip_prefix = [uv_bin, "pip", "install", "--python", str(venv_python)]
     else:
         commands.append([sys.executable, "-m", "venv", str(target_dir)])
         pip_prefix = [str(venv_python), "-m", "pip", "install"]
 
-    commands.append([*pip_prefix, "torch", "torchaudio", "--index-url", torch_index])
+    commands.append(
+        [
+            *pip_prefix,
+            "torch>=2.5,<2.9",
+            "torchaudio>=2.5,<2.9",
+            "--index-url",
+            torch_index,
+        ]
+    )
 
     if engine == "xtts_v2":
-        commands.append([*pip_prefix, "coqui-tts", "soundfile"])
+        commands.append(
+            [
+                *pip_prefix,
+                "coqui-tts",
+                "transformers>=4.46,<5.0",
+                "huggingface-hub>=0.34.0,<1.0",
+                "soundfile",
+                "six",
+            ]
+        )
     else:
-        commands.append([*pip_prefix, "f5-tts", "soundfile"])
+        commands.append(
+            [
+                *pip_prefix,
+                "f5-tts",
+                "datasets>=3.0.0,<4.0.0",
+                "transformers>=4.46,<5.0",
+                "huggingface-hub>=0.34.0,<1.0",
+                "soundfile",
+            ]
+        )
 
     if with_aligner == "whisperx":
         commands.append([*pip_prefix, "whisperx"])
@@ -143,6 +175,89 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def persist_tts_venv_in_dotenv(
+    venv_python: Path | str,
+    dotenv_path: Path | None = None,
+) -> Path:
+    """Atualiza ou adiciona TTS_VENV_PYTHON no arquivo .env local sem tocar em outras chaves."""
+    target_env = (dotenv_path or (WORKSPACE_ROOT / ".env")).resolve()
+    env_line = f"TTS_VENV_PYTHON={Path(venv_python).resolve()}"
+    if target_env.is_file():
+        raw = target_env.read_text(encoding="utf-8")
+        if re.search(r"(?m)^TTS_VENV_PYTHON=.*$", raw):
+            updated = re.sub(r"(?m)^TTS_VENV_PYTHON=.*$", lambda _: env_line, raw)
+        else:
+            sep = "" if raw.endswith("\n") else "\n"
+            updated = f"{raw}{sep}{env_line}\n"
+        target_env.write_text(updated, encoding="utf-8")
+    else:
+        target_env.write_text(f"{env_line}\n", encoding="utf-8")
+    return target_env
+
+
+def _venv_has_torch(venv_python: Path) -> bool:
+    if not venv_python.is_file():
+        return False
+    try:
+        proc = subprocess.run(
+            [
+                str(venv_python),
+                "-c",
+                "import importlib.util; raise SystemExit(0 if importlib.util.find_spec('torch') and importlib.util.find_spec('torchaudio') else 1)",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=8,
+        )
+        return proc.returncode == 0
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
+def run_tts_venv_setup(
+    *,
+    engine: str,
+    venv_dir: Path | None = None,
+    with_aligner: str = "none",
+    device: str = "auto",
+    update_dotenv: bool = True,
+    on_step: Callable[[int, int, str], None] | None = None,
+) -> Path:
+    """Executa os comandos de criação do venv isolado e instalação do motor TTS neural."""
+    plan = build_setup_plan(
+        engine=engine,
+        venv_dir=venv_dir,
+        with_aligner=with_aligner,
+        device=device,
+    )
+    venv_py = Path(plan["venv_python"]).resolve()
+    all_commands: list[list[str]] = plan["commands"]
+
+    # Se o venv e o PyTorch já existem, pula recriação do venv e reinstalação de torch/torchaudio
+    if venv_py.is_file() and _venv_has_torch(venv_py) and len(all_commands) >= 3:
+        commands = all_commands[2:]
+    elif venv_py.is_file() and len(all_commands) >= 2:
+        commands = all_commands[1:]
+    else:
+        commands = all_commands
+
+    total = len(commands)
+    for idx, cmd in enumerate(commands, start=1):
+        if on_step is not None:
+            on_step(idx, total, f"Instalando pacote {engine} no venv isolado (etapa {idx}/{total})...")
+        proc = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        if proc.returncode != 0:
+            err = (proc.stderr or proc.stdout or "").strip()[-400:]
+            raise RuntimeError(
+                f"Falha ao preparar venv isolado para '{engine}' (etapa {idx}/{total}, exit={proc.returncode}): {err}"
+            )
+
+    if update_dotenv:
+        persist_tts_venv_in_dotenv(venv_py)
+    return venv_py
+
+
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
     venv_dir = Path(args.venv_dir) if args.venv_dir else None
@@ -168,7 +283,8 @@ def main(argv: list[str] | None = None) -> int:
             )
             return proc.returncode
 
-    print("\n[setup_tts_venv] Venv isolado pronto! Adicione no arquivo .env:")
+    persist_tts_venv_in_dotenv(plan["venv_python"])
+    print("\n[setup_tts_venv] Venv isolado pronto e registrado no .env:")
     print(plan["env_line"])
     return 0
 

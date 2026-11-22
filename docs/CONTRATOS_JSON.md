@@ -200,9 +200,37 @@ Gerado na Fase 2/3 a partir do áudio aprovado + *forced alignment* (`WhisperX` 
     "headline": "MAKÁRIOS",
     "subtext": "Grego · Mateus 5",
     "highlight_word_ids": ["w_0016"],
-    "transition_in": "paper_tear",
-    "camera_motion": "subtle_zoom_in",
-    "reference_layout_asset": null
+    "transition_in": "editorial_wipe",
+    "camera_motion": "editorial_glide",
+    "reference_layout_asset": null,
+    "composition": "dramatic_split",
+    "atmosphere": "warm_paper",
+    "beats": [
+      {
+        "beat_id": "s02_b1",
+        "anchor_word_id": "w_0010",
+        "progress": 0.0,
+        "headline": "NO GREGO ORIGINAL",
+        "subtext": "Mateus 5:3",
+        "emphasis": "gold",
+        "visual_action": "open_left",
+        "camera_shift": "push_in"
+      },
+      {
+        "beat_id": "s02_b2",
+        "anchor_word_id": "w_0016",
+        "progress": 0.55,
+        "headline": "MAKÁRIOS MUDA TUDO",
+        "subtext": null,
+        "emphasis": "terracotta",
+        "visual_action": "reveal_right",
+        "camera_shift": "settle"
+      }
+    ],
+    "motion_data": {
+      "left_label": "FELICIDADE PASSAGEIRA",
+      "right_label": "PLENITUDE EM DEUS"
+    }
   },
   "assets": [
     {
@@ -240,8 +268,16 @@ Gerado na Fase 2/3 a partir do áudio aprovado + *forced alignment* (`WhisperX` 
 Valores válidos:
 - `status`: `draft | approved | needs_revision | rendered | discarded`
 - `tier`: `1` (Código Puro HTML/SVG/GSAP) ou `2` (Vídeo Generativo / 3D sob demanda)
-- `template`: `paper_collage | bible_quote_card | kinetic_captions | timeline_map | tier2_video`
-- `transition_in`: `cut | paper_tear | whip_pan | stamp_drop`
+- `template`: `editorial_motion | paper_collage | bible_quote_card | kinetic_captions | timeline_map | tier2_video`
+- `transition_in`: `cut | paper_tear | whip_pan | stamp_drop | fade_in | slide_up | slide_left | zoom_punch | iris_reveal | editorial_wipe | cross_motion | zoom_through | ink_wash`
+- `visual.composition` (opcional, default `auto`): `auto | debt_scale | forgiveness_seal | dramatic_split | rhetorical_question | grace_illumination | narrative_arc | counter_impact | scripture_spotlight`
+- `visual.atmosphere` (opcional, default `auto`): `auto | warm_paper | dramatic_spotlight | grace_glow | ink_vignette`
+- `visual.camera_motion`: `subtle_zoom_in | subtle_pan_right | handheld_drift | cinematic_push | editorial_glide | beat_reactive` (extensível)
+- `visual.beats[]` (opcional, retrocompatível): cada item exige `beat_id` único e ao menos `anchor_word_id` (pertencente ao intervalo da cena) ou `progress` (`0.0..1.0`), além de `headline?`, `subtext?`, `emphasis` (`gold | terracotta | navy | light`), `visual_action?` e `camera_shift` (`none | push_in | pull_out | pan_left | pan_right | tilt_drama | settle`).
+- **Guardrails Fail-Fast Obrigatórios (Pydantic + QA + Compositor):**
+  1. **Zero Placeholders:** é proibido marcar `scripture_refs[].verified_by_human=true` ou gravar/renderizar qualquer cena contendo padrões como `[Conferir ...]`, `[TODO]`, `TODO:`, `TBD`, `[Inserir ...]`, `{{...}}` ou `lorem ipsum` (sem falso positivo na palavra portuguesa "todo").
+  2. **Zero Selo Burocrático:** `visual.stamp_text` rejeita `"TEXTO VERIFICADO"` (e variantes cartoriais).
+  3. **Ritmo Anti-Fragmentação:** cenas agrupadas em blocos narrativos coerentes (~4s–8s); micro-cenas de 1–3 palavras (< 1,8s) ou excesso de cortes rápidos (> 40% abaixo de 2,5s) falham no QA.
 
 ---
 

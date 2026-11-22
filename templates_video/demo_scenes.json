@@ -35,8 +35,8 @@
   },
   "scenes": [
     {
-      "format_type": "perdido_traducao",
-      "duration_ms": 3400,
+      "format_type": "conexao_at_nt",
+      "duration_ms": 5400,
       "scene_start_ms": 0,
       "asset_urls": {},
       "show_safe_zones": false,
@@ -46,41 +46,71 @@
         "order": 1,
         "status": "draft",
         "tier": 1,
-        "template": "kinetic_captions",
-        "template_version": "1.0.0",
+        "template": "editorial_motion",
+        "template_version": "2.0.0",
         "timing": {
           "start_word_id": "w_0001",
-          "end_word_id": "w_0008",
+          "end_word_id": "w_0010",
           "resolved_start_ms": 0,
-          "resolved_end_ms": 3400
+          "resolved_end_ms": 5400
         },
         "visual": {
           "background_theme": "carvao",
-          "headline": "NÃO É SÓ FELICIDADE",
-          "subtext": "GREGO · μακάριος",
-          "highlight_word_ids": ["w_0004", "w_0008"],
-          "transition_in": "stamp_drop",
-          "camera_motion": "subtle_zoom_in",
-          "reference_layout_asset": null
+          "composition": "counter_impact",
+          "atmosphere": "dramatic_spotlight",
+          "headline": "UMA DÍVIDA IMPAGÁVEL",
+          "subtext": "Mateus 18:23–24",
+          "original_term": "10.000 talentos",
+          "highlight_word_ids": ["w_0005", "w_0010"],
+          "transition_in": "zoom_through",
+          "camera_motion": "cinematic_push",
+          "beats": [
+            {
+              "beat_id": "b1",
+              "anchor_word_id": "w_0001",
+              "headline": "UMA DÍVIDA IMPAGÁVEL",
+              "subtext": "Mateus 18 · A Parábola",
+              "emphasis": "gold",
+              "camera_shift": "push_in"
+            },
+            {
+              "beat_id": "b2",
+              "anchor_word_id": "w_0007",
+              "headline": "JAMAIS CONSEGUIRIA PAGAR",
+              "subtext": "Equivalente a séculos de trabalho",
+              "emphasis": "terracotta",
+              "camera_shift": "tilt_drama"
+            }
+          ],
+          "motion_data": {
+            "counter_from": 0,
+            "counter_to": 10000,
+            "counter_suffix": " talentos",
+            "unit_label": "DÍVIDA DIANTE DO REI",
+            "compare_value": "IMPOSSÍVEL",
+            "compare_label": "DE QUITAR SOZINHO"
+          }
         },
         "assets": [],
         "sfx_cues": []
       },
       "words": [
-        { "word_id": "w_0001", "text": "Jesus", "start_ms": 120, "end_ms": 480 },
-        { "word_id": "w_0002", "text": "não", "start_ms": 500, "end_ms": 720 },
-        { "word_id": "w_0003", "text": "prometeu", "start_ms": 740, "end_ms": 1200 },
-        { "word_id": "w_0004", "text": "felicidade", "start_ms": 1240, "end_ms": 1820 },
-        { "word_id": "w_0005", "text": "fácil", "start_ms": 1860, "end_ms": 2220 },
-        { "word_id": "w_0006", "text": "em", "start_ms": 2260, "end_ms": 2440 },
-        { "word_id": "w_0007", "text": "Mateus", "start_ms": 2480, "end_ms": 2880 },
-        { "word_id": "w_0008", "text": "cinco.", "start_ms": 2920, "end_ms": 3320 }
+        { "word_id": "w_0001", "text": "Imagine", "start_ms": 120, "end_ms": 580 },
+        { "word_id": "w_0002", "text": "um", "start_ms": 620, "end_ms": 820 },
+        { "word_id": "w_0003", "text": "homem", "start_ms": 860, "end_ms": 1320 },
+        { "word_id": "w_0004", "text": "que", "start_ms": 1360, "end_ms": 1560 },
+        { "word_id": "w_0005", "text": "devia", "start_ms": 1600, "end_ms": 2080 },
+        { "word_id": "w_0006", "text": "tanto", "start_ms": 2140, "end_ms": 2580 },
+        { "word_id": "w_0007", "text": "que", "start_ms": 2660, "end_ms": 2920 },
+        { "word_id": "w_0008", "text": "jamais", "start_ms": 2980, "end_ms": 3620 },
+        { "word_id": "w_0009", "text": "conseguiria", "start_ms": 3680, "end_ms": 4420 },
+        { "word_id": "w_0010", "text": "pagar.", "start_ms": 4480, "end_ms": 5240 }
       ]
     },
     {
-      "format_type": "perdido_traducao",
-      "duration_ms": 3600,
-      "scene_start_ms": 3400,
+      "format_type": "conexao_at_nt",
+      "duration_ms": 6000,
+      "scene_start_ms": 5400,
       "asset_urls": {},
       "show_safe_zones": false,
       "scripture_ref": null,
@@ -89,108 +119,144 @@
         "order": 2,
         "status": "draft",
         "tier": 1,
-        "template": "paper_collage",
-        "template_version": "1.0.0",
+        "template": "editorial_motion",
+        "template_version": "2.0.0",
         "timing": {
-          "start_word_id": "w_0009",
-          "end_word_id": "w_0016",
-          "resolved_start_ms": 3400,
-          "resolved_end_ms": 7000
+          "start_word_id": "w_0011",
+          "end_word_id": "w_0018",
+          "resolved_start_ms": 5400,
+          "resolved_end_ms": 11400
         },
         "visual": {
           "background_theme": "pergaminho",
-          "headline": "MAKÁRIOS",
-          "subtext": "Grego · Mateus 5",
-          "highlight_word_ids": ["w_0016"],
-          "transition_in": "paper_tear",
-          "camera_motion": "subtle_zoom_in",
-          "reference_layout_asset": null
-        },
-        "assets": [
-          {
-            "asset_id": "img_pergaminho_grego",
-            "provider": "gemini_hybrid",
-            "prompt": "Ancient Greek papyrus scroll with makarios",
-            "apply_rembg": true
+          "composition": "debt_scale",
+          "atmosphere": "warm_paper",
+          "headline": "DESPROPORÇÃO ABISSAL",
+          "subtext": "Mateus 18:24–28",
+          "highlight_word_ids": ["w_0014", "w_0018"],
+          "transition_in": "editorial_wipe",
+          "camera_motion": "beat_reactive",
+          "beats": [
+            {
+              "beat_id": "b1",
+              "anchor_word_id": "w_0011",
+              "headline": "O PESO DA DÍVIDA",
+              "subtext": "Diante do trono do rei",
+              "emphasis": "terracotta",
+              "camera_shift": "pan_left"
+            },
+            {
+              "beat_id": "b2",
+              "anchor_word_id": "w_0015",
+              "headline": "DEZ MIL vs. CEM",
+              "subtext": "Uma diferença incalculável",
+              "emphasis": "gold",
+              "camera_shift": "push_in"
+            }
+          ],
+          "motion_data": {
+            "left_label": "10.000 TALENTOS",
+            "left_sub": "Dívida impagável",
+            "right_label": "100 DENÁRIOS",
+            "right_sub": "Pequena quantia",
+            "tilt_direction": "left",
+            "verdict_label": "SEM PROPORÇÃO"
           }
-        ],
-        "sfx_cues": []
-      },
-      "words": [
-        { "word_id": "w_0009", "text": "A", "start_ms": 3480, "end_ms": 3620 },
-        { "word_id": "w_0010", "text": "palavra", "start_ms": 3650, "end_ms": 4080 },
-        { "word_id": "w_0011", "text": "grega", "start_ms": 4120, "end_ms": 4520 },
-        { "word_id": "w_0012", "text": "usada", "start_ms": 4560, "end_ms": 4960 },
-        { "word_id": "w_0013", "text": "ali", "start_ms": 5000, "end_ms": 5280 },
-        { "word_id": "w_0014", "text": "no", "start_ms": 5320, "end_ms": 5520 },
-        { "word_id": "w_0015", "text": "texto", "start_ms": 5560, "end_ms": 5980 },
-        { "word_id": "w_0016", "text": "é makários.", "start_ms": 6020, "end_ms": 6880 }
-      ]
-    },
-    {
-      "format_type": "perdido_traducao",
-      "duration_ms": 4000,
-      "scene_start_ms": 7000,
-      "asset_urls": {},
-      "show_safe_zones": false,
-      "scripture_ref": {
-        "ref_id": "ref_01",
-        "citation": "Mateus 5:3",
-        "translation": "NVI",
-        "exact_text": "Bem-aventurados os pobres em espírito, pois deles é o Reino dos céus.",
-        "verified_by_human": true
-      },
-      "scene": {
-        "scene_id": "scene_03",
-        "order": 3,
-        "status": "draft",
-        "tier": 1,
-        "template": "bible_quote_card",
-        "template_version": "1.0.0",
-        "timing": {
-          "start_word_id": "w_0017",
-          "end_word_id": "w_0028",
-          "resolved_start_ms": 7000,
-          "resolved_end_ms": 11000
-        },
-        "visual": {
-          "background_theme": "pergaminho",
-          "headline": "Deles é o Reino dos Céus",
-          "subtext": "Mateus 5:3 · NVI",
-          "highlight_word_ids": ["w_0017", "w_0026", "w_0028"],
-          "transition_in": "whip_pan",
-          "camera_motion": "subtle_zoom_out",
-          "reference_layout_asset": null
         },
         "assets": [],
         "sfx_cues": []
       },
       "words": [
-        { "word_id": "w_0017", "text": "Bem-aventurados", "start_ms": 7120, "end_ms": 7820 },
-        { "word_id": "w_0018", "text": "os", "start_ms": 7850, "end_ms": 7980 },
-        { "word_id": "w_0019", "text": "pobres", "start_ms": 8020, "end_ms": 8440 },
-        { "word_id": "w_0020", "text": "em", "start_ms": 8480, "end_ms": 8640 },
-        { "word_id": "w_0021", "text": "espírito,", "start_ms": 8680, "end_ms": 9200 },
-        { "word_id": "w_0022", "text": "pois", "start_ms": 9260, "end_ms": 9500 },
-        { "word_id": "w_0023", "text": "deles", "start_ms": 9540, "end_ms": 9840 },
-        { "word_id": "w_0024", "text": "é", "start_ms": 9880, "end_ms": 10000 },
-        { "word_id": "w_0025", "text": "o", "start_ms": 10020, "end_ms": 10120 },
-        { "word_id": "w_0026", "text": "Reino", "start_ms": 10150, "end_ms": 10460 },
-        { "word_id": "w_0027", "text": "dos", "start_ms": 10490, "end_ms": 10640 },
-        { "word_id": "w_0028", "text": "céus.", "start_ms": 10660, "end_ms": 10940 }
+        { "word_id": "w_0011", "text": "Ele", "start_ms": 5520, "end_ms": 5840 },
+        { "word_id": "w_0012", "text": "foi", "start_ms": 5900, "end_ms": 6200 },
+        { "word_id": "w_0013", "text": "levado", "start_ms": 6260, "end_ms": 6900 },
+        { "word_id": "w_0014", "text": "diante", "start_ms": 6980, "end_ms": 7560 },
+        { "word_id": "w_0015", "text": "do", "start_ms": 7620, "end_ms": 7880 },
+        { "word_id": "w_0016", "text": "rei", "start_ms": 7940, "end_ms": 8640 },
+        { "word_id": "w_0017", "text": "para", "start_ms": 8740, "end_ms": 9420 },
+        { "word_id": "w_0018", "text": "pagar.", "start_ms": 9500, "end_ms": 11100 }
       ]
     },
     {
-      "format_type": "mapa_contexto",
-      "duration_ms": 3800,
-      "scene_start_ms": 11000,
+      "format_type": "conexao_at_nt",
+      "duration_ms": 5800,
+      "scene_start_ms": 11400,
+      "asset_urls": {},
+      "show_safe_zones": false,
+      "scripture_ref": null,
+      "scene": {
+        "scene_id": "scene_03",
+        "order": 3,
+        "status": "draft",
+        "tier": 1,
+        "template": "editorial_motion",
+        "template_version": "2.0.0",
+        "timing": {
+          "start_word_id": "w_0019",
+          "end_word_id": "w_0025",
+          "resolved_start_ms": 11400,
+          "resolved_end_ms": 17200
+        },
+        "visual": {
+          "background_theme": "pergaminho",
+          "composition": "forgiveness_seal",
+          "atmosphere": "grace_glow",
+          "headline": "PERDOOU TODA A DÍVIDA",
+          "subtext": "Mateus 18:27",
+          "highlight_word_ids": ["w_0019", "w_0025"],
+          "transition_in": "cross_motion",
+          "camera_motion": "cinematic_push",
+          "beats": [
+            {
+              "beat_id": "b1",
+              "anchor_word_id": "w_0019",
+              "headline": "O DECRETO DO REI",
+              "subtext": "Compaixão inesperada",
+              "emphasis": "gold",
+              "camera_shift": "settle"
+            },
+            {
+              "beat_id": "b2",
+              "anchor_word_id": "w_0022",
+              "headline": "COMPLETAMENTE CANCELADA",
+              "subtext": "Nenhuma cobrança restou",
+              "emphasis": "gold",
+              "visual_action": "strike_debt",
+              "camera_shift": "push_in"
+            }
+          ],
+          "motion_data": {
+            "doc_title": "REGISTRO REAL",
+            "debt_amount": "10.000 TALENTOS",
+            "debt_lines": ["Dívida impossível de quitar", "Sentença revogada pelo rei"],
+            "stamp_word": "PERDOADA",
+            "release_text": "Ele saiu dali completamente livre."
+          }
+        },
+        "assets": [],
+        "sfx_cues": []
+      },
+      "words": [
+        { "word_id": "w_0019", "text": "Perdoou", "start_ms": 11520, "end_ms": 12280 },
+        { "word_id": "w_0020", "text": "toda", "start_ms": 12360, "end_ms": 12920 },
+        { "word_id": "w_0021", "text": "a", "start_ms": 12980, "end_ms": 13160 },
+        { "word_id": "w_0022", "text": "dívida!", "start_ms": 13220, "end_ms": 14120 },
+        { "word_id": "w_0023", "text": "Ele", "start_ms": 14320, "end_ms": 14800 },
+        { "word_id": "w_0024", "text": "saiu", "start_ms": 14880, "end_ms": 15640 },
+        { "word_id": "w_0025", "text": "livre.", "start_ms": 15720, "end_ms": 17000 }
+      ]
+    },
+    {
+      "format_type": "perdido_traducao",
+      "duration_ms": 4000,
+      "scene_start_ms": 17200,
       "asset_urls": {},
       "show_safe_zones": false,
       "scripture_ref": {
-        "ref_id": "ref_02",
-        "citation": "Mateus 4:23",
+        "ref_id": "ref_01",
+        "citation": "Mateus 18:32–33",
         "translation": "NVI",
-        "exact_text": "Da Galileia até Jerusalém, a rota histórica atravessava cento e vinte quilômetros pelo Vale do Jordão.",
+        "exact_text": "Eu perdoei toda a sua dívida. Você não deveria ter tido misericórdia do seu conservo, como eu tive de você?",
         "verified_by_human": true
       },
       "scene": {
@@ -198,39 +264,40 @@
         "order": 4,
         "status": "draft",
         "tier": 1,
-        "template": "timeline_map",
-        "template_version": "1.0.0",
+        "template": "editorial_motion",
+        "template_version": "2.0.0",
         "timing": {
-          "start_word_id": "w_0029",
-          "end_word_id": "w_0038",
-          "resolved_start_ms": 11000,
-          "resolved_end_ms": 14800
+          "start_word_id": "w_0026",
+          "end_word_id": "w_0031",
+          "resolved_start_ms": 17200,
+          "resolved_end_ms": 21200
         },
         "visual": {
           "background_theme": "pergaminho",
-          "headline": "ROTA: GALILEIA → JERUSALÉM",
-          "subtext": "120 km · Contexto Histórico",
-          "original_term": "Cafarnaum → Vale do Jordão → Jerusalém",
-          "stamp_text": "ROTA HISTÓRICA",
-          "highlight_word_ids": ["w_0030", "w_0032", "w_0038"],
-          "transition_in": "paper_tear",
-          "camera_motion": "subtle_zoom_in",
-          "reference_layout_asset": null
+          "composition": "scripture_spotlight",
+          "atmosphere": "warm_paper",
+          "headline": "A Medida da Misericórdia",
+          "subtext": "Mateus 18:32–33 · NVI",
+          "highlight_word_ids": ["w_0027", "w_0031"],
+          "transition_in": "cross_motion",
+          "camera_motion": "editorial_glide",
+          "motion_data": {
+            "reference": "Mateus 18:32–33",
+            "translation": "NVI",
+            "context_note": "A medida do perdão recebido transforma como tratamos o próximo",
+            "emphasis_words": ["perdoei", "misericórdia"]
+          }
         },
         "assets": [],
         "sfx_cues": []
       },
       "words": [
-        { "word_id": "w_0029", "text": "Da", "start_ms": 11080, "end_ms": 11240 },
-        { "word_id": "w_0030", "text": "Galileia", "start_ms": 11260, "end_ms": 11720 },
-        { "word_id": "w_0031", "text": "até", "start_ms": 11760, "end_ms": 11960 },
-        { "word_id": "w_0032", "text": "Jerusalém,", "start_ms": 12000, "end_ms": 12560 },
-        { "word_id": "w_0033", "text": "a", "start_ms": 12600, "end_ms": 12720 },
-        { "word_id": "w_0034", "text": "rota", "start_ms": 12760, "end_ms": 13080 },
-        { "word_id": "w_0035", "text": "atravessava", "start_ms": 13120, "end_ms": 13680 },
-        { "word_id": "w_0036", "text": "o", "start_ms": 13720, "end_ms": 13840 },
-        { "word_id": "w_0037", "text": "Vale do", "start_ms": 13880, "end_ms": 14240 },
-        { "word_id": "w_0038", "text": "Jordão.", "start_ms": 14280, "end_ms": 14720 }
+        { "word_id": "w_0026", "text": "Você", "start_ms": 17320, "end_ms": 17840 },
+        { "word_id": "w_0027", "text": "não", "start_ms": 17900, "end_ms": 18320 },
+        { "word_id": "w_0028", "text": "deveria", "start_ms": 18380, "end_ms": 19100 },
+        { "word_id": "w_0029", "text": "ter", "start_ms": 19160, "end_ms": 19520 },
+        { "word_id": "w_0030", "text": "tido", "start_ms": 19580, "end_ms": 20020 },
+        { "word_id": "w_0031", "text": "misericórdia?", "start_ms": 20080, "end_ms": 21080 }
       ]
     }
   ]

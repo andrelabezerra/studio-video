@@ -4,10 +4,10 @@ import { Handle, Position, type NodeProps } from "@xyflow/react";
 import {
   Check,
   Copy,
-  Eye,
   ImagePlus,
   Play,
   RefreshCw,
+  SlidersHorizontal,
 } from "lucide-react";
 import type { SceneData } from "../../types/studio";
 
@@ -173,10 +173,10 @@ export function SceneNode({ data }: NodeProps) {
               <span className="pill pill-blue">
                 {TEMPLATE_LABELS[scene.template] || scene.template}
               </span>
-              <span className="pill">
-                Nível {scene.tier} · ${scene.cost_usd.toFixed(2)}
-              </span>
               <span className="pill">{scene.visual.background_theme}</span>
+              <span className="pill" title="Transição e movimento de câmera">
+                {scene.visual.transition_in} · {scene.visual.camera_motion || "subtle_zoom_in"}
+              </span>
             </div>
 
             <div>
@@ -263,8 +263,8 @@ export function SceneNode({ data }: NodeProps) {
               d.onOpenPreview(scene.scene_id);
             }}
           >
-            <Eye size={13} />
-            Preview Ao Vivo
+            <SlidersHorizontal size={13} />
+            Editar Cena & Preview
           </button>
 
           <button

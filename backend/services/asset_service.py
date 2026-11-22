@@ -169,6 +169,127 @@ def process_uploaded_scene_asset(
     return updated_scene, out_path, cache_relpath
 
 
+def list_project_image_assets(
+    *,
+    slug: str,
+    cache: ProjectCachePaths,
+) -> list[dict[str, object]]:
+    """Lista todas as imagens já armazenadas em STUDIO_CACHE_DIR/<slug>/assets/ para reuso entre cenas."""
+    if not cache.assets.is_dir():
+        return []
+    items: list[dict[str, object]] = []
+    allowed_exts = {".png", ".jpg", ".jpeg", ".webp"}
+    for entry in sorted(cache.assets.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True):
+        if not entry.is_file() or entry.suffix.lower() not in allowed_exts:
+            continue
+        stat = entry.stat()
+        if stat.st_size <= 0:
+            continue
+        relpath = f"assets/{entry.name}"
+        items.append(
+            {
+                "filename": entry.name,
+                "cache_relpath": relpath,
+                "url": f"/api/projects/{slug}/media/{relpath}",
+                "size_bytes": stat.st_size,
+            }
+        )
+    return items
+
+
+def attach_cached_scene_asset(
+    *,
+    scene: Scene,
+    cache: ProjectCachePaths,
+    cache_relpath: str,
+    asset_id: str | None = None,
+    apply_rembg: bool | None = None,
+) -> tuple[Scene, str]:
+    """Associa uma imagem já existente no cache do projeto a uma cena (reuso rápido sem re-upload)."""
+    resolved = cache.resolve_relpath(cache_relpath)
+    if not resolved.is_file() or resolved.stat().st_size <= 0:
+        raise FileNotFoundError(f"Asset não encontrado no cache do projeto: '{cache_relpath}'.")
+
+    normalized_relpath = resolved.relative_to(cache.root.resolve()).as_posix()
+    digest = sha256_file(resolved)
+
+    if asset_id and asset_id.strip():
+        target_asset_id = _sanitize_asset_id(asset_id, fallback=f"img_{scene.scene_id}")
+    elif scene.assets:
+        target_asset_id = scene.assets[0].asset_id
+    else:
+        target_asset_id = f"img_{scene.scene_id}"
+
+    new_assets: list[SceneAsset] = []
+    updated_existing = False
+    for existing in scene.assets:
+        if existing.asset_id == target_asset_id:
+            new_assets.append(
+                existing.model_copy(
+                    update={
+                        "cache_relpath": normalized_relpath,
+                        "sha256": digest,
+                        "apply_rembg": existing.apply_rembg if apply_rembg is None else apply_rembg,
+                    }
+                )
+            )
+            updated_existing = True
+        else:
+            new_assets.append(existing)
+
+    if not updated_existing:
+        new_assets.append(
+            SceneAsset(
+                asset_id=target_asset_id,
+                provider=ImageProvider.GEMINI_HYBRID,
+                prompt=f"Asset reutilizado da biblioteca ({resolved.name})",
+                apply_rembg=bool(apply_rembg),
+                cache_relpath=normalized_relpath,
+                sha256=digest,
+            )
+        )
+
+    updated_scene = scene.model_copy(
+        update={
+            "assets": new_assets,
+            "cache_hash": None,
+        }
+    )
+    return updated_scene, normalized_relpath
+
+
+def detach_scene_asset(
+    *,
+    scene: Scene,
+    asset_id: str | None = None,
+) -> Scene:
+    """Remove a referência de imagem anexada de uma cena (mantendo o prompt para reuso se houver)."""
+    if not scene.assets:
+        return scene
+
+    target_id = asset_id.strip() if asset_id and asset_id.strip() else scene.assets[0].asset_id
+    new_assets: list[SceneAsset] = []
+    for existing in scene.assets:
+        if existing.asset_id == target_id:
+            new_assets.append(
+                existing.model_copy(
+                    update={
+                        "cache_relpath": None,
+                        "sha256": None,
+                    }
+                )
+            )
+        else:
+            new_assets.append(existing)
+
+    return scene.model_copy(
+        update={
+            "assets": new_assets,
+            "cache_hash": None,
+        }
+    )
+
+
 def generate_cover_png(
     *,
     script: Script,

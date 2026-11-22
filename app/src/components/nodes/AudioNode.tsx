@@ -19,10 +19,46 @@ import type {
   AudioCapabilities,
   GenerateTtsPayload,
   TtsEngineId,
+  TtsEngineInfo,
   TtsPreviewResponse,
   VoiceSampleInfo,
 } from "../../types/studio";
 import type { RenderProgressState } from "../../hooks/useStudioProject";
+
+const FALLBACK_TTS_ENGINES: TtsEngineInfo[] = [
+  {
+    id: "pilot_sapi",
+    label: "Piloto Local PT-BR ($0 · instantâneo)",
+    ready: true,
+    requires_sample: false,
+    mode: "local_fast",
+    hint: "Voz sintética nativa do Windows (não clona amostra).",
+  },
+  {
+    id: "xtts_v2",
+    label: "XTTS-v2 Zero-Shot ($0 · clonagem)",
+    ready: true,
+    requires_sample: true,
+    mode: "isolated_venv",
+    hint: "Clona a voz da amostra em PT-BR no venv isolado.",
+  },
+  {
+    id: "f5_tts",
+    label: "F5-TTS PT-BR ($0 · clonagem)",
+    ready: true,
+    requires_sample: true,
+    mode: "isolated_venv",
+    hint: "Clonagem neural F5-TTS pronta no venv isolado.",
+  },
+  {
+    id: "voicestudio",
+    label: "VoiceStudio Local HTTP ($0)",
+    ready: false,
+    requires_sample: true,
+    mode: "local_http",
+    hint: "Servidor local VoiceStudio HTTP.",
+  },
+];
 
 export interface AudioNodeData extends Record<string, unknown> {
   alignment: AudioAlignment | null;
@@ -60,14 +96,18 @@ export function AudioNode({ data }: NodeProps) {
   const [activeTab, setActiveTab] = useState<AudioTab>("recorded");
   const [dragging, setDragging] = useState(false);
   const [selectedEngineId, setSelectedEngineId] = useState<TtsEngineId>("pilot_sapi");
+  const [userPickedEngine, setUserPickedEngine] = useState<boolean>(false);
   const [selectedSampleId, setSelectedSampleId] = useState<string>("");
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
 
   const capabilities = d.audioCapabilities;
-  const engines = capabilities?.engines ?? [];
+  const engines =
+    capabilities?.engines && capabilities.engines.length > 0
+      ? capabilities.engines
+      : FALLBACK_TTS_ENGINES;
   const voiceSamples = capabilities?.voice_samples ?? [];
 
-  // Mantém seleção de amostra sincronizada com a lista disponível
+  // Mantém seleção de amostra sincronizada e auto-seleciona motor de clonagem se houver amostra
   useEffect(() => {
     if (voiceSamples.length === 0) {
       if (selectedSampleId !== "") setSelectedSampleId("");
@@ -78,7 +118,15 @@ export function AudioNode({ data }: NodeProps) {
       const preferred = voiceSamples.find((s) => s.is_default) ?? voiceSamples[0];
       setSelectedSampleId(preferred.id);
     }
-  }, [voiceSamples, selectedSampleId]);
+    if (!userPickedEngine && selectedEngineId === "pilot_sapi") {
+      const readyClone =
+        engines.find((e) => e.id === "xtts_v2" && e.ready) ??
+        engines.find((e) => e.requires_sample && e.ready);
+      if (readyClone) {
+        setSelectedEngineId(readyClone.id);
+      }
+    }
+  }, [voiceSamples, selectedSampleId, engines, userPickedEngine, selectedEngineId]);
 
   const selectedEngine = useMemo(
     () => engines.find((e) => e.id === selectedEngineId) ?? engines[0] ?? null,
@@ -115,11 +163,17 @@ export function AudioNode({ data }: NodeProps) {
   );
 
   const missingRequiredSample = Boolean(
-    selectedEngine?.requires_sample && !selectedSampleId
+    selectedEngine?.requires_sample && !selectedSampleId && voiceSamples.length === 0
+  );
+  const engineCanRunOrAutoSetup = Boolean(
+    selectedEngine &&
+      (selectedEngine.ready ||
+        selectedEngine.id === "xtts_v2" ||
+        selectedEngine.id === "f5_tts")
   );
   const canGenerateTts = Boolean(
     d.canAlign &&
-      selectedEngine?.ready &&
+      engineCanRunOrAutoSetup &&
       !missingRequiredSample &&
       !d.busyGenerateTts &&
       !(d.renderProgress.active && isTtsStage)
@@ -137,6 +191,15 @@ export function AudioNode({ data }: NodeProps) {
     const uploaded = await d.onUploadVoiceSample(file);
     if (uploaded) {
       setSelectedSampleId(uploaded.id);
+      if (selectedEngineId === "pilot_sapi") {
+        const cloneEngine =
+          engines.find((e) => e.id === "xtts_v2" && e.ready) ??
+          engines.find((e) => e.requires_sample && e.ready) ??
+          engines.find((e) => e.id === "xtts_v2");
+        if (cloneEngine) {
+          setSelectedEngineId(cloneEngine.id);
+        }
+      }
     }
   };
 
@@ -149,10 +212,13 @@ export function AudioNode({ data }: NodeProps) {
 
   const handleGenerateTtsClick = async () => {
     if (!selectedEngine) return;
+    const effectiveSampleId =
+      selectedSampleId || (voiceSamples[0]?.id ?? null);
     await d.onGenerateTts({
       engine: selectedEngine.id,
-      voice_sample_id: selectedSampleId || null,
+      voice_sample_id: effectiveSampleId,
       auto_align: true,
+      auto_setup: true,
     });
   };
 
@@ -321,7 +387,10 @@ export function AudioNode({ data }: NodeProps) {
                       data-testid={`tts-engine-${eng.id}`}
                       data-engine-id={eng.id}
                       title={eng.hint}
-                      onClick={() => setSelectedEngineId(eng.id)}
+                      onClick={() => {
+                        setUserPickedEngine(true);
+                        setSelectedEngineId(eng.id);
+                      }}
                     >
                       <div className="tts-engine-main">
                         <span
@@ -447,6 +516,18 @@ export function AudioNode({ data }: NodeProps) {
                 <div className="tts-sample-warning" data-testid="voice-sample-warning">
                   <AlertTriangle size={11} style={{ flexShrink: 0 }} />
                   <span>{sampleWarningText}</span>
+                </div>
+              )}
+
+              {selectedEngine?.id === "pilot_sapi" && voiceSamples.length > 0 && (
+                <div className="tts-sample-warning" data-testid="pilot-sapi-sample-notice">
+                  <AlertTriangle size={11} style={{ flexShrink: 0 }} />
+                  <span>
+                    <strong>pilot_sapi</strong> usa a voz nativa do Windows (sem
+                    clonar a amostra). Para clonar <code>{selectedSample?.filename || "a amostra"}</code>,
+                    configure e selecione <strong>XTTS-v2</strong> ou{" "}
+                    <strong>F5-TTS</strong>.
+                  </span>
                 </div>
               )}
             </div>

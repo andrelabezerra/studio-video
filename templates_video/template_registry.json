@@ -1,12 +1,62 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "templates": [
+    {
+      "id": "editorial_motion",
+      "label": "Editorial Motion · Palco Cinematográfico",
+      "tier": 1,
+      "default_cost_usd": 0.0,
+      "description": "Palco livre multi-beats (4s–9s) com 8 composições SVG coreografadas (balança de dívida, cancelamento com tinta viva, split-screen dramático, pergunta retórica, iluminação de graça, arco narrativo, contador monumental e citação bíblica limpa).",
+      "recommended_formats": [
+        "mapa_contexto",
+        "perdido_traducao",
+        "mito_vs_texto",
+        "conexao_at_nt"
+      ],
+      "compositions": [
+        "auto",
+        "debt_scale",
+        "forgiveness_seal",
+        "dramatic_split",
+        "rhetorical_question",
+        "grace_illumination",
+        "narrative_arc",
+        "counter_impact",
+        "scripture_spotlight"
+      ],
+      "editable_fields": [
+        {
+          "key": "composition",
+          "label": "Composição Cinematográfica",
+          "type": "select",
+          "placeholder": "debt_scale"
+        },
+        {
+          "key": "headline",
+          "label": "Título Principal (Headline)",
+          "type": "text",
+          "placeholder": "UMA DÍVIDA IMPAGÁVEL"
+        },
+        {
+          "key": "subtext",
+          "label": "Subtexto / Contexto Editorial",
+          "type": "text",
+          "placeholder": "Mateus 18:21–35"
+        },
+        {
+          "key": "original_term",
+          "label": "Termo / Contraste / Destaque",
+          "type": "text",
+          "placeholder": "10.000 talentos"
+        }
+      ]
+    },
     {
       "id": "paper_collage",
       "label": "Paper Collage Editorial",
       "tier": 1,
       "default_cost_usd": 0.0,
-      "description": "Recorte tátil em papel rasgado com sombra real, fita crepe, seta SVG e marca-texto dourado.",
+      "description": "Recorte tátil em papel rasgado com sombra real, fita crepe, seta SVG, marca-texto dourado e suporte a multi-beats contínuos.",
       "recommended_formats": [
         "mapa_contexto",
         "perdido_traducao",
@@ -42,10 +92,10 @@
     },
     {
       "id": "bible_quote_card",
-      "label": "Cartão de Versículo Bíblico",
+      "label": "Citação Bíblica Editorial",
       "tier": 1,
       "default_cost_usd": 0.0,
-      "description": "Cartão editorial inclinado com referência bíblica verificada e grifo progressivo nas palavras-chave.",
+      "description": "Composição editorial limpa de documentário com referência bíblica, filete dourado animado via SVG e marca-texto sincronizado (sem selo burocrático).",
       "recommended_formats": [
         "perdido_traducao",
         "mito_vs_texto",
@@ -70,12 +120,6 @@
           "label": "Termo-Chave / Nota Lexical",
           "type": "text",
           "placeholder": "Reino dos Céus"
-        },
-        {
-          "key": "stamp_text",
-          "label": "Selo de Verificação",
-          "type": "text",
-          "placeholder": "TEXTO VERIFICADO"
         }
       ]
     },
@@ -84,7 +128,7 @@
       "label": "Tipografia Cinética Vox",
       "tier": 1,
       "default_cost_usd": 0.0,
-      "description": "Blocos tipográficos de alto impacto (4 a 6 palavras) com badge de termo original e carimbo editorial.",
+      "description": "Blocos tipográficos de alto impacto (4 a 6 palavras) com badge de termo original, sublinhados SVG e suporte a multi-beats.",
       "recommended_formats": [
         "perdido_traducao",
         "mito_vs_texto"
@@ -110,7 +154,7 @@
         },
         {
           "key": "stamp_text",
-          "label": "Carimbo Terracota",
+          "label": "Carimbo Terracota (Opcional)",
           "type": "text",
           "placeholder": "ATENÇÃO"
         }
@@ -147,7 +191,7 @@
         },
         {
           "key": "stamp_text",
-          "label": "Selo Cartográfico / Carimbo",
+          "label": "Selo Cartográfico / Carimbo (Opcional)",
           "type": "text",
           "placeholder": "ROTA HISTÓRICA"
         }

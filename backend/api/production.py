@@ -34,7 +34,13 @@ from backend.services.alignment_service import (
     align_audio_to_script,
     resolve_scene_timings,
 )
-from backend.services.asset_service import generate_cover_png, process_uploaded_scene_asset
+from backend.services.asset_service import (
+    attach_cached_scene_asset,
+    detach_scene_asset,
+    generate_cover_png,
+    list_project_image_assets,
+    process_uploaded_scene_asset,
+)
 from backend.services.audio_mixer_service import _run_ffmpeg, ensure_pilot_audio
 from backend.services.compositor_service import render_project, render_scene_clip
 from backend.services.sse_hub import SSEHub
@@ -70,6 +76,14 @@ class RunPendingRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     profile: Literal["preview", "final"] = "preview"
+
+
+class AttachSceneAssetRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    cache_relpath: str
+    asset_id: str | None = None
+    apply_rembg: bool | None = None
 
 
 @router.post("/audio/upload")
@@ -273,6 +287,10 @@ def update_scene(
         if key in patch:
             merged[key] = patch[key]
 
+    # Normaliza tier automaticamente ao retornar de tier2_video para template Nível 1
+    if "template" in patch and patch["template"] != "tier2_video" and "tier" not in patch:
+        merged["tier"] = 1
+
     # Guardrail Nível 2 (AGENTS.md Regra 4)
     target_tier = merged.get("tier", 1)
     target_template = merged.get("template")
@@ -288,7 +306,7 @@ def update_scene(
     try:
         candidate = Scene.model_validate(merged)
     except ValidationError as exc:
-        raise HTTPException(status_code=422, detail=exc.errors()) from exc
+        raise HTTPException(status_code=422, detail=exc.errors(include_context=False)) from exc
 
     # Guardrail de custo por cena e por vídeo
     if candidate.cost_usd > settings.max_cost_per_scene_usd:
@@ -377,6 +395,77 @@ async def upload_scene_asset(
     return {
         "scene": updated_scene.model_dump(mode="json"),
         "asset_url": f"/api/projects/{slug}/media/{cache_relpath}",
+    }
+
+
+@router.get("/assets")
+def list_project_assets(
+    slug: str,
+    request: Request,
+) -> dict[str, Any]:
+    settings = get_app_settings(request)
+    storage = get_app_storage(request)
+    ensure_project_exists(storage, slug)
+    cache = get_project_cache(slug, cache_root=settings.studio_cache_dir, ensure=False)
+    return {"assets": list_project_image_assets(slug=slug, cache=cache)}
+
+
+@router.post("/scenes/{scene_id}/asset/attach")
+def attach_existing_scene_asset(
+    slug: str,
+    scene_id: str,
+    body: AttachSceneAssetRequest,
+    request: Request,
+) -> dict[str, Any]:
+    settings = get_app_settings(request)
+    storage = get_app_storage(request)
+    ensure_project_exists(storage, slug)
+
+    try:
+        scene = storage.load_scene(slug, scene_id)
+    except (FileNotFoundError, ValueError) as exc:
+        raise HTTPException(status_code=404, detail=f"Cena não encontrada: '{scene_id}'.") from exc
+
+    cache = get_project_cache(slug, cache_root=settings.studio_cache_dir, ensure=True)
+    try:
+        updated_scene, cache_relpath = attach_cached_scene_asset(
+            scene=scene,
+            cache=cache,
+            cache_relpath=body.cache_relpath,
+            asset_id=body.asset_id,
+            apply_rembg=body.apply_rembg,
+        )
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    storage.save_scene(slug, updated_scene)
+    return {
+        "scene": updated_scene.model_dump(mode="json"),
+        "asset_url": f"/api/projects/{slug}/media/{cache_relpath}",
+    }
+
+
+@router.delete("/scenes/{scene_id}/asset")
+def delete_scene_asset(
+    slug: str,
+    scene_id: str,
+    request: Request,
+    asset_id: str | None = None,
+) -> dict[str, Any]:
+    storage = get_app_storage(request)
+    ensure_project_exists(storage, slug)
+
+    try:
+        scene = storage.load_scene(slug, scene_id)
+    except (FileNotFoundError, ValueError) as exc:
+        raise HTTPException(status_code=404, detail=f"Cena não encontrada: '{scene_id}'.") from exc
+
+    updated_scene = detach_scene_asset(scene=scene, asset_id=asset_id)
+    storage.save_scene(slug, updated_scene)
+    return {
+        "scene": updated_scene.model_dump(mode="json"),
     }
 
 

@@ -17,6 +17,8 @@ O canal combina **jornalismo explicativo visual estilo Vox** com **profundidade 
 - Slides estáticos com cara de PowerPoint ou imagens de IA genéricas trocando em *crossfade* lento.
 - Legenda neon pulando palavra por palavra no centro da tela (estilo "Hormozi" conflita com a sobriedade editorial Vox).
 - Saudações longas (*"Olá pessoal, paz do Senhor, no vídeo de hoje..."*) ou despedidas genéricas que derrubam a retenção.
+- **Fragmentação frenética (1 frase curta = 1 cena):** nunca criar micro-cenas de 1–3 palavras ou cortes a cada 1–2 segundos.
+- **Modelo burocrático de cartão estático com selo `"TEXTO VERIFICADO"`:** proibido renderizar carimbos cartoriais/burocráticos sobre versículos ou qualquer texto placeholder entre colchetes (`[Conferir ...]`, `[TODO]`, `TBD`). Versículos devem aparecer em composições editoriais limpas, vivas e orgânicas.
 
 ---
 
@@ -41,10 +43,13 @@ Todo novo vídeo deve ser classificado em um dos 4 formatos abaixo (a UI recomen
 - **Visual (*pattern interrupt* nos primeiros 1,5s):** Entrada tátil imediata (recorte de papel surgindo com sombra + som de rasgo/carimbo + palavra-âncora com marcador-texto).
 - **Co-criação:** A IA sempre propõe **3 variações de Hook** (`mito`, `paradoxo`, `traducao` ou `mapa`) para escolha humana na UI.
 
-### 3.2 Corpo Explicativo (3s a 40s)
-- **Cadência visual:** Troca de cena ou estado visual relevante a cada **2,5 a 4,0 segundos**.
+### 3.2 Corpo Explicativo & Ritmo Fluido Multi-Beat (Lição Aprendida Obrigatória)
+- **Agrupamento narrativo em blocos de 4s a 8s:** Em vez de cortar a cena a cada frase curta (erro que gera 25+ micro-cenas cansativas), cada cena deve cobrir **1 ideia narrativa completa (4s a 8s, podendo ir até ~9s em clímax com 3 beats)**.
+  - Vídeos curtos (35–48s): **~8 a 10 cenas**.
+  - Vídeos narrativos / parábolas (60–85s): **~10 a 14 cenas** (nunca micro-cenas de 1–3 palavras).
+- **Animação contínua via `beats[]` internos:** Dinamismo não vem de cortar a cena a cada 1,5s, mas de evoluir a mesma cena em **2 a 4 `beats[]` ancorados em `word_id`** (mudança de destaque tipográfico, desenho SVG progressivo, deslocamento sutil de câmera, resposta de luz/atmosfera).
 - **Micro-viradas (*open loops*):** A cada 8–12 segundos, introduzir um pivô narrativo (*"Mas olha o que o texto diz logo depois..."*, *"Só que no grego a palavra muda tudo..."*).
-- **Uma ideia visual por cena:** Cada cena comunica 1 conceito claro — nunca empilhar 3 gráficos simultâneos.
+- **Liberdade visual além de templates repetitivos:** Priorizar `editorial_motion` (composições SVG coreografadas como `debt_scale`, `forgiveness_seal`, `dramatic_split`, `rhetorical_question`, `grace_illumination`, `narrative_arc`, `counter_impact`, `scripture_spotlight`) alternado com `paper_collage`, `timeline_map`, `kinetic_captions` e `bible_quote_card` limpo — nunca repetir a mesma composição em cenas consecutivas.
 
 ### 3.3 Fechamento sem Queda de Retenção (últimos 5–8s)
 - **Aplicação fundida à conclusão:** Entregar o insight prático em 1 frase memorável sem sinalizar "agora vou encerrar o vídeo".
@@ -76,12 +81,12 @@ Para publicar o mesmo `.mp4` nas 3 plataformas sem cortar texto ou ícones:
 - **Margem lateral esquerda mínima:** `≥ 64 px` (`x < 64`)
 - **Área útil nobre garantida:** `x: 64..920` (`856 px`) × `y: 220..1500` (`1280 px`).
 
-### 4.4 Biblioteca de Efeitos Dinâmicos (Nível 1)
-1. **Paper Collage Multicamadas:** Fundo de textura craft/pergaminho com movimento sutil + recortes com borda rasgada em SVG + `drop-shadow` realista + entrada com *overshoot* suave (`back.out`).
-2. **Marcador-Texto Vox:** Retângulo `#E5A93C` desenhado da esquerda para a direita atrás da palavra-chave no `start_ms` exato da fala.
-3. **Cartão de Versículo Editorial:** Cartão inclinado (`-1.5°` a `+1.5°`), referência (`Livro Cap:Vers · NVI`), entrada por recorte e destaque progressivo da frase central.
-4. **Transições Táteis:** Rasgo de papel (*paper tear*), *whip-pan* rápido (6–8 frames) e carimbo editorial sincronizados com SFX.
-5. **Traçado SVG (Fase 4):** Setas, rotas em mapas e linhas do tempo desenhadas com `stroke-dashoffset`.
+### 4.4 Biblioteca de Efeitos Dinâmicos & Motor Cinematográfico (Nível 1)
+1. **Editorial Motion Multi-Beat (`editorial_motion`):** Composições SVG coreografadas (`stroke-dashoffset` desenhando ao vivo, balança de dívida `debt_scale`, decreto e selo orgânico `forgiveness_seal`, contraste `dramatic_split`, pergunta monumental `rhetorical_question`, luz `grace_illumination`, arco narrativo `narrative_arc`, contador `counter_impact`, citação limpa `scripture_spotlight`) guiadas por `beats[]` e `motion_data`.
+2. **Atmosfera Viva & Câmera Contínua:** Grão de papel determinístico, partículas/parallax sutil, iluminação/vinheta dinâmica (`warm_paper`, `dramatic_spotlight`, `grace_glow`, `ink_vignette`) e câmera viva (`cinematic_push`, `editorial_glide`, `beat_reactive`) que nunca congelam no meio da cena.
+3. **Paper Collage Multicamadas:** Fundo de textura craft/pergaminho com movimento sutil + recortes com borda rasgada em SVG + `drop-shadow` realista + entrada com *overshoot* suave.
+4. **Citação Bíblica Editorial Limpa (Zero Cartão Burocrático):** Referência canônica (`Livro Cap:Vers · Tradução`) com destaque progressivo na frase central — **estritamente proibido** exibir selo `"TEXTO VERIFICADO"` ou qualquer texto placeholder (`[Conferir ...]`).
+5. **Transições Cinematográficas:** `editorial_wipe`, `cross_motion`, `zoom_through`, `ink_wash`, `paper_tear`, `whip_pan` e `stamp_drop` sincronizadas com SFX.
 
 ---
 

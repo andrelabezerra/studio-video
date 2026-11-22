@@ -422,3 +422,40 @@ print(json.dumps({"type": "done", "output": str(out), "total_chunks": total}), f
     assert "onedrive" not in plan["venv_dir"].lower()
     assert plan["env_line"].startswith("TTS_VENV_PYTHON=")
     assert len(plan["commands"]) >= 3
+
+
+def test_ensure_pilot_audio_preserves_long_sapi_speech_over_58s(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Garante que roteiros longos (>58s) não descartem a voz SAPI nem caiam no ruído senoidal."""
+    from backend.services import audio_mixer_service
+
+    storage = ProjectStorage(WORKSPACE_ROOT / "projects")
+    script = storage.load_script("piloto-makarios")
+
+    def _fake_sapi(_text: str, raw_wav_path: Path) -> bool:
+        raw_wav_path.parent.mkdir(parents=True, exist_ok=True)
+        raw_wav_path.write_bytes(_make_wav_bytes(duration_sec=90.0, sample_rate=24000))
+        return True
+
+    fallback_called = False
+
+    def _forbid_fallback(*_args: Any, **_kwargs: Any) -> None:
+        nonlocal fallback_called
+        fallback_called = True
+
+    monkeypatch.setattr(audio_mixer_service, "_try_windows_sapi_tts", _fake_sapi)
+    monkeypatch.setattr(
+        audio_mixer_service, "_synthesize_fallback_pilot_narration", _forbid_fallback
+    )
+
+    out_wav, _ = audio_mixer_service.ensure_pilot_audio(
+        script=script,
+        cache_dir=tmp_path / "cache_long",
+        target_duration_sec=42.0,
+    )
+    assert fallback_called is False
+    assert out_wav.is_file()
+    dur = audio_mixer_service._probe_wav_duration_sec(out_wav)
+    assert dur > 60.0

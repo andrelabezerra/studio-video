@@ -18,8 +18,8 @@
       "max": 48
     },
     "scene_pacing_sec": {
-      "min": 2.5,
-      "max": 4.0
+      "min": 3.5,
+      "max": 8.0
     }
   },
   "safe_zones_px": {
@@ -61,28 +61,28 @@
       "format_type": "mapa_contexto",
       "label": "Mapa & Contexto",
       "description": "Geografia, rotas, distâncias e contexto histórico-arqueológico de passagens bíblicas.",
-      "default_templates": ["timeline_map", "paper_collage", "bible_quote_card"],
+      "default_templates": ["editorial_motion", "timeline_map", "paper_collage", "bible_quote_card"],
       "hook_types": ["mapa", "paradoxo"]
     },
     {
       "format_type": "perdido_traducao",
       "label": "Perdido na Tradução",
       "description": "Termos originais em hebraico e grego que revelam camadas perdidas na leitura rápida.",
-      "default_templates": ["kinetic_captions", "bible_quote_card", "paper_collage"],
+      "default_templates": ["editorial_motion", "kinetic_captions", "paper_collage", "bible_quote_card"],
       "hook_types": ["traducao", "paradoxo"]
     },
     {
       "format_type": "mito_vs_texto",
       "label": "Mito vs. Texto",
       "description": "Desconstrução respeitosa de clichês e frases atribuídas à Bíblia usando o texto original.",
-      "default_templates": ["paper_collage", "bible_quote_card", "kinetic_captions"],
+      "default_templates": ["editorial_motion", "paper_collage", "kinetic_captions", "bible_quote_card"],
       "hook_types": ["mito", "paradoxo"]
     },
     {
       "format_type": "conexao_at_nt",
       "label": "Conexão AT → NT",
       "description": "Paralelos, símbolos e profecias conectando o Antigo ao Novo Testamento.",
-      "default_templates": ["timeline_map", "bible_quote_card", "paper_collage"],
+      "default_templates": ["editorial_motion", "timeline_map", "paper_collage", "bible_quote_card"],
       "hook_types": ["paradoxo", "mapa"]
     }
   ],

@@ -27,7 +27,7 @@ interface NewProjectModalProps {
   ) => Promise<void>;
 }
 
-const VALID_TRANSLATIONS: BibleTranslation[] = ["NVI", "ARA", "NAA"];
+const VALID_TRANSLATIONS: BibleTranslation[] = ["NVI", "ARA", "NAA", "KJA"];
 
 function toBibleTranslation(value: string | undefined): BibleTranslation {
   if (value && VALID_TRANSLATIONS.includes(value as BibleTranslation)) {
@@ -237,15 +237,37 @@ export function NewProjectModal({
 
           <div>
             <label className="field-label" htmlFor="new-proj-idea">
-              Ideia Bruta / Gancho Pastoral
+              Ideia Bruta / Gancho Pastoral ou Roteiro Pronto
             </label>
             <textarea
               id="new-proj-idea"
               className="textarea"
-              placeholder="Descreva em 1–2 frases a descoberta, contraste ou contexto histórico que você quer destacar..."
+              rows={5}
+              placeholder="Descreva sua ideia/gancho ou cole aqui um roteiro já pronto (várias frases ou parágrafos) para a IA ajustar e segmentar..."
               value={rawIdea}
               onChange={(e) => setRawIdea(e.target.value)}
             />
+            {rawIdea.trim() && (
+              <div
+                className="mono"
+                style={{
+                  fontSize: 10.5,
+                  color: "var(--text-muted)",
+                  marginTop: 4,
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span>
+                  {rawIdea.trim().split(/\s+/).length} palavras · {rawIdea.length}/15000 chars
+                </span>
+                <span>
+                  {rawIdea.trim().split(/[.!?\n]+/).filter((s) => s.trim()).length >= 3
+                    ? "Roteiro pronto detectado (IA ajustará mantendo seu texto)"
+                    : "Ideia / Gancho inicial"}
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="grid-2">
@@ -275,6 +297,7 @@ export function NewProjectModal({
                 <option value="NVI">NVI (Nova Versão Internacional)</option>
                 <option value="ARA">ARA (Almeida Revista e Atualizada)</option>
                 <option value="NAA">NAA (Nova Almeida Atualizada)</option>
+                <option value="KJA">KJA (King James Atualizada)</option>
               </select>
             </div>
           </div>

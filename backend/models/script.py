@@ -7,6 +7,7 @@ from enum import StrEnum
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from backend.models.preset import HookType
+from backend.models.validation import assert_no_placeholders, find_placeholder_match
 
 
 class SegmentRole(StrEnum):
@@ -34,6 +35,18 @@ class NarrationSegment(BaseModel):
     display_text: str = Field(min_length=1)
     tts_text: str = Field(min_length=1)
 
+    @model_validator(mode="after")
+    def _validate_no_placeholders(self) -> NarrationSegment:
+        assert_no_placeholders(
+            self.display_text,
+            field_path=f"narration_segments[{self.segment_id}].display_text",
+        )
+        assert_no_placeholders(
+            self.tts_text,
+            field_path=f"narration_segments[{self.segment_id}].tts_text",
+        )
+        return self
+
 
 class ScriptureRef(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -43,6 +56,19 @@ class ScriptureRef(BaseModel):
     translation: str = Field(default="NVI", min_length=1)
     exact_text: str = Field(min_length=1)
     verified_by_human: bool = False
+
+    @model_validator(mode="after")
+    def _validate_verified_no_placeholder(self) -> ScriptureRef:
+        assert_no_placeholders(
+            self.citation,
+            field_path=f"scripture_refs[{self.ref_id}].citation",
+        )
+        if self.verified_by_human:
+            assert_no_placeholders(
+                self.exact_text,
+                field_path=f"scripture_refs[{self.ref_id}].exact_text",
+            )
+        return self
 
 
 class CoverSpec(BaseModel):
@@ -92,8 +118,11 @@ class Script(BaseModel):
         return self
 
     def all_scripture_verified(self) -> bool:
-        """Retorna True se todas as referências bíblicas tiverem validação humana."""
-        return all(ref.verified_by_human for ref in self.scripture_refs)
+        """Retorna True se todas as referências bíblicas tiverem validação humana e zero placeholders."""
+        return all(
+            ref.verified_by_human and find_placeholder_match(ref.exact_text) is None
+            for ref in self.scripture_refs
+        )
 
     def get_scripture_ref(self, ref_id: str) -> ScriptureRef:
         for ref in self.scripture_refs:

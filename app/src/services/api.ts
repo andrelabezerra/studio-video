@@ -8,6 +8,7 @@ import type {
   HealthResponse,
   Manifest,
   Metrics48h,
+  ProjectAssetLibraryItem,
   ProjectDetail,
   ProjectSummary,
   QueueActionType,
@@ -238,6 +239,7 @@ export const studioApi = {
           engine: payload.engine,
           voice_sample_id: payload.voice_sample_id ?? null,
           auto_align: payload.auto_align ?? true,
+          auto_setup: payload.auto_setup ?? true,
         }),
       }
     );
@@ -274,6 +276,40 @@ export const studioApi = {
       {
         method: "POST",
         body: form,
+      }
+    );
+  },
+
+  listProjectAssets(slug: string): Promise<{ assets: ProjectAssetLibraryItem[] }> {
+    return requestJson<{ assets: ProjectAssetLibraryItem[] }>(
+      `/api/projects/${encodeURIComponent(slug)}/assets`
+    );
+  },
+
+  attachSceneAsset(
+    slug: string,
+    sceneId: string,
+    payload: { cache_relpath: string; asset_id?: string; apply_rembg?: boolean }
+  ): Promise<{ scene: SceneData; asset_url: string }> {
+    return requestJson(
+      `/api/projects/${encodeURIComponent(slug)}/scenes/${encodeURIComponent(sceneId)}/asset/attach`,
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }
+    );
+  },
+
+  deleteSceneAsset(
+    slug: string,
+    sceneId: string,
+    assetId?: string
+  ): Promise<{ scene: SceneData }> {
+    const query = assetId ? `?asset_id=${encodeURIComponent(assetId)}` : "";
+    return requestJson(
+      `/api/projects/${encodeURIComponent(slug)}/scenes/${encodeURIComponent(sceneId)}/asset${query}`,
+      {
+        method: "DELETE",
       }
     );
   },

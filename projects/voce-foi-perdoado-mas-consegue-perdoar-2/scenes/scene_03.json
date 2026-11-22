@@ -1,0 +1,109 @@
+{
+  "scene_id": "scene_03",
+  "order": 3,
+  "status": "rendered",
+  "tier": 1,
+  "template": "editorial_motion",
+  "template_version": "2.0.0",
+  "timing": {
+    "start_word_id": "w_0037",
+    "end_word_id": "w_0051",
+    "resolved_start_ms": 11796,
+    "resolved_end_ms": 17270
+  },
+  "visual": {
+    "background_theme": "carvao",
+    "headline": "SÚPLICA DE JOELHOS",
+    "subtext": "CLAMOR POR MISERICÓRDIA",
+    "highlight_word_ids": [
+      "w_0037",
+      "w_0044",
+      "w_0050"
+    ],
+    "transition_in": "ink_wash",
+    "camera_motion": "cinematic_push",
+    "reference_layout_asset": null,
+    "scripture_ref_id": null,
+    "original_term": null,
+    "stamp_text": null,
+    "series_label": "PARÁBOLA · MATEUS 18",
+    "image_layout": "auto",
+    "image_fit": "cover",
+    "image_scale": 1.0,
+    "image_offset_x": 0.0,
+    "image_offset_y": 0.0,
+    "image_opacity": 1.0,
+    "image_animation": "ken_burns_in",
+    "illustration_variant": "auto",
+    "element_animation": "vox_editorial",
+    "animation_speed": 1.0,
+    "motion_intensity": 1.15,
+    "show_stamp": null,
+    "composition": "narrative_arc",
+    "atmosphere": "dramatic_spotlight",
+    "beats": [
+      {
+        "beat_id": "s03_b1",
+        "anchor_word_id": "w_0037",
+        "progress": null,
+        "headline": "DESESPERADO, SE AJOELHOU",
+        "subtext": "SEM NENHUMA SAÍDA",
+        "emphasis": "terracotta",
+        "visual_action": "step_1",
+        "camera_shift": "none"
+      },
+      {
+        "beat_id": "s03_b2",
+        "anchor_word_id": "w_0044",
+        "progress": null,
+        "headline": "PEDIU MISERICÓRDIA",
+        "subtext": "DIANTE DA AUTORIDADE",
+        "emphasis": "gold",
+        "visual_action": "step_2",
+        "camera_shift": "push_in"
+      },
+      {
+        "beat_id": "s03_b3",
+        "anchor_word_id": "w_0045",
+        "progress": null,
+        "headline": "E O QUE O REI FEZ?",
+        "subtext": "A VIRADA DA PARÁBOLA",
+        "emphasis": "gold",
+        "visual_action": "step_3",
+        "camera_shift": "settle"
+      }
+    ],
+    "motion_data": {
+      "steps": [
+        {
+          "tag": "01 · DESESPERO",
+          "title": "De joelhos",
+          "detail": "Sem recursos para pagar"
+        },
+        {
+          "tag": "02 · CLAMOR",
+          "title": "Pediu misericórdia",
+          "detail": "Apelo direto ao coração do rei"
+        },
+        {
+          "tag": "03 · RESPOSTA",
+          "title": "O que o rei fez?",
+          "detail": "Uma decisão inesperada"
+        }
+      ],
+      "show_handle_end": false
+    }
+  },
+  "assets": [],
+  "sfx_cues": [
+    {
+      "sfx_id": "paper_tear_01",
+      "anchor_word_id": "w_0037",
+      "offset_ms": -50,
+      "gain_db": -6.5
+    }
+  ],
+  "review_pins": [],
+  "cache_hash": "04db05b52a553feade7595e5fa9d977861d203337da6f06bbac79251dbce1438",
+  "cost_usd": 0.0
+}

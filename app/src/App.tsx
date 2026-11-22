@@ -230,6 +230,7 @@ export function App() {
           scene={previewScene}
           templates={studio.templates}
           tier2Catalog={studio.tier2Catalog}
+          projectAssets={studio.projectAssets}
           mediaRevision={studio.mediaRevision}
           busySave={Boolean(
             studio.busyMap[`scene_save_${previewScene.scene_id}`]
@@ -247,11 +248,17 @@ export function App() {
             studio.busyMap[`scene_tier2_${previewScene.scene_id}`]
           )}
           onClose={() => setPreviewSceneId(null)}
+          onNavigateScene={(nextSceneId) => {
+            setSelectedSceneId(nextSceneId);
+            setPreviewSceneId(nextSceneId);
+          }}
           onSaveScene={studio.updateScene}
           onRegenerateScene={studio.regenerateScene}
-          onUploadAsset={(id, file, assetId) =>
-            studio.uploadSceneAsset(id, file, { asset_id: assetId })
+          onUploadAsset={(id, file, options) =>
+            studio.uploadSceneAsset(id, file, options)
           }
+          onAttachAsset={(id, payload) => studio.attachSceneAsset(id, payload)}
+          onDeleteAsset={(id, assetId) => studio.deleteSceneAsset(id, assetId)}
           onAddPin={studio.addScenePin}
           onTogglePin={studio.toggleScenePin}
           onDeletePin={studio.deleteScenePin}

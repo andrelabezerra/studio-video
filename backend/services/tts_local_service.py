@@ -25,7 +25,7 @@ from typing import Any, Literal
 import httpx
 
 from backend.core.cache import ProjectCachePaths
-from backend.core.config import StudioSettings, get_voice_samples_dir
+from backend.core.config import StudioSettings, get_voice_samples_dir, load_settings, resolve_cache_dir
 from backend.models.preset import AudioMode
 from backend.models.script import Script
 from backend.services.alignment_service import (
@@ -37,6 +37,11 @@ from backend.services.alignment_service import (
 )
 from backend.services.audio_mixer_service import _run_ffmpeg, ensure_pilot_audio
 from backend.workers import F5_WORKER_SCRIPT, XTTS_WORKER_SCRIPT
+from backend.workers.setup_tts_venv import (
+    _venv_python_path,
+    resolve_default_venv_dir,
+    run_tts_venv_setup,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -78,6 +83,33 @@ def detect_hardware() -> dict[str, Any]:
         "gpu_name": None,
         "cpu_warning": _CPU_WARNING_MSG,
     }
+
+
+def resolve_effective_tts_venv_python(settings: StudioSettings) -> str | None:
+    """Resolve TTS_VENV_PYTHON priorizando settings e auto-detectando o venv padrão em produção."""
+    if settings.tts_venv_python and settings.tts_venv_python.strip():
+        return settings.tts_venv_python.strip()
+
+    try:
+        default_prod_cache = resolve_cache_dir(None, create=False)
+        is_prod_cache = settings.studio_cache_dir.resolve() == default_prod_cache.resolve()
+    except (OSError, ValueError):
+        is_prod_cache = False
+
+    if not is_prod_cache:
+        return None
+
+    try:
+        fresh = load_settings(workspace_root=settings.workspace_root, create_cache_dir=False)
+        if fresh.tts_venv_python and fresh.tts_venv_python.strip():
+            return fresh.tts_venv_python.strip()
+    except (OSError, ValueError):
+        pass
+
+    default_py = _venv_python_path(resolve_default_venv_dir())
+    if default_py.is_file():
+        return str(default_py)
+    return None
 
 
 def validate_tts_venv(tts_venv_python: str | None) -> tuple[bool, bool, Path | None]:
@@ -316,15 +348,16 @@ def delete_voice_sample(settings: StudioSettings, sample_id: str) -> bool:
 def get_audio_capabilities(settings: StudioSettings) -> dict[str, Any]:
     """Retorna capacidades de hardware, engines TTS/alinhamento e amostras (0 segredos)."""
     hw = detect_hardware()
-    venv_configured, venv_valid, venv_path = validate_tts_venv(settings.tts_venv_python)
+    effective_venv_py = resolve_effective_tts_venv_python(settings)
+    venv_configured, venv_valid, venv_path = validate_tts_venv(effective_venv_py)
 
     venv_mods = (
         probe_venv_modules(venv_path, ("TTS", "f5_tts"))
         if venv_valid and venv_path is not None
         else {"TTS": False, "f5_tts": False}
     )
-    xtts_ready = bool(venv_valid and venv_mods.get("TTS", False))
-    f5_ready = bool(venv_valid and venv_mods.get("f5_tts", False))
+    xtts_ready = venv_valid and venv_mods.get("TTS", False)
+    f5_ready = venv_valid and venv_mods.get("f5_tts", False)
     voicestudio_ready = probe_voicestudio(settings.voicestudio_url)
 
     def _venv_hint(engine_id: str, pkg_name: str, is_ready: bool) -> str:
@@ -385,9 +418,9 @@ def get_audio_capabilities(settings: StudioSettings) -> dict[str, Any]:
             },
         ],
         "alignment_engines": [
-            {"id": "deterministic_rms", "ready": bool(align_status["deterministic_rms"])},
-            {"id": "whisperx", "ready": bool(align_status["whisperx"])},
-            {"id": "stable_ts", "ready": bool(align_status["stable_ts"])},
+            {"id": "deterministic_rms", "ready": align_status["deterministic_rms"]},
+            {"id": "whisperx", "ready": align_status["whisperx"]},
+            {"id": "stable_ts", "ready": align_status["stable_ts"]},
         ],
         "voice_samples": samples,
     }
@@ -431,25 +464,33 @@ def validate_tts_generation_request(
     settings: StudioSettings,
     engine: TtsEngineId,
     voice_sample_id: str | None = None,
+    *,
+    allow_auto_setup: bool = False,
 ) -> tuple[Path | None, Path | None]:
     """Valida pré-requisitos da engine fail-fast; retorna (venv_python_path, voice_sample_path)."""
     if engine == "pilot_sapi":
         return (None, None)
 
     if engine in ("xtts_v2", "f5_tts"):
-        configured, valid, venv_path = validate_tts_venv(settings.tts_venv_python)
-        if not configured or not valid or venv_path is None:
-            raise ValueError(
-                f"Engine '{engine}' exige TTS_VENV_PYTHON configurado e válido (fora do OneDrive). "
-                f"Execute: uv run --no-sync python -m backend.workers.setup_tts_venv --engine {engine}"
-            )
+        effective_venv_py = resolve_effective_tts_venv_python(settings)
+        configured, valid, venv_path = validate_tts_venv(effective_venv_py)
         required_pkg = "TTS" if engine == "xtts_v2" else "f5_tts"
-        mods = probe_venv_modules(venv_path, (required_pkg,))
-        if not mods.get(required_pkg, False):
-            raise ValueError(
-                f"Pacote '{required_pkg}' não encontrado no venv isolado ('{venv_path}'). "
-                f"Execute: uv run --no-sync python -m backend.workers.setup_tts_venv --engine {engine}"
-            )
+        pkg_ready = False
+        if configured and valid and venv_path is not None:
+            mods = probe_venv_modules(venv_path, (required_pkg,))
+            pkg_ready = mods.get(required_pkg, False)
+
+        if not allow_auto_setup:
+            if not configured or not valid or venv_path is None:
+                raise ValueError(
+                    f"Engine '{engine}' exige TTS_VENV_PYTHON configurado e válido (fora do OneDrive). "
+                    f"Execute: uv run --no-sync python -m backend.workers.setup_tts_venv --engine {engine}"
+                )
+            if not pkg_ready:
+                raise ValueError(
+                    f"Pacote '{required_pkg}' não encontrado no venv isolado ('{venv_path}'). "
+                    f"Execute: uv run --no-sync python -m backend.workers.setup_tts_venv --engine {engine}"
+                )
 
         sample_path = resolve_voice_sample_path(settings, voice_sample_id)
         if sample_path is None:
@@ -457,7 +498,7 @@ def validate_tts_generation_request(
                 f"Engine '{engine}' exige uma amostra de voz (WAV/MP3 de 6–15s). "
                 "Envie uma amostra em POST /api/voice-samples/upload antes de gerar."
             )
-        return (venv_path, sample_path)
+        return (venv_path if pkg_ready else None, sample_path)
 
     if engine == "voicestudio":
         if not probe_voicestudio(settings.voicestudio_url):
@@ -659,10 +700,16 @@ def generate_tts_narration(
     engine: TtsEngineId,
     voice_sample_id: str | None = None,
     target_duration_sec: float = 40.0,
+    allow_auto_setup: bool = False,
     on_progress: ProgressCallback | None = None,
 ) -> tuple[Path, AudioMode]:
     """Gera narration_master.wav (48kHz mono) usando a engine local selecionada."""
-    venv_path, sample_path = validate_tts_generation_request(settings, engine, voice_sample_id)
+    venv_path, sample_path = validate_tts_generation_request(
+        settings,
+        engine,
+        voice_sample_id,
+        allow_auto_setup=allow_auto_setup,
+    )
     master_wav = cache.audio / "narration_master.wav"
     preview = build_tts_preview(script)
     chunks = preview["chunks"]
@@ -685,12 +732,19 @@ def generate_tts_narration(
     raw_tts_wav = cache.audio / f"_raw_{engine}_{uuid.uuid4().hex[:8]}.wav"
     try:
         if engine in ("xtts_v2", "f5_tts"):
+            if venv_path is None and allow_auto_setup:
+                _emit(6, f"Preparando ambiente isolado de clonagem ({engine}) pela 1ª vez...")
+                venv_path = run_tts_venv_setup(
+                    engine=engine,
+                    on_step=lambda step, total, msg: _emit(5 + int((step / max(1, total)) * 10), msg),
+                )
+                settings.tts_venv_python = str(venv_path)
             assert venv_path is not None and sample_path is not None
             worker_script = XTTS_WORKER_SCRIPT if engine == "xtts_v2" else F5_WORKER_SCRIPT
             _emit(10, f"Iniciando worker isolado {engine} ({len(chunks)} blocos)...")
 
             def _on_chunk(chunk_idx: int, total: int, pct: int, seg_id: str) -> None:
-                scaled = 10 + int(round(pct * 0.78))
+                scaled = 10 + round(pct * 0.78)
                 label = f" ({seg_id})" if seg_id else ""
                 _emit(scaled, f"Sintetizando bloco {chunk_idx}/{total}{label} via {engine}...")
 
